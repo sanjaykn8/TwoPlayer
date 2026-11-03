@@ -1138,3 +1138,94 @@ exercised by both the old and new tests. Progression across two level scenes is 
 | Save tests 1–14 (`docs/MANUAL_SAVE_TEST.md`), including closing with the real window X button | **Pending user test** |
 | Phase 2–7 manual tests | **Still pending** |
 | Visual inspection of captured frames | Done by Claude from captures, **not** interactive play |
+
+## Phase 9: 2026-11-03
+
+### A. Validation
+
+| Check | Result |
+|---|---|
+| Import / compile of every new and changed script | All compile (also `test_all_scripts_parse` and the scene instantiation test, which now includes every menu scene, `game_app.tscn` and `ui_test_room.tscn`) |
+| Generated art | `tools/build_phase9_content.gd` wrote `assets/created/ui_icons.png` (32×8); import clean |
+| Bus layout under `--script` (probe) | Master, Music, SFX loaded from `default_bus_layout.tres` |
+| Smoke run of the app (headless) | Menu → slot screen → settings → controls → new campaign → HUD → pause → main menu, no errors |
+| Real shutdown paths (headless probes, no test quit handler) | Window close on the menu, window close during play, Save and Quit: all exit with no leak warnings (before the fix, quitting while music played reported a leaked MP3 playback) |
+| Real window (windowed run, `touch_window = true`) | Starts 1280×720 titled "UNTITLED". Fullscreen → window mode 3 (fullscreen) at 1920×1080 with the HUD live; windowed 640×360; back to 1280×720. The game always renders 640×360 |
+| Rendered captures (windowed) | Main menu (empty and with saves); four slot states; overwrite and delete confirmations; settings with focus marker; controls; HUD in shared, side-by-side and stacked split with 10 hearts and effect indicators; pause; game over; victory preview; HUD in fullscreen |
+
+### B. Automated tests
+
+Command: `godot --headless --path . --fixed-fps 60 --script res://tests/run_tests.gd`
+
+Result: **412 passed, 0 failed**, exit code 0, with no `ERROR`, `WARNING` or `SCRIPT ERROR`
+lines. The result was identical in two consecutive runs.
+
+- **Tests:** 345 Phase 1–8 tests plus 67 Phase 9 tests.
+- **Expected output:** five lines starting `[CampaignGame]`. They are the expected reports of
+  fault-injection tests: two from Phase 8, three from Phase 9.
+
+| Requirement (prompt Part O) | Tests |
+|---|---|
+| Main menu 1–8 | `test_main_menu_loads`, `test_continue_disabled_without_campaigns`, `test_continue_enabled_with_a_campaign`, `test_buttons_open_their_screens`, `test_exit_uses_the_quit_path` |
+| Save-slot UI 1–10 | `test_four_slots_with_their_states`, `test_empty_and_occupied_metadata`, `test_continue_only_offers_loadable_campaigns`, `test_continue_without_campaigns_guides_to_new_game`, `test_loading_a_slot_uses_save_manager`, `test_recovered_slot_loads_and_reports_recovery`, `test_repair_action_uses_the_recovery_interface`, `test_delete_requires_confirmation_and_touches_one_slot`, `test_new_game_on_an_empty_slot_starts_at_once`, `test_overwrite_requires_confirmation`, `test_damaged_slot_is_never_replaced_silently`, `test_manage_actions_follow_the_slot_state` |
+| HUD 1–11 | `test_both_players_health_is_shown_independently`, `test_more_than_three_hearts`, `test_death_is_shown_clearly`, `test_shared_coin_counter`, `test_effects_appear_under_the_right_player_and_count_down`, `test_expired_effects_disappear`, `test_permanent_upgrades_shown`, `test_world_and_level_from_the_catalog`, `test_one_hud_in_every_camera_mode` (shared, side by side, stacked, merging; one HUD, never inside a SubViewport) |
+| Pause 1–10 | `test_escape_pauses_and_resumes`, `test_everything_stops_while_paused`, `test_timed_gate_waits_while_paused`, `test_settings_from_pause_keep_the_game_paused`, `test_restart_requires_confirmation_and_is_not_a_death`, `test_save_and_quit_waits_for_a_verified_save`, `test_return_to_main_menu_preserves_the_campaign`, `test_failed_save_never_leaves_the_game`, `test_pause_is_refused_outside_ordinary_play` |
+| Game over 1–5, victory | `test_wipe_shows_run_lost_after_durable_invalidation`, `test_begin_again_plays_the_fresh_run`, `test_main_menu_never_offers_the_lost_run`, `test_storage_failure_offers_only_quitting`, `test_victory_screen_after_the_last_level`, `test_victory_preview_is_labelled_and_changes_nothing` |
+| Settings 1–7 | `test_volumes_set_real_bus_levels_independently`, `test_display_requests_keep_the_pixel_grid`, `test_values_survive_a_restart`, `test_campaign_deletion_and_wipes_never_touch_settings`, `test_invalid_values_fall_back_individually`, `test_malformed_file_gives_defaults`, `test_missing_file_gives_defaults`, `test_location_is_separate_from_saves`, `test_display_options` |
+| Audio 1–7 | `test_bus_layout`, `test_config_only_names_existing_files`, `test_effects_play_on_the_sfx_bus_and_pause_with_the_game`, `test_bursts_are_limited`, `test_music_starts_once_and_never_restarts`, `test_tracks_switch_and_stop_cleanly`, `test_pause_policy_ducks_music`, `test_menu_music_plays_once`, `test_gameplay_music_transitions_without_duplicates`, `test_menu_sounds`, `test_gameplay_sounds_use_the_sfx_bus_and_pause`, `test_sliders_drive_the_real_buses` |
+| UI navigation (real key events through `Input.parse_input_event`) | `test_keyboard_navigation_confirm_and_back`, `test_focus_is_clearly_visible`, `test_modal_dialog_blocks_the_screen_behind`, `test_menu_has_no_gameplay_and_ignores_gameplay_keys`, `test_controls_screen_matches_the_input_map` |
+
+### C. Regression (prompt Part P)
+
+All 345 Phase 1–8 tests pass unchanged. The explicitly requested cases are covered as follows.
+
+| Requested case | Test |
+|---|---|
+| Pause on a moving platform | `test_everything_stops_while_paused` (P2 stands on the lift) |
+| Pause during a timed gate | `test_timed_gate_waits_while_paused` |
+| Pause with fruit effects | `test_everything_stops_while_paused` |
+| Return to the main menu and resume | `test_return_to_main_menu_preserves_the_campaign` |
+| Delete one slot among populated ones | `test_delete_requires_confirmation_and_touches_one_slot` |
+| Fullscreen while the HUD is shown | Windowed run (section A) and `test_display_options` |
+| HUD during camera transitions | `test_one_hud_in_every_camera_mode` |
+
+The shared code changed in this phase is exercised by the old tests as well as the new ones:
+
+- `CampaignGame`: injected `SaveManager`, new signals, `restart_run`, `save_before_leaving`,
+  the quit hook, and a HUD child in its scene;
+- `Sfx`: buses and limits;
+- the new sound cues in `CombatComponent`, `Slime` and `Knight`.
+
+### Defects found and fixed during Phase 9
+
+1. **The settings screen crashed when opened on its own.** The scene-instantiation test opened
+   it without an app. It now falls back to the player's settings, read from disk.
+2. **`ConfigFile.load` printed an engine error for a malformed settings file.** Settings are now
+   read with a quiet line parser, so each bad line falls back on its own.
+3. **Quitting while music played reported a leaked MP3 playback and a resource still in use.**
+   Every quit path now stops audio and waits 0.15 s first, and music no longer uses the static
+   stream cache.
+4. **The slot screen's "recovered" text overflowed its card.** Found in the captures; shortened.
+5. **Visual fixes from the captures:**
+   - The main-menu footer was unreadable over the ground; it now sits on a dark band.
+   - The level name crossed the split divider; it now sits inside the coin panel.
+   - The focused volume slider had no visible marker; it now has a pointer and a gold caption.
+   - The victory statistics were misaligned; they are now in a grid.
+6. **A failed save before leaving logged two error lines; now one.**
+7. **Test-only issues:**
+   - an escape GDScript lacks (`\x00`);
+   - a burst test that counted total sounds instead of concurrent ones;
+   - an int/float comparison;
+   - a synthetic button press that never moved focus, now replaced by real keys.
+8. **Framework weakness found:** the runner counts a test as passed even if it hit a `SCRIPT
+   ERROR` (only assertions fail a test). One such case occurred: the same-frame sound dedupe
+   dropped a second hurt sound. It was fixed, and full-run logs are now checked for
+   `SCRIPT ERROR` (KI-83).
+
+### D. Manual tests
+
+| Test | Status |
+|---|---|
+| UI tests 1–20 (`docs/MANUAL_UI_TEST.md`): menus by keyboard, listening to the mix, settings persistence after a real restart, fullscreen on the real monitor, HUD readability in play | **Pending user test** |
+| Phase 2–8 manual tests | **Still pending** |
+| Visual inspection of captured frames | Done by Claude from captures, **not** interactive play; no audio was listened to |

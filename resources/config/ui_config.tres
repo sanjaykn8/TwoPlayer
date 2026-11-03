@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="UiConfig" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/ui_config.gd" id="1_ui"]
+
+[resource]
+script = ExtResource("1_ui")
+game_title = "UNTITLED"
+subtitle = "A cooperative adventure for two knights"
+version_label = "development build (Phase 9)"
+fade_seconds = 0.25

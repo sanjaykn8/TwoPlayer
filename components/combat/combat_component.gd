@@ -183,6 +183,7 @@ func _start(attack_direction: AttackDirection.Direction, grounded: bool, in_phys
 	state = State.ATTACKING
 	_place_hitbox()
 	_update_weapon()
+	Sfx.cue(&"attack", self)
 	attack_started.emit(attack_id, direction)
 
 

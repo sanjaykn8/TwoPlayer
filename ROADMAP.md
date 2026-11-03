@@ -447,7 +447,7 @@ Always prioritize a stable playable game over rapidly generated content.
 | Phase 6: Hazards and Platforming Mechanics | Implemented and auto-tested (229/229 including Phase 1–5 regression); **manual hazard tests pending** | `docs/PHASE_6_SUMMARY.md`, `docs/TEST_REPORT.md`, `docs/MANUAL_HAZARD_TEST.md` |
 | Phase 7: Cooperative Puzzle Systems | Implemented and auto-tested (296/296 including Phase 1–6 regression); **manual puzzle tests pending** | `docs/PHASE_7_SUMMARY.md`, `docs/TEST_REPORT.md`, `docs/MANUAL_PUZZLE_TEST.md` |
 | Phase 8: Death, Campaign Reset and Save System | Implemented and auto-tested (345/345 including Phase 1–7 regression); **manual save tests pending** | `docs/PHASE_8_SUMMARY.md`, `docs/TEST_REPORT.md`, `docs/MANUAL_SAVE_TEST.md` |
-| Phase 9: Game Interface and Audio | Not started | Waiting for authorisation |
+| Phase 9: Game Interface and Audio | Implemented and auto-tested (412/412 including Phase 1–8 regression); **manual UI tests pending** | `docs/PHASE_9_SUMMARY.md`, `docs/TEST_REPORT.md`, `docs/MANUAL_UI_TEST.md` |
 | Phases 10–12 | Not started | — |
 
 Phase 1 task tracking:
@@ -597,4 +597,27 @@ Phase 8 task tracking:
 | Full run reset (both knights, coins, items, upgrades, enemies, puzzles) | Tested |
 | Old campaign invalidation | Tested |
 | Race conditions | Tested |
-| Game-over screen and slot UI | Not started (Phase 9) |
+| Game-over screen and slot UI | Implemented and tested in Phase 9 |
+
+Phase 9 task tracking:
+
+| Task | Status |
+|---|---|
+| Main menu (New Game, Continue, Save Slots, Settings, Controls, Exit) | Tested |
+| Four-slot selection (new game, continue, management) | Tested |
+| Overwrite and delete confirmations; corrupted / recovered / lost slots | Tested |
+| Continue (only loadable campaigns) | Tested |
+| Settings: Master / Music / Effects buses, display mode and size, persistence | Tested (window switching also checked in a real windowed run) |
+| Pause (everything stops; settings while paused; restart; save and quit; main menu) | Tested |
+| Player health displays (any maximum, death state) | Tested |
+| Coin display | Tested |
+| Timed-effect indicators and countdowns | Tested |
+| World and level indicator | Tested |
+| HUD in shared and split-screen modes (one HUD, outside the viewports) | Tested |
+| Game-over screen on the team wipe | Tested |
+| Victory screen (real completion; development preview) | Tested |
+| Controls guide | Tested (against the InputMap) |
+| Music (menu, world, victory, silent game over; no restarts or duplicates) | Tested; listening pending |
+| Sound effects (menu, combat, damage, transitions; SFX bus; limits) | Tested; listening pending |
+| Keyboard navigation of every menu | Tested with real key events; physical keyboard pending |
+| Initial tutorial screen (GDD §14) | Not implemented (KI-82) |

@@ -1166,3 +1166,198 @@ The dead campaign can never be saved again (`save_active_run` refuses a campaign
 the slot's marker, and any request whose token is not the current run). Closing the window
 during the wipe leaves the slot INVALIDATED or holding the fresh run. Only the active slot is
 touched.
+
+## 20. Interface, settings and audio (implemented in Phase 9)
+
+### Application flow (`scenes/app/game_app.tscn`, class `GameApp`, the main scene)
+
+`GameApp` lives for the whole session and owns:
+
+- one `SaveManager`, shared with the campaign (`CampaignGame.saves` is injected);
+- the `SettingsManager`;
+- the single `AudioManager`;
+- the `UiStack` of menu screens (CanvasLayer 20);
+- a fade layer (CanvasLayer 30);
+- a `World` node holding at most one `CampaignGame`.
+
+There is no autoload. Scenes change only by adding or removing the `CampaignGame` under `World`.
+
+| Mode | Meaning |
+|---|---|
+| MENU | Main menu and its sub-screens; no campaign exists |
+| PLAYING | `CampaignGame` runs; Esc (`pause` action) pauses |
+| PAUSED | `get_tree().paused = true` under the pause menu |
+| GAME_OVER | Team wipe shown; the fresh run waits, paused, for Begin Again |
+| VICTORY | Last catalog level completed; paused under the victory screen |
+| LEAVING | A verified save was made and the application is shutting down |
+
+- **New Game / Continue:** `start_new_campaign(slot, overwrite)` and `continue_campaign(slot)`
+  create a `CampaignGame` with `StartMode.NEW` (→ `SaveManager.start_new_run`) or
+  `StartMode.LOAD` (→ `SaveManager.load_run`, which repairs a recovered slot).
+  `overwrite` is true only after the player confirmed in a dialog.
+- **Leaving:** `return_to_menu()` and `save_and_quit()` first call
+  `CampaignGame.save_before_leaving()`. They leave only on `OK`. On failure the game stays
+  paused and the pause menu shows why. A halted wipe (WIPE_FAILED) never leaves to the menu,
+  because the lost run is still on disk.
+- **Quitting:** every quit goes through `GameApp.shutdown()`:
+  - Covers the menu Exit button, Save and Quit, the window X on a menu, and the window X in a
+    campaign (`CampaignGame.quit_handler`).
+  - It stops all audio, waits 0.15 s, then quits.
+  - Without the wait, a music stream still playing at exit is reported as leaked.
+  - `GameApp` turns `auto_accept_quit` off. With a campaign running, `CampaignGame` handles the
+    close request: it saves first, as in Phase 8.
+
+### Screens (`scenes/ui/menus/`, one `.tscn` + script each, base class `MenuScreen`)
+
+| Screen | Purpose |
+|---|---|
+| `main_menu` | New Game, Continue (disabled with a hint when no slot is loadable), Save Slots, Settings, Controls, Exit. The title and subtitle come from `resources/config/ui_config.tres`; the title is "UNTITLED" until a real one is chosen |
+| `save_slot_screen` | Modes NEW_GAME, CONTINUE, MANAGE (details below) |
+| `settings_screen` | Master / Music / Effects sliders and Reset audio; display mode, window size and Reset display |
+| `controls_screen` | Both players' keys and the context rules |
+| `pause_menu` | Resume, Settings, Restart Campaign, Save and Quit, Return to Main Menu |
+| `game_over_screen` | "RUN LOST", then Begin Again / Main Menu; Quit only on a storage failure |
+| `victory_screen` | Real run statistics; a `preview` flag for the development harness |
+
+`MenuScreen` (`scripts/ui/menu_screen.gd`):
+
+- builds its widgets in `build()`;
+- names its first focus in `first_focus()`;
+- handles Escape in `back()`;
+- delegates every action to `GameApp`.
+
+UI scripts never read save files.
+
+### Save-slot workflow
+
+- Card text comes from `SaveManager.get_slot_metadata()`. Statuses are shown as words: EMPTY,
+  ACTIVE (= VALID), RECOVERED, CORRUPTED, INVALIDATED.
+- Card contents: location (`LevelCatalog.location_title`), coins, both knights' health, play
+  time, and the local save time.
+
+| Mode | Behaviour |
+|---|---|
+| NEW_GAME | Empty or INVALIDATED slot: start at once. ACTIVE or RECOVERED: confirm "Overwrite" (states the location and coins). CORRUPTED: confirm "Replace"; `start_new_run` keeps `slot_N.corrupt` |
+| CONTINUE | Only ACTIVE and RECOVERED cards are enabled and focusable. With none: a message and a New Game button |
+| MANAGE | Focusing a card selects it. Enter moves to its actions (Load / New Campaign / Delete / Repair), enabled per status. Delete always confirms. Repair = `SaveManager.recover_backup` |
+
+Each operation affects one slot; tests prove the other files stay byte-identical.
+
+### Navigation (`UiStack`, `scripts/ui/ui_stack.gd`)
+
+- `push(screen)` disables the screen below with `focus_behavior_recursive` and
+  `mouse_behavior_recursive`. Opaque screens hide it; dialogs (`opaque = false`) leave it
+  visible but inert.
+- `pop` re-activates the screen below and restores the control it last focused.
+- Escape (`ui_cancel`) goes only to the top screen. `GameApp` handles `pause` (Esc) only when
+  the stack is empty, and both handlers mark the event handled.
+- Menus use Godot's standard `ui_*` actions (arrows, Enter/Space, Esc); the gameplay mappings
+  are unchanged.
+- `MenuScreen.link_vertical` / `link_horizontal` set explicit wrap-around neighbours.
+  `ConfirmDialog` keeps focus inside the dialog; destructive dialogs start on Cancel.
+- `UiButton` shows focus with a gold frame, gold text and a pointer arrow (not colour alone),
+  and plays the menu sounds. Mouse hover moves the keyboard focus.
+- Gameplay input cannot leak into menus:
+  - On the menu, no knights exist.
+  - While paused or on the game-over or victory screens, the whole gameplay tree is paused.
+  - Enter is not a gameplay key.
+
+### HUD (`scenes/ui/hud/game_hud.gd`, CanvasLayer 10, a child of `campaign_game.tscn`)
+
+- **Exactly one HUD.** It is in the main window, outside the rig's SubViewports, so all camera
+  modes show the same single HUD.
+- **Layout:**
+  - P1 panel top-left; P2 panel top-right (mirrored);
+  - coins with the world/level name under them, top centre;
+  - save notices and a brief "Saved" mark at the bottom.
+- **`PlayerStatusPanel`:**
+  - "P1"/"P2" tag in the player's colour;
+  - a palette-swapped knight portrait;
+  - `HealthDisplay` hearts for any maximum, wrapping after 10, drawn in `_draw`;
+  - "current/max", or "DOWN";
+  - upgrade summary (PWR, RANGE, SPEED, POISON);
+  - one `EffectIndicator` per active timed effect: the pickup's sprite, name, charges and
+    seconds.
+- **Updates:**
+
+  | Source | Updates |
+  |---|---|
+  | `HealthComponent.health_changed` | Hearts and health text |
+  | `PlayerStats.changed` | Upgrade summary |
+  | `PlayerEffects.changed` | Adds or removes indicators |
+  | `RunState.coins_changed` | Coin counter |
+  | `CampaignGame.level_started` | Rebinds to the new level's knights |
+  | `RunState.current()` identity change | Rebinds to the new run |
+
+  The only per-frame work is updating effect seconds, rewritten only when the shown whole
+  second changes.
+
+### Pause
+
+`GameApp.pause_game()` sets `get_tree().paused`. The level runs inside the rig, which is
+PAUSABLE, so everything gameplay stops:
+
+- knights, slimes and physics;
+- platforms, puzzle timers and timed gates;
+- timed effects (`PlayerProgress` ticks in physics);
+- play time (`CampaignGame._process` checks the pause).
+
+The UI, `GameApp`, `AudioManager` and menu sounds run with PROCESS_MODE_ALWAYS. Gameplay
+sounds pause; music continues `pause_duck_db` quieter.
+
+Restart Campaign confirms first, then calls `CampaignGame.restart_run()`, which uses
+`SaveManager.start_new_run(slot, true)` and loads the first level. It is not a death: no marker,
+`wipes` unchanged.
+
+### Game over and victory
+
+- `CampaignGame.team_wipe_started` opens the game-over screen at once with no choices. By then
+  the Phase 8 wipe has already invalidated the old campaign on disk.
+- `team_wipe_finished` means the fresh run exists. `GameApp` pauses the tree and shows Begin
+  Again (unpause the fresh run) and Main Menu (save it and go to the menu).
+- `team_wipe_failed` (new signal) shows a storage error with only Quit.
+- `campaign_completed` (new signal, after the last catalog level) opens the victory screen with
+  real `RunState` numbers.
+- While `LevelCatalog.DEVELOPMENT_CAMPAIGN` is true, the victory screen says that only test
+  levels exist. The development preview is labelled and changes no data.
+
+### Settings (`scripts/systems/settings_manager.gd`)
+
+- **Storage:**
+  - `user://settings.cfg`, outside `user://saves/`, never touched by slot operations.
+  - Written with `ConfigFile` to a `.tmp` file, then renamed.
+  - Read by a small line parser, so one bad line or value falls back on its own and nothing
+    logs engine errors.
+- **Values:** `master_volume`, `music_volume`, `sfx_volume` (0–100, 0 mutes the bus),
+  `fullscreen`, `window_scale` (640×360 × n).
+- **Window sizes:** only scales that fit the screen's usable area are offered. The project's
+  viewport stretch, integer scaling and letterbox keep the pixel grid exact.
+- **Applying:** applied at launch and on every change. `touch_window = false` in tests; real
+  window changes were verified in a windowed run.
+
+### Audio
+
+| Component | Role |
+|---|---|
+| `default_bus_layout.tres` | Buses Master → Music, SFX |
+| `AudioConfig` (`resources/config/audio_config.tres`) | Music tracks, context and world track ids, sound cues, fade and duck values, voice limits; `validate()` checks every file exists |
+| `AudioManager` (one per app) | One music player on the Music bus. `play_track` never restarts the playing track and fades between tracks. `play_level` picks the world's track (`world_tracks`, `default_world_track`). `set_ducked` handles pause |
+| `Sfx` (extended Phase 5 helper) | Every effect on the SFX bus. Gameplay effects pause; menu effects (`ui = true`) do not. At most `max_voices` gameplay / `max_ui_voices` menu effects at once; a stream starts at most once per frame. `Sfx.cue(id)` plays a named cue |
+
+Cues: attack (`CombatComponent`), enemy hit / stagger / death (`Slime`), player damage / death
+and jump (`Knight`), level transition (`CampaignGame`), menu navigation / confirm / cancel /
+error, game over, victory. Existing Phase 5–7 sounds (coins, fruit, jars, power tiles, switches,
+gates, puzzles, hazards) are unchanged and now use the SFX bus.
+
+### Phase 9 test harness
+
+`scenes/dev/ui_test_room.tscn` is `GameApp` with `user://saves_ui_dev/` and
+`user://settings_ui_dev.cfg`. Its development keys are listed in the script header:
+
+- seed the four slot states;
+- add hearts, effects or coins;
+- kill P1;
+- show the victory preview;
+- force side-by-side or stacked splits.
+
+Tests use `user://test_saves_ui/` and `user://test_settings_ui.cfg` (`tests/framework/ui_test_util.gd`).

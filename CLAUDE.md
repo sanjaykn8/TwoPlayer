@@ -611,3 +611,11 @@ The goal is a complete and reliable game, not a collection of generated files.
 - New saveable state goes through `RunState.snapshot()` (run-wide) or `capture_live()` / `apply_live()` / `save_state()` (level-live) and must be validated before it is applied. Never serialise nodes, resources or callables.
 - Gameplay never saves directly: call `CampaignGame.request_autosave(reason)`. Only `CampaignGame` runs team wipes; a knight's `died` signal is the only trigger.
 - Tests and dev rooms use their own save folders (`user://test_saves*/`, `user://saves_dev/`), never `user://saves/`.
+- Main scene: `scenes/app/game_app.tscn` (`GameApp`). It owns the one `SaveManager` (injected into `CampaignGame`), `SettingsManager`, `AudioManager` and the `UiStack`. Only `GameApp` pauses the game (`get_tree().paused`). No autoloads.
+- Menu screens extend `MenuScreen`: widgets in `build()`, first focus in `first_focus()`, Escape in `back()`. Every action goes through `GameApp`, and UI scripts never read save files. Use `UiButton`, `ConfirmDialog` (destructive questions focus Cancel) and `UiTheme`. Use only Pixel Operator 8 at 8, 16 or 32 px.
+- HUD: `GameHud` is a CanvasLayer child of `campaign_game.tscn`. It updates from signals and must never be placed inside a SubViewport.
+- Sounds: play through `Sfx.play` / `Sfx.cue` (SFX bus; pass `ui = true` for menu sounds). Music goes only through `AudioManager`. Every file and cue lives in `resources/config/audio_config.tres`.
+- Settings live in `user://settings.cfg` (`SettingsManager`), never in a save slot. Tests use `user://test_settings_ui.cfg` and `user://test_saves_ui/` (`UiTestUtil`), with `touch_window = false` and a `quit_handler`.
+- Every quit goes through `GameApp.shutdown()` or `CampaignGame.quit_handler`. These stop audio before exiting.
+- Phase 9 harness: `scenes/dev/ui_test_room.tscn` (its own save folder and settings file; dev keys in its script).
+- Test runner caveat: a test that hits a `SCRIPT ERROR` is still counted as passed, so check full-run logs for `SCRIPT ERROR`.

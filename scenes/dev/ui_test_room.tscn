@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scenes/dev/ui_test_room.gd" id="1_ui"]
+
+[node name="UiTestRoom" type="Node"]
+script = ExtResource("1_ui")
+save_dir = "user://saves_ui_dev/"
+settings_path = "user://settings_ui_dev.cfg"

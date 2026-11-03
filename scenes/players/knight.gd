@@ -306,6 +306,7 @@ func _jump() -> void:
 	_set_state(State.AIRBORNE)
 	for rider in _riders():
 		rider._lift(velocity.y)
+	Sfx.cue(&"jump", self)
 	jumped.emit()
 
 
@@ -572,6 +573,7 @@ func _on_hit_received(event: DamageEvent) -> void:
 
 
 func _on_damaged(_amount: int) -> void:
+	Sfx.cue(&"player_damage" if health.is_alive() else &"player_death", self)
 	if state == State.DEAD or not health.is_alive():
 		return
 	_hurt_timer = HURT_ANIMATION_TIME

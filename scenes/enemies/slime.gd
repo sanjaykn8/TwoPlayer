@@ -387,6 +387,7 @@ func _on_hit_received(event: DamageEvent) -> void:
 func _apply_outcome(outcome: SlimeStagger.Outcome, source: Node) -> void:
 	match outcome:
 		SlimeStagger.Outcome.PROGRESS:
+			Sfx.cue(&"enemy_hit", self)
 			_flash_left = FLASH_TIME
 			_hit_pause = stats.hit_pause
 			stagger_progress_changed.emit(stagger.progress, stagger.threshold)
@@ -394,11 +395,13 @@ func _apply_outcome(outcome: SlimeStagger.Outcome, source: Node) -> void:
 			if target == null and source is Node2D and source.is_in_group(&"knights") and _is_valid(source):
 				_set_target(source)
 		SlimeStagger.Outcome.STAGGERED:
+			Sfx.cue(&"enemy_stagger", self)
 			_flash_left = FLASH_TIME
 			stagger_progress_changed.emit(stagger.progress, stagger.threshold)
 			_enter(State.STAGGERED)
 			staggered.emit()
 		SlimeStagger.Outcome.KILLED:
+			Sfx.cue(&"enemy_death", self)
 			_die()
 
 

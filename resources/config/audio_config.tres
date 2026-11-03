@@ -1,0 +1,124 @@
+[gd_resource type="Resource" script_class="AudioConfig" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/audio/audio_config.gd" id="1_ac"]
+
+[resource]
+script = ExtResource("1_ac")
+music_tracks = {
+"menu": {
+"path": "res://assets/music/time_for_adventure.mp3",
+"pitch": 0.85,
+"volume_db": -9.0
+},
+"victory": {
+"path": "res://assets/music/time_for_adventure.mp3",
+"pitch": 1.1,
+"volume_db": -7.0
+},
+"world_1": {
+"path": "res://assets/music/time_for_adventure.mp3",
+"pitch": 1.0,
+"volume_db": -11.0
+}
+}
+context_tracks = {
+"game_over": "",
+"menu": "menu",
+"victory": "victory"
+}
+world_tracks = {
+"w1": "world_1"
+}
+default_world_track = "world_1"
+cues = {
+"attack": {
+"jitter": 0.1,
+"path": "res://assets/sounds/tap.wav",
+"pitch": 1.9,
+"volume_db": -13.0
+},
+"enemy_death": {
+"jitter": 0.05,
+"path": "res://assets/sounds/explosion.wav",
+"pitch": 1.4,
+"volume_db": -10.0
+},
+"enemy_hit": {
+"jitter": 0.08,
+"path": "res://assets/sounds/hurt.wav",
+"pitch": 1.6,
+"volume_db": -10.0
+},
+"enemy_stagger": {
+"jitter": 0.0,
+"path": "res://assets/sounds/hurt.wav",
+"pitch": 0.8,
+"volume_db": -9.0
+},
+"game_over": {
+"jitter": 0.0,
+"path": "res://assets/sounds/explosion.wav",
+"pitch": 0.55,
+"volume_db": -6.0
+},
+"jump": {
+"jitter": 0.05,
+"path": "res://assets/sounds/jump.wav",
+"pitch": 1.0,
+"volume_db": -17.0
+},
+"level_transition": {
+"jitter": 0.0,
+"path": "res://assets/sounds/power_up.wav",
+"pitch": 0.8,
+"volume_db": -6.0
+},
+"player_damage": {
+"jitter": 0.0,
+"path": "res://assets/sounds/hurt.wav",
+"pitch": 1.0,
+"volume_db": -6.0
+},
+"player_death": {
+"jitter": 0.0,
+"path": "res://assets/sounds/explosion.wav",
+"pitch": 0.7,
+"volume_db": -4.0
+},
+"save": {
+"jitter": 0.0,
+"path": "res://assets/sounds/coin.wav",
+"pitch": 0.6,
+"volume_db": -16.0
+},
+"ui_cancel": {
+"jitter": 0.0,
+"path": "res://assets/sounds/tap.wav",
+"pitch": 0.7,
+"volume_db": -10.0
+},
+"ui_confirm": {
+"jitter": 0.0,
+"path": "res://assets/sounds/tap.wav",
+"pitch": 1.0,
+"volume_db": -7.0
+},
+"ui_error": {
+"jitter": 0.0,
+"path": "res://assets/sounds/hurt.wav",
+"pitch": 1.3,
+"volume_db": -12.0
+},
+"ui_move": {
+"jitter": 0.0,
+"path": "res://assets/sounds/tap.wav",
+"pitch": 1.5,
+"volume_db": -15.0
+},
+"victory": {
+"jitter": 0.0,
+"path": "res://assets/sounds/power_up.wav",
+"pitch": 1.25,
+"volume_db": -4.0
+}
+}

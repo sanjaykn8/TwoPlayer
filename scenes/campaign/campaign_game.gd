@@ -19,6 +19,10 @@ signal level_started(level_id: String)
 signal autosaved(reason: String, ok: bool)
 signal team_wipe_started
 signal team_wipe_finished(saved: bool)
+## The old campaign could not be invalidated on disk (or the fresh level failed): halted.
+signal team_wipe_failed(reason: String)
+## The last level of the catalog was completed (the campaign is finished and saved).
+signal campaign_completed
 ## A message for the player/developer (save failures, recoveries, wipes).
 signal notice(text: String)
 
@@ -37,6 +41,10 @@ const DEFAULT_WIPE_DELAY := 1.2
 ## false: begin() must be called by the owner (tests).
 @export var auto_begin := true
 
+## Replaces get_tree().quit(code) after a verified exit save (GameApp stops the audio first).
+var quit_handler := Callable()
+
+## Injected by GameApp (one SaveManager for the menus and the campaign); created otherwise.
 var saves: SaveManager
 var phase := Phase.IDLE
 var level: Node2D
@@ -61,14 +69,22 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	rig.process_mode = Node.PROCESS_MODE_PAUSABLE
 	get_tree().set_auto_accept_quit(false)
-	saves = SaveManager.new(save_dir)
-	saves.recovered.connect(func(s: int, why: String) -> void: _notice("Slot %d: %s" % [s, why]))
+	if saves == null:
+		saves = SaveManager.new(save_dir)
+	saves.recovered.connect(_on_slot_recovered)
 	if auto_begin:
 		begin.call_deferred()
 
 
 func _exit_tree() -> void:
 	get_tree().set_auto_accept_quit(true)
+	# The SaveManager can outlive this campaign (GameApp shares one with the menus).
+	if saves != null and saves.recovered.is_connected(_on_slot_recovered):
+		saves.recovered.disconnect(_on_slot_recovered)
+
+
+func _on_slot_recovered(recovered_slot: int, why: String) -> void:
+	_notice("Slot %d: %s" % [recovered_slot, why])
 
 
 ## Starts the campaign according to `start_mode`. Returns OK or the failure.
@@ -233,6 +249,7 @@ func complete_level() -> void:
 		campaign.flags["finished"] = true
 		_notice("Campaign complete!")
 		request_autosave("campaign_complete")
+		campaign_completed.emit()
 		return
 	phase = Phase.TRANSITIONING
 	_transition_target = next
@@ -245,6 +262,7 @@ func _do_transition() -> void:
 	var next := _transition_target
 	_transition_target = ""
 	run().campaign.enter_level(next)
+	Sfx.cue(&"level_transition", self, true)
 	if _load_level(next, {}) == "":
 		save_now("level_start:" + next)
 
@@ -277,6 +295,7 @@ func start_team_wipe() -> void:
 	if err != OK:
 		phase = Phase.WIPE_FAILED
 		_notice("STORAGE FAILURE: the lost campaign could not be invalidated (%s). The game is halted." % saves.last_error)
+		team_wipe_failed.emit(saves.last_error)
 		return
 	await get_tree().create_timer(maxf(wipe_delay, 0.0), true, false, true).timeout
 	if phase != Phase.WIPING:
@@ -288,6 +307,7 @@ func _finish_team_wipe() -> void:
 	RunState.reset()  # clears coins, collected items, upgrades, effects, puzzles, enemies, campaign
 	if _load_level(LevelCatalog.FIRST_LEVEL, {}) != "":
 		phase = Phase.WIPE_FAILED
+		team_wipe_failed.emit("the first level could not be loaded")
 		return
 	var err := saves.save_active_run(WorldSnapshot.capture(level, knights), run().campaign.campaign_id, true)
 	saves.wipe_lock = false
@@ -308,6 +328,43 @@ func _freeze_level() -> void:
 		level.process_mode = Node.PROCESS_MODE_DISABLED
 
 
+# --- Voluntary restart and leaving (pause menu) ----------------------------------------------
+
+## The players chose to restart: a brand-new campaign replaces this one in the same slot
+## (SaveManager.start_new_run with overwrite), starting at the first level. This is not a
+## death: no team wipe, no invalidation marker. Other slots are untouched.
+func restart_run() -> Error:
+	if phase != Phase.PLAYING:
+		return ERR_BUSY
+	_pending_reason = ""
+	_pending_token = ""
+	_transition_target = ""
+	var err := saves.start_new_run(saves.active_slot, true)
+	if err != OK:
+		_notice("Could not restart the campaign: %s" % saves.last_error)
+		return err
+	fresh_run_unsaved = false
+	if _load_level(LevelCatalog.FIRST_LEVEL, {}) != "":
+		return ERR_CANT_CREATE
+	last_save_reason = "restart"
+	last_save_ok = true
+	return OK
+
+
+## Saves before the players leave (Save and Quit, Return to Main Menu). Returns OK only after
+## the save was written and verified; on failure the campaign keeps running unchanged and
+## nothing may be discarded. Never counts as a death.
+func save_before_leaving(reason: String) -> Error:
+	if phase != Phase.PLAYING:
+		return ERR_BUSY
+	_pending_reason = ""
+	_transition_target = ""
+	var err := save_now(reason)
+	if err != OK:
+		_notice("Leaving was cancelled because the save failed (%s). Nothing was lost; the game continues." % saves.last_error)
+	return err
+
+
 # --- Application exit ------------------------------------------------------------------------
 
 func _notification(what: int) -> void:
@@ -325,7 +382,7 @@ func handle_close_request() -> void:
 			return
 		Phase.PLAYING, Phase.TRANSITIONING:
 			if _exit_save_failed:
-				get_tree().quit(1)
+				_quit(1)
 				return
 			# No new transitions, autosaves or wipes from here on. A pending transition is
 			# dropped: the valid pre-transition level is what gets saved.
@@ -336,7 +393,7 @@ func handle_close_request() -> void:
 				level.process_mode = Node.PROCESS_MODE_DISABLED
 			var err := save_now("exit")
 			if err == OK:
-				get_tree().quit(0)
+				_quit(0)
 			else:
 				_exit_save_failed = true
 				phase = Phase.PLAYING
@@ -345,7 +402,14 @@ func handle_close_request() -> void:
 				_notice("Could not save before closing (%s). Close again to quit without saving." % saves.last_error)
 		_:
 			phase = Phase.EXITING
-			get_tree().quit(0)
+			_quit(0)
+
+
+func _quit(code: int) -> void:
+	if quit_handler.is_valid():
+		quit_handler.call(code)
+	else:
+		get_tree().quit(code)
 
 
 # --- Play time ---------------------------------------------------------------------------------

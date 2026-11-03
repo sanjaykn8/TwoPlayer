@@ -678,3 +678,29 @@ Where a decision refines an earlier section, this section is authoritative.
   world freezes briefly, then a completely new run starts at the first level (3/3 health, power
   1, no upgrades, no coins, every item, enemy and puzzle back) and is saved. The lost run can
   never be loaded again, not even by quitting during the reset. Other slots are untouched.
+
+**Interface, settings and audio (Phase 9, 2026-11-03)** (refines sections 14 and 15):
+- **Title.** The game has no final title; the menu and window show "UNTITLED", set in
+  `resources/config/ui_config.tres`.
+- **Main menu.** New Game, Continue, Save Slots, Settings, Controls, Exit. Continue works only
+  when a slot holds a loadable campaign; a campaign lost in a team wipe never counts.
+- **Slots.** Each slot shows its number, status (EMPTY, ACTIVE, RECOVERED, CORRUPTED,
+  INVALIDATED), world and level, coins, both knights' health, play time and the last save
+  time. Starting a new campaign over an existing or damaged one, and deleting, always ask first.
+- **HUD.** Player One top-left, Player Two top-right (mirrored), each with "P1"/"P2", a portrait
+  in the knight's colours, one heart per health point (any maximum), upgrades, and timed effects
+  with seconds and charges. The shared coin total and the world/level name are at the top centre.
+  It is the same single HUD in shared and split views.
+- **Pause (Esc).** Resume, Settings, Restart Campaign, Save and Quit, Return to Main Menu.
+  Everything in the game stops, including effect timers and play time; music plays quieter.
+  - **Restart** asks first, then replaces the campaign in the slot. It is not a death.
+  - **Leaving** (Save and Quit, Main Menu) happens only after the save succeeded.
+- **Game over.** "RUN LOST" over the frozen world. Once the lost run is erased and the new run
+  exists, the players choose Begin Again or Main Menu.
+- **Victory.** Shows the run's real numbers after the last level.
+- **Settings.** Saved in `settings.cfg`, separate from the save slots:
+  - Master, Music and Effects volume;
+  - windowed or fullscreen;
+  - window size in whole multiples of 640×360. The picture is never stretched.
+- **Audio.** Music fades between menu, world, victory and silence on game over, and never
+  restarts. Sound effects are limited so bursts stay quiet.

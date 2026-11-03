@@ -293,6 +293,53 @@ Nearest in Phase 1.
 | Doors, gates, switches, plates, exit portal | "!" blocks, crates only | **Create** |
 | Signs for clues | signposts (8,3), (8,4) | Usable |
 | Backgrounds | sky gradient strips | Usable for 4 of 6 themes; others via tint |
-| HUD hearts, icons, panels | — | **Create** (or draw with fruit/jar icons + font) |
+| HUD hearts, icons, panels | `assets/created/ui_icons.png` (Phase 9) + fruit / jar / "?" sprites + font | Done (Phase 9) |
 | Music | 1 × 40 s track | Thin |
 | SFX | 6 files | Partial |
+
+## 9. Phase 9 additions and audio assignment
+
+### Created art
+
+| File | Size | Content | Made by |
+|---|---|---|---|
+| `res://assets/created/ui_icons.png` | 32×8 (four 8×8 cells) | Heart (full), heart (empty), slider grabber, menu pointer arrow | `tools/build_phase9_content.gd` |
+
+The HUD and menus reuse bundle art directly through `AtlasTexture` regions:
+
+| Element | Source |
+|---|---|
+| Effect icons | Yellow fruit `fruit.png (0,16,16,16)`; yellow jar `world_tileset.png` cell (1,7); "?" tile cell (0,2) |
+| Coin icon | `coin.png` frame 0 |
+| HUD portraits | `knight.png (8,12,16,16)` with the palette shader |
+| Main-menu backdrop | Sky strip cell column 2 rows 9–15 at 3×; grass and dirt; teal and orange trees, bush, mushrooms and signpost; both knights and both slimes idling |
+| Fonts | Pixel Operator 8 (regular and bold) at 8, 16 and 32 px |
+
+### Audio assignment (`resources/config/audio_config.tres`)
+
+| Use | File | Pitch | Volume |
+|---|---|---|---|
+| Menu music | `time_for_adventure.mp3` | 0.85 | −9 dB |
+| World 1 music (default world track) | `time_for_adventure.mp3` | 1.0 | −11 dB |
+| Victory music | `time_for_adventure.mp3` | 1.1 | −7 dB |
+| Game-over music | none (silence) | — | — |
+| Menu move / confirm / cancel | `tap.wav` | 1.5 / 1.0 / 0.7 | — |
+| Menu error | `hurt.wav` | 1.3 | — |
+| Attack swing | `tap.wav` | 1.9 ±10 % | — |
+| Jump | `jump.wav` | 1.0 | −17 dB |
+| Enemy hit / stagger | `hurt.wav` | 1.6 / 0.8 | — |
+| Enemy death | `explosion.wav` | 1.4 | — |
+| Player damage / death | `hurt.wav` / `explosion.wav` | 1.0 / 0.7 | — |
+| Level transition | `power_up.wav` | 0.8 | — |
+| Victory jingle | `power_up.wav` | 1.25 | — |
+| Game over | `explosion.wav` | 0.55 | — |
+| Coins, fruit, jars, tiles, switches, gates, puzzles, hazards | Unchanged since Phases 5–7 | — | — |
+
+**Still missing from the bundle:**
+
+- a dedicated sword swing;
+- a gate, level-transition, victory or game-over sound;
+- a menu-specific click;
+- any second music track.
+
+Each use above reuses one of the six effects or the single track (KI-76, KI-77).

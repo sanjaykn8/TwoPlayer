@@ -24,6 +24,10 @@ slot_*.dead
 slot_*.corrupt
 test_saves*/
 saves_dev/
+saves_ui_dev/
+# Player preferences (they live in %APPDATA%, never here)
+settings*.cfg
+settings*.cfg.tmp
 
 # Sensitive / machine-local files
 .env
