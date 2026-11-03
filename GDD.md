@@ -547,3 +547,19 @@ Where a decision refines an earlier section, this section is authoritative.
 3. Standing on a one-way platform, Down drops through it. There is no crouching on one-way platforms.
 4. Standing on solid ground, Up jumps and Down crouches.
 5. In the air, Up has no effect beyond the short jump buffer, and Down grabs a ladder only.
+
+**Camera behaviour (Phase 2 instruction, 2026-11-03)** (refines section 4):
+- **Shared view.** One full-screen view follows the midpoint between the knights, with a small
+  dead zone and smoothing.
+- **Splitting.** The view splits when the knights are farther apart than 85 % of the shared
+  view's safe region, or as soon as either knight would leave the view. The split shows no jump.
+- **Split direction.**
+  - Mostly horizontal separation: side-by-side views with a vertical divider.
+  - Mostly vertical separation: stacked views with a horizontal divider.
+  - The direction changes only when the other axis clearly dominates (×1.35 for 0.35 s).
+- **Fixed views.** Player One always has the left or top view. Player Two always has the right or bottom view.
+- **Merging.** The views merge back after the knights stay within 55 % of the safe region for
+  0.25 s. The halves line up and become one view with no jump.
+- **Limits.** Each level defines camera bounds; cameras never show anything outside them.
+  There is no zoom (D-8).
+- All values live in `resources/config/camera_config.tres`.

@@ -114,7 +114,164 @@ Defects found and fixed during Phase 1 testing:
 | Test | Status |
 |---|---|
 | Visual check of rendered frames (crisp pixels, P1 green/red vs P2 blue/cyan, HUD, crouch, climb, stacking, hurt) | Done by Claude from captured frames, **not** interactive play |
-| Physical keyboard tests 1–10 and Alt checks A–D (`docs/MANUAL_KEYBOARD_TEST.md`) | **Pending user test** |
-| Keyboard model and layout | **Not yet supplied** |
+| Physical keyboard tests 1–10 and Alt checks A–D (`docs/MANUAL_KEYBOARD_TEST.md`) | **USER-REPORTED PASS** (reported by the project owner before Phase 2; see the Phase 2 section) |
+| Keyboard model and layout | **Not supplied** |
 | Movement feel, responsiveness, readability with two people | **Pending user test** |
 | Running the test room from the editor (F5) by the user | **Pending user test** |
+
+## Phase 1 physical keyboard test: user report
+
+- **Result: USER-REPORTED PASS.** Before Phase 2 began, the project owner reported that the
+  physical keyboard test was performed and that the keyboard works correctly for both players.
+- **Not supplied:** keyboard manufacturer, model and layout, and the per-test results table.
+- This is a user report. Claude did not, and cannot, independently verify the hardware.
+  Ghosting and Alt behaviour on other keyboards remain untested.
+
+## Phase 2: 2026-11-03
+
+### A. Validation
+
+| Check | Method | Result |
+|---|---|---|
+| Import | `godot --headless --path . --import` | No errors |
+| Editor opens project | `godot --headless --path . --editor --quit` | No errors |
+| Camera room launches standalone | `godot --headless --path . res://scenes/dev/camera_test_room.tscn --quit-after 120` | Exit 0, no errors |
+| Phase 1 generator refactor | Regenerated the Phase 1 room with `tools/level_builder.gd` and diffed it against the committed file (ignoring generated IDs) | Identical; committed file kept |
+| Renderer in rendered run | Windowed capture script | `gl_compatibility` on RTX 4050 |
+| Seamless split (rendered) | Froze both knights, captured the last shared frame and the frame produced by the single camera update that split | Left half: **0** differing pixels. Right half: 460, all from P2's own 15 px move |
+| Window resize (rendered) | `DisplayServer.window_set_size` to 1920×1080, 1000×620, 800×450 | Root visible rect and rig stay 640×360. Views 320×360 + 320×360 in each case. Captures sharp and undistorted |
+| Long-run counters | Rendered run with 7 layout changes | 61 nodes throughout |
+
+### B. Automated tests
+
+Command: `godot --headless --path . --fixed-fps 60 --script res://tests/run_tests.gd`
+
+Result: **74 passed, 0 failed**, exit code 0, no `ERROR`/`WARNING` lines. That is 42 Phase 1
+tests (unchanged), 11 camera unit tests and 21 camera gameplay tests.
+
+```
+res://tests/gameplay/test_camera_rig.gd
+PASS test_shared_mode_at_start
+PASS test_world_is_simulated_once
+PASS test_pixel_art_settings
+PASS test_horizontal_separation_splits_side_by_side
+PASS test_vertical_separation_splits_stacked
+PASS test_assignment_is_fixed_even_when_knights_cross
+PASS test_split_triggers_at_threshold_while_walking
+PASS test_independent_tracking
+PASS test_reunification_by_walking
+PASS test_reunification_initiated_by_either_player
+PASS test_no_flicker_inside_hysteresis_band
+PASS test_jitter_at_split_threshold_switches_once
+PASS test_merge_requires_hold_time
+PASS test_orientation_hysteresis_and_hold
+PASS test_cameras_respect_level_bounds
+PASS test_tall_section_tracking
+PASS test_layout_follows_rig_size
+PASS test_camera_does_not_affect_simulation
+PASS test_camera_updates_never_move_knights
+PASS test_repeated_switching_does_not_accumulate_resources
+PASS test_phase1_mechanics_inside_the_rig
+res://tests/gameplay/test_knight_movement.gd
+PASS test_knights_spawn_independent
+PASS test_players_move_independently_and_simultaneously
+PASS test_left_and_right_together_cancel
+PASS test_full_jump_height_and_landing
+PASS test_variable_jump_height
+PASS test_no_double_jump_and_no_hold_bunny_hop
+PASS test_jump_buffer_before_landing
+PASS test_both_jump_in_same_frame
+PASS test_crouch_under_low_ceiling
+PASS test_down_on_solid_floor_does_not_drop
+PASS test_drop_through_one_way_and_jump_back_up
+PASS test_drop_passes_only_one_platform
+PASS test_other_knight_unaffected_by_drop
+PASS test_ladder_climb_up_hold_and_exit_top
+PASS test_ladder_climb_down_from_top
+PASS test_ladder_side_release
+PASS test_passage_allows_free_movement
+PASS test_attack_inputs_are_independent
+PASS test_attack_direction_from_input
+PASS test_push_moves_the_other_knight
+PASS test_push_against_wall_does_not_trap
+PASS test_corridor_mutual_push_never_locks
+PASS test_push_off_platform_edge
+PASS test_standing_on_knight_carry_and_lift
+PASS test_spawn_overlap_resolves_without_impulse
+PASS test_raw_key_events_drive_both_knights
+res://tests/unit/test_camera_math.gd
+PASS test_midpoint
+PASS test_separation_ratio_axes
+PASS test_split_and_merge_thresholds_with_hysteresis
+PASS test_orientation_selection_and_hysteresis
+PASS test_layout_rectangles
+PASS test_sub_view_center_is_seamless
+PASS test_clamp_center_to_bounds
+PASS test_deadzone
+PASS test_smoothing_is_frame_rate_independent
+PASS test_camera_config_validation
+PASS test_camera_bounds_rect_and_tilemap_fit
+res://tests/unit/test_logic.gd
+PASS test_attack_direction_table
+PASS test_vertical_intent_priority_table
+PASS test_input_frame_edges_and_axes
+PASS test_health_limits
+PASS test_health_max_changes
+res://tests/unit/test_project_setup.gd
+PASS test_rendering_and_window_settings
+PASS test_save_directory_identity
+PASS test_gameplay_actions_exist_with_correct_keys
+PASS test_actions_are_exclusive_per_player
+PASS test_alt_variants_and_modifier_independence
+PASS test_profiles_reference_valid_actions
+res://tests/unit/test_resource_validation.gd
+PASS test_all_scripts_parse
+PASS test_all_resources_and_scenes_load
+PASS test_scenes_instantiate_with_valid_paths_signals_and_shapes
+PASS test_game_code_is_offline
+PASS test_knight_sprite_frames
+```
+
+Requirement coverage:
+- midpoint: `test_midpoint`
+- horizontal and vertical separation: `test_separation_ratio_axes`
+- split and merge thresholds plus hysteresis: `test_split_and_merge_thresholds_with_hysteresis`, `test_split_triggers_at_threshold_while_walking`, `test_merge_requires_hold_time`, `test_no_flicker_inside_hysteresis_band`, `test_jitter_at_split_threshold_switches_once`
+- orientation: `test_orientation_selection_and_hysteresis`, `test_orientation_hysteresis_and_hold`, `test_horizontal_separation_splits_side_by_side`, `test_vertical_separation_splits_stacked`
+- assignment: `test_assignment_is_fixed_even_when_knights_cross`
+- target updates: `test_independent_tracking`, `test_tall_section_tracking`
+- viewport sizes: `test_layout_rectangles`, `test_layout_follows_rig_size`
+- bounds: `test_clamp_center_to_bounds`, `test_cameras_respect_level_bounds`, `test_camera_bounds_rect_and_tilemap_fit`
+- mode changes during movement: `test_reunification_by_walking` (checks every frame that each knight stays visible in its own view), `test_reunification_initiated_by_either_player`
+- one simulation: `test_world_is_simulated_once`
+- no physics side effects: `test_camera_does_not_affect_simulation` (P1's trajectory is identical with the camera on and off, while the camera switches modes), `test_camera_updates_never_move_knights`
+- resources: `test_repeated_switching_does_not_accumulate_resources`
+
+### C. Phase 1 regression
+
+- All 42 Phase 1 tests pass unchanged, in the Phase 1 room.
+- `test_phase1_mechanics_inside_the_rig` repeats the following inside the camera room, where
+  physics now runs in a SubViewport's World2D: jump height, one-way drop, crawl, push, and
+  simultaneous attacks. All pass.
+- No Phase 1 movement, input or knight file was modified.
+
+### Defects found and fixed during Phase 2
+
+1. **Enum type mismatch in Godot 4.7.2.** A static function on a `class_name` script declared
+   as `-> Orientation` produced a type that typed callers rejected as not `CameraMath.Orientation`
+   (reproduced in isolation). Fixed by fully qualifying the enum in `camera_math.gd`.
+   Phase 1's `AttackDirection` was probed with typed callers and is unaffected.
+2. **Physics interpolation warning.** It forced the cameras into physics-process mode. They now
+   declare `CAMERA2D_PROCESS_PHYSICS` explicitly.
+3. **Test-only issues:**
+   - placements inside the crawl section, where a standing knight is wedged;
+   - unrealistically fast scripted movement, at six times knight speed;
+   - a float32 boundary comparison;
+   - a capture taken one tick after the split, which first suggested a 10 px seam;
+     the exact split frame shows none.
+
+### D. Manual tests
+
+| Test | Status |
+|---|---|
+| Camera tests 1–10 (`docs/MANUAL_CAMERA_TEST.md`) | **Pending user test** |
+| Visual inspection of captured frames (shared, side-by-side, stacked, merging, three window sizes) | Done by Claude from captures, **not** interactive play |

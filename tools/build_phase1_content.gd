@@ -18,11 +18,9 @@ const FRAMES_PATH := "res://resources/players/knight_frames.tres"
 const TILESET_PATH := "res://resources/tilesets/dev_world_tileset.tres"
 const ROOM_PATH := "res://scenes/dev/phase_1_test_room.tscn"
 
-const WORLD_SOURCE := 0
-const PLATFORM_SOURCE := 1
-const GRASS_TOP := Vector2i(0, 0)
-const DIRT := Vector2i(0, 1)
-const WALL := Vector2i(8, 1)
+const LevelBuilder := preload("res://tools/level_builder.gd")
+const WORLD_SOURCE := LevelBuilder.WORLD_SOURCE
+const PLATFORM_SOURCE := LevelBuilder.PLATFORM_SOURCE
 const ROOM_COLS := 40
 const ROOM_ROWS := 22
 
@@ -184,14 +182,7 @@ func _build_test_room() -> void:
 	sky.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_add(root, root, sky)
 
-	var terrain := TileMapLayer.new()
-	terrain.name = "Terrain"
-	terrain.tile_set = load(TILESET_PATH)
-	for cell: Vector2i in solid:
-		terrain.set_cell(cell, WORLD_SOURCE, _solid_atlas(cell, solid))
-	for cell: Vector2i in one_way:
-		terrain.set_cell(cell, PLATFORM_SOURCE, _platform_atlas(cell, one_way))
-	_add(root, root, terrain)
+	_add(root, root, LevelBuilder.build_terrain(solid, one_way, [0, ROOM_COLS - 1]))
 
 	var climbables := Node2D.new()
 	climbables.name = "Climbables"
@@ -216,13 +207,7 @@ func _build_test_room() -> void:
 		"LANDING": Vector2(552, 290), "PASSAGE": Vector2(546, 52),
 	}
 	for text: String in label_spots:
-		var label := Label.new()
-		label.name = text.replace("-", "") + "Label"
-		label.text = text
-		label.position = label_spots[text]
-		label.add_theme_font_size_override(&"font_size", 8)
-		label.add_theme_color_override(&"font_color", Color(0.1, 0.12, 0.2, 0.85))
-		_add(root, labels, label)
+		_add(root, labels, LevelBuilder.make_label(text, label_spots[text]))
 
 	var spawn_1 := Marker2D.new()
 	spawn_1.name = "SpawnP1"
@@ -249,47 +234,17 @@ func _build_test_room() -> void:
 	hud.name = "InputDebugHud"
 	_add(root, root, hud)
 
-	var packed := PackedScene.new()
-	var err := packed.pack(root)
-	if err != OK:
-		_report(ROOM_PATH, err)
-		return
-	_report(ROOM_PATH, ResourceSaver.save(packed, ROOM_PATH))
+	LevelBuilder.save_scene(root, ROOM_PATH)
 	root.free()
 
 
 func _fill(cells: Dictionary, x0: int, y0: int, x1: int, y1: int, value: Variant = true) -> void:
-	for y in range(y0, y1 + 1):
-		for x in range(x0, x1 + 1):
-			cells[Vector2i(x, y)] = value
-
-
-func _solid_atlas(cell: Vector2i, solid: Dictionary) -> Vector2i:
-	if cell.x == 0 or cell.x == ROOM_COLS - 1:
-		return WALL
-	return DIRT if solid.has(cell + Vector2i.UP) else GRASS_TOP
-
-
-## Chains platform pieces: a left cap starts each pair, a right cap ends it,
-## and an isolated cell uses the short single platform.
-func _platform_atlas(cell: Vector2i, one_way: Dictionary) -> Vector2i:
-	var row: int = one_way[cell]
-	var has_left := one_way.has(cell + Vector2i.LEFT)
-	var has_right := one_way.has(cell + Vector2i.RIGHT)
-	if not has_left and not has_right:
-		return Vector2i(0, row)
-	if not has_left or (has_right and cell.x % 2 == 0):
-		return Vector2i(1, row)
-	return Vector2i(2, row)
+	LevelBuilder.fill(cells, x0, y0, x1, y1, value)
 
 
 func _add(root: Node, parent: Node, child: Node) -> void:
-	parent.add_child(child)
-	child.owner = root
+	LevelBuilder.add(root, parent, child)
 
 
 func _report(path: String, err: Error) -> void:
-	if err == OK:
-		print("wrote ", path)
-	else:
-		push_error("failed to write %s: %s" % [path, error_string(err)])
+	LevelBuilder.report(path, err)

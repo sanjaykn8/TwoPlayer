@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="CameraConfig" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/cameras/camera_config.gd" id="1_cam"]
+
+[resource]
+script = ExtResource("1_cam")
+zoom = 1
+safe_margin = Vector2(48, 40)
+follow_offset = Vector2(0, -24)
+shared_deadzone = Vector2(12, 8)
+split_enter_ratio = 0.85
+split_exit_ratio = 0.55
+merge_hold_time = 0.25
+transition_duration = 0.3
+visibility_margin = Vector2(6, 4)
+target_body_size = Vector2(10, 18)
+orientation_hysteresis = 1.35
+orientation_hold_time = 0.35
+shared_follow_speed = 6.0
+split_follow_speed = 8.0
+snap_distance = 192.0
+divider_width = 2
+divider_color = Color(0.06, 0.06, 0.09, 1)

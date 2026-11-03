@@ -1,6 +1,7 @@
 # Manual Keyboard Test (Phase 1)
 
-Status: **pending**. To be performed by the project owner and a second player on the real keyboard.
+Status: **USER-REPORTED PASS** (before Phase 2). The keyboard manufacturer, model and layout were not supplied,
+so hardware verification is not independently confirmed. Re-run this procedure on any other keyboard.
 Automated tests cannot prove these results; they only cover Godot's handling of key events.
 
 ## Before you start

@@ -439,9 +439,10 @@ Always prioritize a stable playable game over rapidly generated content.
 | Phase | Status | Evidence |
 |---|---|---|
 | Phase 0: Existing Project Audit | Tested | `docs/AUDIT_REPORT.md` (2026-11-03) |
-| Phase 1: Core Project and Player Foundation | Implemented and auto-tested; **physical keyboard test pending** | `docs/PHASE_1_SUMMARY.md`, `docs/TEST_REPORT.md` (42/42 automated tests). Gate item "Test on the actual Windows keyboard" waits on `docs/MANUAL_KEYBOARD_TEST.md` |
-| Phase 2: Camera and Split-Screen | Not started | Waiting for authorisation |
-| Phases 3–12 | Not started | — |
+| Phase 1: Core Project and Player Foundation | Tested. Physical keyboard: **user-reported pass** (model and layout not supplied) | `docs/PHASE_1_SUMMARY.md`, `docs/TEST_REPORT.md`; commit `4d5c6b0` |
+| Phase 2: Camera and Split-Screen | Implemented and auto-tested (74/74 including Phase 1 regression); **manual camera tests pending** | `docs/PHASE_2_SUMMARY.md`, `docs/TEST_REPORT.md`, `docs/MANUAL_CAMERA_TEST.md` |
+| Phase 3: Combat and Health | Not started | Waiting for authorisation |
+| Phases 4–12 | Not started | — |
 
 Phase 1 task tracking:
 
@@ -462,3 +463,20 @@ Phase 1 task tracking:
 | Controlled pushing between players | Tested (automated) |
 | Initial health | Tested (automated) |
 | Basic animation state management | Implemented; jump/fall/crouch/climb use placeholder frames |
+
+Phase 2 task tracking:
+
+| Task | Status |
+|---|---|
+| Shared camera | Tested (automated); manual pending |
+| Midpoint tracking | Tested |
+| Distance-based split trigger (viewport-relative, plus visibility guard) | Tested |
+| Individual player cameras | Tested |
+| Vertical split mode (side by side) | Tested |
+| Horizontal split mode (stacked) | Tested |
+| Camera merge threshold | Tested |
+| Hysteresis (mode and orientation) | Tested |
+| Smooth transitions (seamless split, aligned merge) | Tested (math + rendered pixel comparison); manual pending |
+| HUD positioning in both modes | Debug overlay sits outside the rig and works in all modes; the real HUD is Phase 9 |
+| Level camera bounds | Tested |
+| Window resizing | Tested (rig layout + rendered run at 3 window sizes); manual pending |

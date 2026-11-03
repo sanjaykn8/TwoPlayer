@@ -1,7 +1,8 @@
 # Architecture
 
-Status: Phase 0 proposal, with **Phase 1 implemented**. Section 13 describes what
-exists now. Sections 3–12 remain the target design; where Phase 1 deviates, section 13 says so.
+Status: Phase 0 proposal, with **Phase 1 and Phase 2 implemented**. Section 7 (camera)
+and section 13 (players) describe what exists now. The rest of sections 3–12 remain the target
+design; where the implementation deviates, those sections say so.
 
 ## 1. Existing project (as audited 2026-11-03)
 
@@ -256,41 +257,107 @@ Per-level state in `Campaign`: `levels[level_key][persist_id] = {…}`. On level
 `PersistComponent` reads its entry and restores, or frees itself if it was consumed or
 defeated.
 
-## 7. Camera and split-screen
+## 7. Camera and split-screen (implemented in Phase 2)
+
+### Scene structure
 
 ```
-CameraRig (Control, full rect, inside a CanvasLayer below the HUD)
-├─ ViewA (SubViewportContainer, stretch) → SubViewport A (world_2d = shared) → Camera2D A
-└─ ViewB (SubViewportContainer, stretch) → SubViewport B (world_2d = shared) → Camera2D B
+<Room or gameplay scene> (Node)
+├─ Level (Node2D)                     moved into ViewA/Viewport/World by attach_world()
+├─ SplitScreenRig (Control, full rect, split_screen_rig.gd, process_physics_priority 100)
+│  ├─ ViewA (SubViewportContainer, stretch off)
+│  │  └─ Viewport (SubViewport)        owns the World2D: physics, rendering, level nodes
+│  │     ├─ World (Node2D)             ← the level lives here, exactly once
+│  │     └─ Camera (Camera2D)          Player One's camera (also the shared camera)
+│  ├─ ViewB (SubViewportContainer)     hidden in shared mode
+│  │  └─ Viewport (SubViewport)        world_2d = ViewA's World2D; contains ONLY its camera
+│  │     └─ Camera (Camera2D)          Player Two's camera
+│  └─ Divider (ColorRect)
+└─ HUD (CanvasLayer)                  outside the rig, drawn over both views
 ```
 
-Both SubViewports share the gameplay `World2D`. The world is rendered once per active
-view. That is cheap for 2D.
+- **One simulation.** All level nodes, knights and physics bodies exist once, inside view A's
+  world. View B borrows the same `World2D` and only renders it through a second camera. Tests
+  assert that there are exactly 2 knights, 1 terrain layer and 2 SubViewports, and that view B
+  contains only its camera.
+- **No cost when unused.** In shared mode view B is hidden and its render target is
+  `UPDATE_DISABLED`.
+- **Pixel art.** Each SubViewport sets `canvas_item_default_texture_filter = NEAREST` (sub-viewports
+  do not inherit the project default) and snaps 2D transforms and vertices to pixels. Camera
+  positions are rounded to whole pixels, and zoom is a fixed integer (1).
+- **Sizes.** The rig fills the root viewport, which is always 640×360 logical pixels because
+  the project stretch mode is `viewport` / `keep` / `integer`. The window scales that image by
+  whole numbers with letterboxing. The rig sets each SubViewport's size and its container's
+  size together (stretch off), so a layout change never shows a frame at the wrong size.
+  If the rig itself is resized, it re-lays out on `resized`.
+- **Cameras** run in `CAMERA2D_PROCESS_PHYSICS` (required by physics interpolation).
+  The rig moves them in `_physics_process` after the knights have moved
+  (`process_physics_priority = 100`). Any jump calls `reset_physics_interpolation()`.
 
-- **Shared mode:** ViewA fills the screen and follows the players' midpoint. ViewB is hidden
-  and its viewport set to `UPDATE_DISABLED`.
-- **Split mode:** both visible. Orientation comes from the angle of the P1→P2 vector:
-  mostly horizontal separation → left|right; mostly vertical → top/bottom. The angle
-  has its own hysteresis band so the orientation cannot flip on diagonals.
-- **Thresholds:** split when separation exceeds `enter` on either axis (axis-specific,
-  because the screen is 16:9). Merge only when below `exit` (< enter) on both axes for
-  `merge_hold` seconds. `enter` must be smaller than the distance at which either player
-  would leave the shared view (margin ≥ 1 player height). This guarantees that
-  neither player can leave the screen in shared mode.
-- **Transitions:** on split, both cameras start at the shared camera position and
-  ease toward their player. On merge, they ease to the midpoint before ViewB hides.
-  No zoom in v1 (non-integer zoom shimmers on pixel art). This is decision D-8.
-- **Limits:** each camera clamps to the level `Bounds`. Teleports (fall respawn, level
-  start) snap the camera with `reset_smoothing()`.
-- **Pixel-perfect:** base resolution 640×360 (decision D-7). Halves become 320×360 or
-  640×180, i.e. 20 tiles wide or 11 tiles tall.
-- **Parallax:** `Parallax2D` follows the viewport it is rendered in. That must be verified
-  for the second SubViewport sharing a World2D (risk R-8). The fallback is a per-view
-  background layer.
+### Modes (`SplitScreenRig.Mode`)
 
-HUD is a separate `CanvasLayer` on top of the rig: P1 status top-left, P2 top-right,
-coins and world/level top-centre, in every mode. Timed effects are listed under each
-player's health.
+| Mode | Screen | Camera A | Camera B |
+|---|---|---|---|
+| `SHARED` | A = 640×360 | Follows the knights' midpoint (plus `follow_offset`), with a dead zone and exponential smoothing, clamped to bounds | Idle, not rendered |
+| `SPLIT` | Side by side 320×360 + 320×360, or stacked 640×180 + 640×180 | Follows Player One | Follows Player Two |
+| `MERGING` | Same as split | Eases onto the left/top half of the upcoming shared view | Eases onto the right/bottom half |
+
+**Separation ratio.** `CameraMath.separation_ratio` divides |dx| and |dy| by the shared
+view's *safe region* (view size − 2 × `safe_margin`) = 544 × 280 px. The thresholds therefore
+follow the actual view size and zoom rather than fixed distances.
+
+- **Split** when max(ratio) > `split_enter_ratio` (0.85 → 462 px horizontally, 238 px
+  vertically). Also split at once if either knight's body comes within `visibility_margin`
+  of the shared view's edge. This guard covers camera lag, fast falls and teleports.
+- **Merge** when max(ratio) < `split_exit_ratio` (0.55 → 299 px and 154 px) continuously for
+  `merge_hold_time` (0.25 s). Then `MERGING` runs for `transition_duration` (0.3 s), and
+  the shared view takes over showing exactly the same pixels. If the knights separate
+  again during `MERGING`, the rig returns to `SPLIT`.
+- Between 0.55 and 0.85 nothing changes (hysteresis band). Tests confirm no layout change
+  while wandering inside the band, and exactly one switch under jitter at the split threshold.
+
+**Orientation.** A new split uses the dominant normalised axis: ratio.x ≥ ratio.y gives
+`SIDE_BY_SIDE` (vertical divider), otherwise `STACKED` (horizontal divider). While split, the
+other axis must exceed the current one by `orientation_hysteresis` (×1.35) for
+`orientation_hold_time` (0.35 s) before the layout changes.
+
+**Player identity.** Player One always uses view A (left or top). Player Two always uses view B
+(right or bottom), whatever their positions.
+
+**Seamless transitions.**
+- *Split:* each camera starts at `CameraMath.sub_view_center()` of the old shared centre,
+  so its half of the screen shows the same pixels as before. Verified on rendered frames:
+  0 changed pixels in the unaffected half. The cameras then ease toward their knights.
+- *Merge:* the reverse. The cameras line up with the halves of the upcoming shared view,
+  and then one shared camera replaces them.
+- *Crossed knights:* when the knights are on the "wrong" sides for their fixed views, lining
+  up would sweep each camera across the other knight, so the split or merge cuts instead.
+- *Teleports:* a target jump larger than `snap_distance` (192 px) cuts instead of sliding.
+- *Orientation change:* an instant re-layout; each camera keeps its centre.
+
+### Level bounds (`components/camera/camera_bounds.gd`)
+
+Each level contains one `CameraBounds` node (group `camera_bounds`). It defines either an
+explicit rectangle (`size`, starting at the node position) or `fit_to_tile_map` (the used
+rectangle of a TileMapLayer). `attach_world()` / `refresh_world()` find it. Every camera
+centre is clamped so its view stays inside the bounds (`CameraMath.clamp_center`). On an axis
+where the bounds are smaller than the view, the view is centred on the bounds. Without a
+`CameraBounds` node the cameras are unclamped.
+
+### Reuse in future levels
+
+A gameplay scene instantiates the rig and calls `rig.attach_world(level)`. The level needs:
+- the two knights (group `knights`, assigned to views by `player_id()`);
+- a `CameraBounds` node.
+
+After a respawn or any teleport, call `rig.snap_to_targets()`. All tuning lives in
+`resources/config/camera_config.tres`.
+
+### Not covered yet
+
+- **Parallax** (risk R-8) is untested because no `Parallax2D` layer exists yet.
+- **Audio:** the 2D audio listener will be view A's (Phase 9).
+- **HUD:** the real HUD (Phase 9) will sit outside the rig in its own CanvasLayer, as the debug overlays do now.
 
 ## 8. Save system
 
@@ -496,3 +563,5 @@ Invulnerability, shields and damage kinds are Phase 3.
 | Run one test file | same, plus `-- test_logic` (substring filter) |
 | Regenerate Phase 1 content | `... --headless --path . --script res://tools/build_phase1_content.gd -- content` |
 | Play the test room in its own window | `Godot_v4.7.2-stable_win64.exe --path .` |
+| Play the camera test room | `Godot_v4.7.2-stable_win64.exe --path . res://scenes/dev/camera_test_room.tscn` |
+| Regenerate Phase 2 content | `... --headless --path . --script res://tools/build_phase2_content.gd` |

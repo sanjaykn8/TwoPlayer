@@ -27,7 +27,7 @@ Status key: **Implemented** (code exists) · **Auto-tested** (automated test pas
 | Attack input and direction resolver (no combat) | Yes | Yes | **Pending user test** |
 | Animations: idle, run, hurt (real); jump, fall, crouch, climb (placeholders) | Yes | Frame-mapping test | Visual check of captured frames only |
 | Development test room + debug HUD | Yes | Loads and instantiates in tests | **Pending user test** |
-| Physical keyboard / ghosting / Alt behaviour | n/a | **Cannot be automated** | **Pending user test** |
+| Physical keyboard / ghosting / Alt behaviour | n/a | **Cannot be automated** | **User-reported pass** (model and layout not supplied) |
 
 ## 2. New files
 

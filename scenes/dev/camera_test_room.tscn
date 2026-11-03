@@ -1,0 +1,15 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/dev/camera_test_room.gd" id="1_r0u73"]
+[ext_resource type="PackedScene" path="res://scenes/dev/camera_test_level.tscn" id="2_4v78f"]
+[ext_resource type="PackedScene" path="res://scenes/camera/split_screen_rig.tscn" id="3_byego"]
+[ext_resource type="PackedScene" path="res://scenes/dev/camera_debug_hud.tscn" id="4_t1msf"]
+
+[node name="CameraTestRoom" type="Node" unique_id=1845121079]
+script = ExtResource("1_r0u73")
+
+[node name="Level" parent="." unique_id=1054838476 instance=ExtResource("2_4v78f")]
+
+[node name="SplitScreenRig" parent="." unique_id=1388077880 instance=ExtResource("3_byego")]
+
+[node name="CameraDebugHud" parent="." unique_id=1023951214 instance=ExtResource("4_t1msf")]
