@@ -1,0 +1,434 @@
+# DEVELOPMENT ROADMAP
+## Two-Player Cooperative Platformer
+
+## Development Philosophy
+
+Build a complete playable foundation first.
+
+Do not begin large-scale level production until movement, camera, combat, enemy AI, health, collectibles, death and persistence are working.
+
+Every phase must produce a working and testable result.
+
+---
+
+# PHASE 0 — Existing Project Audit
+
+### Objectives
+Understand the existing Godot project and downloaded asset bundle.
+
+### Tasks
+- Inspect project.godot.
+- Inspect the current Godot version.
+- Inventory all extracted assets.
+- Identify character sprites.
+- Identify slime sprites.
+- Identify tilesets.
+- Inspect animations and audio.
+- Identify suitable collectible assets.
+- Check existing scripts and scenes.
+- Create an asset catalog.
+- Establish a clean project architecture.
+- Initialize version control if appropriate.
+
+### Deliverables
+- ASSET_CATALOG.md.
+- ARCHITECTURE.md.
+- Updated project structure proposal.
+- Development task checklist.
+
+### Completion gate
+No unknown asset paths or undocumented existing systems should be treated as usable resources.
+
+# PHASE 1 — Core Project and Player Foundation
+
+### Objectives
+Get both knights moving in the same playable scene.
+
+### Tasks
+- Configure project resolution.
+- Configure pixel-art rendering.
+- Create reusable player scene.
+- Configure Player One input.
+- Configure Player Two input.
+- Implement horizontal movement.
+- Implement jumping.
+- Implement variable-height jumping if supported.
+- Implement crouching.
+- Implement one-way platform dropping.
+- Implement ladder climbing.
+- Implement player collisions.
+- Implement controlled pushing between players.
+- Configure initial health.
+- Add basic animation state management.
+
+### Required controls
+Player One: WASD + V.
+
+Player Two: Arrows + Alt.
+
+### Completion gate
+Both players must move, jump, climb and interact simultaneously without input interference.
+
+Test on the actual Windows keyboard.
+
+# PHASE 2 — Camera and Split-Screen
+
+### Objectives
+Implement a camera that supports both nearby and distant players.
+
+### Tasks
+- Shared camera.
+- Midpoint tracking.
+- Distance-based split trigger.
+- Individual player cameras.
+- Vertical split mode.
+- Horizontal split mode.
+- Camera merge threshold.
+- Hysteresis.
+- Smooth transitions.
+- HUD positioning in both modes.
+
+### Completion gate
+Players must not disappear from view when separated. Camera switching must not flicker.
+
+# PHASE 3 — Combat and Health
+
+### Objectives
+Create reliable directional combat.
+
+### Tasks
+- Knife model or sprite.
+- Sword-like swing animation.
+- Last-movement-based attack direction.
+- Four cardinal-direction hitboxes.
+- Attack cooldown.
+- Attack animation timing.
+- Single-hit-per-swing protection.
+- Health component.
+- Damage processing.
+- Temporary post-hit immunity.
+- Death handling.
+
+### Completion gate
+Both knights can attack independently in all four supported directions.
+
+Health must never become negative, and multiple damage events from one collision must not occur accidentally.
+
+# PHASE 4 — Slime Enemies and Enemy AI
+
+### Objectives
+Build the complete enemy foundation.
+
+### Tasks
+- Reusable slime base scene.
+- Green slime.
+- Purple slime.
+- Patrol movement.
+- Detection area.
+- Player detection.
+- Chase state.
+- Twice-normal chase speed.
+- Contact damage.
+- Stagger thresholds.
+- Stagger animations.
+- Vulnerability window.
+- Recovery.
+- Enemy death.
+- Coin drop.
+
+### Completion gate
+Verify:
+- Green slime staggered after two base-power hits.
+- Purple slime staggered after four base-power hits.
+- Stagger duration is at least ten seconds.
+- One additional melee hit kills a staggered slime.
+- Enemy recovery resets the stagger counter.
+- Each defeated slime drops four to six coins.
+
+# PHASE 5 — Collectibles and Progression
+
+### Objectives
+Implement all collectible systems.
+
+### Tasks
+- Coin collection.
+- Shared coin counter.
+- Independent 10% healing lottery.
+- Green health fruit.
+- Yellow protective fruit.
+- Red attack-range fruit.
+- Purple poison fruit.
+- Green permanent jar.
+- Red permanent jar.
+- Yellow timed jar.
+- Blue permanent jar.
+- Five-second random power tiles.
+- Collection persistence.
+- Effect timers.
+- Player-specific effects.
+
+### Completion gate
+Test every collectible independently, including interactions between health upgrades, healing, attack power and poison.
+
+No collectible should apply its effect twice because of duplicate collision events.
+
+# PHASE 6 — Hazards and Platforming Mechanics
+
+### Objectives
+Make the environment dangerous and mechanically interesting.
+
+### Tasks
+- Spikes.
+- Hot ground.
+- Lava.
+- Falling boundaries.
+- Safe respawn positions.
+- Moving platforms.
+- Timed platforms.
+- Disappearing platforms.
+- Collapsing platforms.
+- Narrow passages.
+- Climbing areas.
+- Precision jumps.
+
+### Completion gate
+Each hazard must apply its specified consequence exactly once per damage event.
+
+Falling must respawn the affected player with one health point removed.
+
+Lava must cause immediate campaign death.
+
+# PHASE 7 — Cooperative Puzzle Systems
+
+### Objectives
+Build the mechanics that make the game genuinely cooperative.
+
+### Tasks
+- Pressure plates.
+- Simultaneous activation.
+- Switch-controlled doors.
+- Timed gates.
+- Separate paths.
+- Moving-platform coordination.
+- Enemy distraction puzzles.
+- Multiple targets.
+- Shared mechanisms.
+- Environmental clues.
+- Optional sacrifice/risk mechanics.
+
+### Completion gate
+Every puzzle must have a valid solution with two players.
+
+Test:
+- Players arriving in different orders.
+- One player dying during a puzzle.
+- Players moving away from activated switches.
+- Pausing during timed mechanisms.
+- Reloading after puzzle progress is saved.
+
+Prevent softlocks.
+
+# PHASE 8 — Death, Campaign Reset and Save System
+
+### Objectives
+Make progression reliable while preserving the unforgiving death rule.
+
+### Tasks
+- Four save slots.
+- New campaign.
+- Continue campaign.
+- Local save data.
+- Save versioning.
+- Save-on-exit.
+- Automatic milestone saves.
+- Player-state serialization.
+- Enemy-state serialization.
+- Collectible-state serialization.
+- Puzzle-state serialization.
+- Timed effect restoration.
+- Save validation.
+- Invalid-save handling.
+- Full campaign reset.
+- Fresh campaign creation after team wipe.
+
+### Completion gate
+Perform these tests:
+
+1. Start a campaign.
+2. Collect coins and permanent upgrades.
+3. Complete multiple levels.
+4. Activate puzzles and mechanisms.
+5. Save and quit.
+6. Relaunch the game.
+7. Continue the same campaign.
+8. Verify all saved states.
+9. Die with either knight.
+10. Verify that the entire campaign resets.
+11. Confirm that the old campaign cannot be resumed through Continue.
+12. Confirm the other three save slots remain untouched.
+
+# PHASE 9 — Game Interface and Audio
+
+### Objectives
+Make the game understandable and complete.
+
+### Tasks
+- Main menu.
+- Four-slot selection.
+- New Game.
+- Continue.
+- Settings.
+- Pause.
+- Player health displays.
+- Coin display.
+- Timed-effect indicators.
+- World and level indicator.
+- Game-over screen.
+- Victory screen.
+- Controls guide.
+- Music.
+- Sound effects.
+- Audio settings.
+
+### Completion gate
+Every menu and interface element must work using the keyboard.
+
+HUD elements must remain readable in shared and split-screen modes.
+
+# PHASE 10 — World and Level Production
+
+### Objectives
+Build the entire campaign using validated mechanics.
+
+### Campaign structure
+
+Six worlds, four main levels per world.
+
+Total: 24 main levels.
+
+Each world should contain:
+- A distinct visual environment.
+- New combinations of hazards.
+- Increasing enemy difficulty.
+- New cooperative puzzle variations.
+- Hidden collectibles.
+- Difficult optional paths.
+- Environmental clues.
+- An exit to the next stage.
+
+Include optional boss encounters and reward areas.
+
+### Level progression
+
+World 1:
+Teach the basic mechanics without making the opening trivial.
+
+World 2:
+Introduce enemy combinations and moving-platform challenges.
+
+World 3:
+Introduce complex mechanisms and separated routes.
+
+World 4:
+Introduce increasingly dangerous environmental hazards.
+
+World 5:
+Combine demanding platforming, combat and multi-stage cooperative puzzles.
+
+World 6:
+Use the hardest combinations of previously introduced mechanics.
+
+### Completion gate
+All 24 levels must be playable from beginning to end.
+
+Target a measured 90–120-minute successful first playthrough.
+
+Do not inflate duration using excessive empty corridors, repetitive enemy encounters or artificial waiting.
+
+# PHASE 11 — Balancing and Game Testing
+
+### Objectives
+Test the game as a complete campaign.
+
+### Tasks
+- Test all input combinations.
+- Test keyboard ghosting.
+- Test both players in combat simultaneously.
+- Test split-screen transitions.
+- Test all enemy thresholds.
+- Test damage and invulnerability.
+- Test fruit and jar combinations.
+- Test random power effects.
+- Test difficult platform sequences.
+- Test cooperative puzzle completion.
+- Test every exit.
+- Test all save slots.
+- Test campaign reset.
+- Test restart after death.
+- Test invalid and missing save data.
+- Test game exit during gameplay.
+- Test game exit during transitions.
+- Test performance in crowded areas.
+
+### Completion gate
+No critical or major gameplay bugs may remain.
+
+There must be no known campaign-blocking softlocks.
+
+# PHASE 12 — Export and Final Validation
+
+### Objectives
+Prepare the finished Windows game.
+
+### Tasks
+- Configure Windows export.
+- Verify all assets are included.
+- Verify scene dependencies.
+- Validate save locations.
+- Verify offline execution.
+- Test a fresh installation.
+- Test without the Godot editor open.
+- Test after restarting Windows.
+- Create a clean release build.
+- Write a short user manual.
+
+### Deliverables
+- Windows executable.
+- Exported game data.
+- Four-slot save system.
+- Final test report.
+- Known-issues document.
+- Basic controls and gameplay manual.
+
+### Final completion gate
+
+A fresh player must be able to:
+1. Launch the exported game.
+2. Start a new two-player campaign.
+3. Play all main worlds.
+4. Save and resume.
+5. Experience the full team-wipe mechanic.
+6. Complete the final level.
+7. Play without internet connectivity.
+
+Do not declare release readiness until these requirements have been verified.
+
+---
+
+# DEVELOPMENT TRACKING
+
+Maintain a checklist of every task.
+
+For each task, record:
+- Not started.
+- In progress.
+- Implemented.
+- Tested.
+- Failed.
+- Blocked.
+
+Every completed task must have a corresponding validation result.
+
+Do not mark a whole phase complete merely because its scripts exist.
+
+Always prioritize a stable playable game over rapidly generated content.
