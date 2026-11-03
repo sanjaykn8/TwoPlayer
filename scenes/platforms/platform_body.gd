@@ -25,6 +25,8 @@ const OCCUPANT_MASK := SpaceQuery.OCCUPANT_MASK
 	set(value):
 		one_way = value
 		_rebuild()
+## Stable id within its level (Phase 8 saves). Empty: its live state is not saved.
+@export var save_id := ""
 ## platforms.png row: 0 grass, 1 sand/wood, 2 orange, 3 ice.
 @export_range(0, 3) var material_row := 1:
 	set(value):
@@ -64,6 +66,28 @@ func set_collision_enabled(on: bool) -> void:
 func is_occupied() -> bool:
 	var rect := Rect2(global_position - Vector2.ONE, Vector2(width_px(), HEIGHT) + Vector2(2, 2))
 	return SpaceQuery.rect_occupied(get_world_2d(), rect, OCCUPANT_MASK, [get_rid()])
+
+
+## The platform's solid space below its top surface (global). A knight standing ON the
+## platform does not intersect it; one inside it does.
+func interior_rect() -> Rect2:
+	return Rect2(global_position + Vector2(0, 1), Vector2(width_px(), HEIGHT - 1))
+
+
+## Restoring a save found someone inside this platform: become solid only once they leave
+## (timed and collapsing platforms override this; others cannot vanish).
+func fade_in_safely() -> void:
+	pass
+
+
+## Live state for saves (subclasses). Empty: nothing to save.
+func capture_live() -> Dictionary:
+	return {}
+
+
+## Applies a captured live state (subclasses validate their own fields).
+func apply_live(_data: Dictionary) -> void:
+	pass
 
 
 func _rebuild() -> void:

@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scenes/campaign/campaign_game.gd" id="1_cg"]
+[ext_resource type="PackedScene" path="res://scenes/camera/split_screen_rig.tscn" id="2_rig"]
+
+[node name="CampaignGame" type="Node"]
+script = ExtResource("1_cg")
+
+[node name="SplitScreenRig" parent="." instance=ExtResource("2_rig")]

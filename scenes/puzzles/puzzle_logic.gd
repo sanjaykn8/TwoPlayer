@@ -246,6 +246,18 @@ func _enter(next: State) -> void:
 	queue_redraw()
 
 
+## Only an ACTIVE unlatched lock has temporary state worth keeping; partial SYNC/SEQUENCE
+## attempts are not saved and restart after loading.
+func capture_live() -> Dictionary:
+	return {"state": state, "time": time_in_state} if state == State.ACTIVE and not latch else {}
+
+
+func apply_live(data: Dictionary) -> void:
+	if int(data.get("state", -1)) == State.ACTIVE and not latch and (mode == Mode.SYNC or mode == Mode.SEQUENCE):
+		_enter(State.ACTIVE)
+		time_in_state = clampf(float(data.get("time", 0.0)), 0.0, active_time)
+
+
 func _save_state() -> Dictionary:
 	return {"completed": true} if state == State.COMPLETED else {}
 

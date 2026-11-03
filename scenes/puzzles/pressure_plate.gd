@@ -139,6 +139,18 @@ func _evaluate() -> void:
 		_set_active(false)
 
 
+func capture_live() -> Dictionary:
+	return {"time_left": time_left, "pressed": pressed} if mode == Mode.TIMED and _active else {}
+
+
+func apply_live(data: Dictionary) -> void:
+	if mode != Mode.TIMED or not data.has("time_left"):
+		return
+	time_left = clampf(float(data.time_left), 0.0, active_time)
+	pressed = bool(data.get("pressed", false))
+	_set_active(time_left > 0.0)
+
+
 ## A plate needs a living knight standing on it (TriggerZone overrides this).
 func _knight_counts(knight: Knight) -> bool:
 	return not knight.is_dead() and knight.is_on_floor()

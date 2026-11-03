@@ -88,6 +88,25 @@ func _enter(next: State) -> void:
 	state_changed.emit(next)
 
 
+func capture_live() -> Dictionary:
+	return {"state": state, "time": time_in_state}
+
+
+func apply_live(data: Dictionary) -> void:
+	var next := int(data.get("state", State.ACTIVE))
+	if next < 0 or next >= State.size():
+		return
+	_enter(next as State)
+	time_in_state = clampf(float(data.get("time", 0.0)), 0.0, 3600.0)
+	_update_visual()
+
+
+func fade_in_safely() -> void:
+	if collision_enabled():
+		_enter(State.REACTIVATING)
+		_update_visual()
+
+
 func _update_visual() -> void:
 	visual_tint = Color.WHITE
 	match state:

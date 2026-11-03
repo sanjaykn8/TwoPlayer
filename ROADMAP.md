@@ -446,8 +446,9 @@ Always prioritize a stable playable game over rapidly generated content.
 | Phase 5: Collectibles and Progression | Implemented and auto-tested (178/178 including Phase 1–4 regression); **manual collectible tests pending** | `docs/PHASE_5_SUMMARY.md`, `docs/TEST_REPORT.md`, `docs/MANUAL_COLLECTIBLE_TEST.md` |
 | Phase 6: Hazards and Platforming Mechanics | Implemented and auto-tested (229/229 including Phase 1–5 regression); **manual hazard tests pending** | `docs/PHASE_6_SUMMARY.md`, `docs/TEST_REPORT.md`, `docs/MANUAL_HAZARD_TEST.md` |
 | Phase 7: Cooperative Puzzle Systems | Implemented and auto-tested (296/296 including Phase 1–6 regression); **manual puzzle tests pending** | `docs/PHASE_7_SUMMARY.md`, `docs/TEST_REPORT.md`, `docs/MANUAL_PUZZLE_TEST.md` |
-| Phase 8: Death, Campaign Reset and Save System | Not started | Waiting for authorisation |
-| Phases 9–12 | Not started | — |
+| Phase 8: Death, Campaign Reset and Save System | Implemented and auto-tested (345/345 including Phase 1–7 regression); **manual save tests pending** | `docs/PHASE_8_SUMMARY.md`, `docs/TEST_REPORT.md`, `docs/MANUAL_SAVE_TEST.md` |
+| Phase 9: Game Interface and Audio | Not started | Waiting for authorisation |
+| Phases 10–12 | Not started | — |
 
 Phase 1 task tracking:
 
@@ -579,3 +580,21 @@ Phase 7 task tracking:
 | Players moving away from activated switches | Tested |
 | Pausing during timed mechanisms | Tested |
 | Reloading after puzzle progress is saved | Tested (room reload and snapshot restore; disk saving is Phase 8) |
+
+Phase 8 task tracking:
+
+| Task | Status |
+|---|---|
+| Four independent save slots | Tested |
+| Slot metadata | Tested |
+| Versioned save schema and validation | Tested |
+| Player, enemy, collectible, coin, puzzle and platform state | Tested |
+| Timed effects paused while closed | Tested |
+| Milestone autosaves | Tested |
+| Save on normal exit | Tested (real child process); manual window-close pending |
+| Atomic writes, backup and recovery | Tested (fault injection) |
+| Team wipe from either knight | Tested |
+| Full run reset (both knights, coins, items, upgrades, enemies, puzzles) | Tested |
+| Old campaign invalidation | Tested |
+| Race conditions | Tested |
+| Game-over screen and slot UI | Not started (Phase 9) |

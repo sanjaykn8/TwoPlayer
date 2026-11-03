@@ -85,6 +85,21 @@ func _physics_process(delta: float) -> void:
 	position = start_position + travel * progress
 
 
+func capture_live() -> Dictionary:
+	return {"progress": progress, "direction": direction, "pause_left": _pause_left,
+		"running": running, "target": target_progress}
+
+
+func apply_live(data: Dictionary) -> void:
+	progress = clampf(float(data.get("progress", 0.0)), 0.0, 1.0)
+	direction = 1 if int(data.get("direction", 1)) >= 0 else -1
+	_pause_left = clampf(float(data.get("pause_left", 0.0)), 0.0, 60.0)
+	running = bool(data.get("running", true))
+	target_progress = clampf(float(data.get("target", -1.0)), -1.0, 1.0)
+	position = start_position + travel * progress
+	reset_physics_interpolation()
+
+
 func _approach_target(delta: float) -> void:
 	var length := travel.length()
 	if length <= 0.0 or speed <= 0.0 or progress == target_progress:

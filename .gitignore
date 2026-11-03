@@ -17,6 +17,13 @@ logs/
 # Local save data must never live in the repository (saves go to %APPDATA%/TwoKnightCoop/)
 /saves/
 *.save
+# Save-slot helper files and test save folders (they live in %APPDATA%, never here)
+slot_*.bak
+slot_*.tmp
+slot_*.dead
+slot_*.corrupt
+test_saves*/
+saves_dev/
 
 # Sensitive / machine-local files
 .env

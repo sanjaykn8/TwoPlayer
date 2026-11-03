@@ -1,0 +1,13 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/dev/save_test_room.gd" id="1_83ivm"]
+[ext_resource type="PackedScene" path="res://scenes/camera/split_screen_rig.tscn" id="2_het2r"]
+[ext_resource type="PackedScene" path="res://scenes/dev/save_debug_hud.tscn" id="3_i3nwa"]
+
+[node name="SaveTestRoom" type="Node" unique_id=1744522885]
+script = ExtResource("1_83ivm")
+save_dir = "user://saves_dev/"
+
+[node name="SplitScreenRig" parent="." unique_id=963277011 instance=ExtResource("2_het2r")]
+
+[node name="SaveDebugHud" parent="." unique_id=2071766703 instance=ExtResource("3_i3nwa")]

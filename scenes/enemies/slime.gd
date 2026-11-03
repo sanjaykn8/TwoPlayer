@@ -52,6 +52,9 @@ static var debug_visible := false
 @export var start_facing_right := false
 ## Free the node after the death animation. Tests can keep it for inspection.
 @export var free_on_death := true
+## Stable id within its level (Phase 8 saves). Empty: not saved (development rooms).
+## A slime with an id that the run recorded as defeated removes itself when its level loads.
+@export var save_id := ""
 
 var state := State.IDLE
 ## -1 left, 1 right.
@@ -94,6 +97,10 @@ var _ray := PhysicsRayQueryParameters2D.new()
 
 func _ready() -> void:
 	add_to_group(GROUP)
+	if save_id != "" and RunState.current().puzzles.has_state(SaveIds.level_key(self), SaveIds.ENEMY_PREFIX + save_id):
+		set_physics_process(false)
+		queue_free()  # defeated earlier in this run
+		return
 	if stats == null:
 		push_error("%s: Slime needs a SlimeStats resource" % name)
 		set_physics_process(false)
@@ -420,6 +427,8 @@ func _die() -> void:
 	_death_left = DEATH_TIME
 	alert_label.visible = false
 	sprite.play(&"hurt")
+	if save_id != "":
+		RunState.current().puzzles.set_state(SaveIds.level_key(self), SaveIds.ENEMY_PREFIX + save_id, {"defeated": true})
 	drop_result = coin_dropper.drop(global_position + Vector2(0, -6), self, get_parent())
 	state_changed.emit(previous, State.DEAD)
 	defeated.emit(self, drop_result)
@@ -439,6 +448,52 @@ func _update_death(delta: float) -> void:
 			queue_free()
 		else:
 			set_physics_process(false)
+
+
+# --- Save state (Phase 8) ----------------------------------------------------------
+
+## Live state of a living slime. Targets are never saved: they are re-sensed after loading.
+func save_state() -> Dictionary:
+	return {
+		"type": scene_file_path.get_file().get_basename(),
+		"x": global_position.x, "y": global_position.y,
+		"facing": facing, "home_x": home_x,
+		"stagger_progress": stagger.progress,
+		"staggered": stagger.staggered,
+		"stagger_left": stagger.time_left,
+		"poison_left": poison.remaining,
+	}
+
+
+## Validates, then applies a saved live state. Returns false (and changes nothing) on bad data.
+func restore_state(data: Dictionary) -> bool:
+	for key in ["x", "y", "facing", "home_x", "stagger_progress", "staggered", "stagger_left", "poison_left"]:
+		if not data.has(key):
+			return false
+	var left := float(data.stagger_left)
+	var progress := int(data.stagger_progress)
+	var poison_left := float(data.poison_left)
+	if left < 0.0 or left > stagger.duration + 0.01 or progress < 0 or progress > 99 or poison_left < 0.0 or poison_left > 60.0:
+		return false
+	global_position = Vector2(float(data.x), float(data.y))
+	velocity = Vector2.ZERO
+	facing = 1 if int(data.facing) >= 0 else -1
+	home_x = float(data.home_x)
+	_set_target(null)
+	_candidates.clear()
+	stagger.progress = progress
+	poison.clear()
+	if bool(data.staggered) and left > 0.0:
+		_enter(State.STAGGERED)  # clears poison, as a fresh stagger does
+		stagger.staggered = true
+		stagger.time_left = left
+	else:
+		stagger.staggered = false
+		stagger.time_left = 0.0
+		poison.apply(poison_left)
+		_enter(State.IDLE, stats.idle_time)
+	reset_physics_interpolation()
+	return true
 
 
 # --- Contact damage -----------------------------------------------------------------

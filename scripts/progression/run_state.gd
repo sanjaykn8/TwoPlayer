@@ -19,7 +19,8 @@ signal item_collected(id: String, player_id: int, kind: String)
 signal restored
 
 ## 2: adds "puzzles" (a version-1 snapshot without it restores with no puzzle progress).
-const VERSION := 2
+## 3: adds "campaign" (older snapshots keep the current campaign position).
+const VERSION := 3
 const PROGRESSION_CONFIG := "res://resources/config/progression_config.tres"
 const KNIGHT_CONFIG := "res://resources/config/knight_config.tres"
 const COMBAT_CONFIG := "res://resources/config/combat_config.tres"
@@ -35,6 +36,8 @@ var collected := {}
 var coin_rng := RandomNumberGenerator.new()
 ## Saved puzzle states and live puzzle registration for this run.
 var puzzles := PuzzleRegistry.new()
+## Campaign position, completed levels, play time and the run's unique id.
+var campaign := CampaignState.new()
 
 var _players := {}
 
@@ -111,7 +114,7 @@ func snapshot() -> Dictionary:
 	for id in PLAYER_IDS:
 		players[str(id)] = _players[id].snapshot()
 	return {"version": VERSION, "coins": coins, "collected": items, "players": players,
-		"puzzles": puzzles.snapshot()}
+		"puzzles": puzzles.snapshot(), "campaign": campaign.snapshot()}
 
 
 ## Restores a snapshot. Everything is validated before anything changes; returns false
@@ -140,11 +143,15 @@ func restore(data: Variant) -> bool:
 		return false
 	if not PuzzleRegistry.is_valid_snapshot(puzzle_data):
 		return false
+	if int(data.version) >= 3 and not CampaignState.is_valid_snapshot(data.get("campaign")):
+		return false
 	for id in PLAYER_IDS:
 		_players[id].restore(data.players[str(id)])
 	coins = coin_total
 	collected = items
 	puzzles.restore(puzzle_data)
+	if int(data.version) >= 3:
+		campaign.restore(data.campaign)
 	coins_changed.emit(coins)
 	restored.emit()
 	return true

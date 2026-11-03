@@ -222,6 +222,23 @@ func _set_solid(on: bool) -> void:
 		_shape.set_deferred(&"disabled", not on)
 
 
+func capture_live() -> Dictionary:
+	if mode == Mode.LATCH or state == State.CLOSED:
+		return {}
+	return {"open": true, "time_left": time_left}
+
+
+## Restores an open FOLLOW/TIMED gate with its remaining time; it then closes through the
+## normal safe path (waiting for a clear doorway).
+func apply_live(data: Dictionary) -> void:
+	if mode == Mode.LATCH or not data.get("open", false):
+		return
+	_snap_open()
+	time_left = clampf(float(data.get("time_left", 0.0)), 0.0, maxf(open_time, close_delay))
+	if mode == Mode.TIMED and time_left <= warning_time:
+		_enter(State.WARNING)
+
+
 func _save_state() -> Dictionary:
 	return {"open": true} if mode == Mode.LATCH and _latched else {}
 

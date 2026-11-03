@@ -153,6 +153,18 @@ static func _direction_flag(direction: Vector2) -> int:
 	return DIR_UP if direction.y < 0.0 else DIR_DOWN
 
 
+func capture_live() -> Dictionary:
+	return {"active": _active, "time_left": time_left, "player": last_player} if mode == Mode.MOMENTARY and _active else {}
+
+
+func apply_live(data: Dictionary) -> void:
+	if mode != Mode.MOMENTARY or not data.get("active", false):
+		return
+	last_player = int(data.get("player", 0))
+	time_left = clampf(float(data.get("time_left", 0.0)), 0.0, active_time)
+	_set_active(time_left > 0.0)
+
+
 func _save_state() -> Dictionary:
 	if mode == Mode.MOMENTARY or not _active:
 		return {}

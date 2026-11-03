@@ -11,10 +11,14 @@ const FRAMES := 12
 ## Coins that somehow fall far below any level are removed.
 const LOST_Y := 4000.0
 
+## Stable save id ("<enemy>_coin_<n>"); WorldSnapshot gives unnamed coins one when saving.
+var save_id := ""
+
 var _spin := 0.0
 var _resting := false
 
 @onready var sprite: Sprite2D = $Sprite
+@onready var pickup: CoinPickup = $Pickup
 
 
 func _ready() -> void:
@@ -46,3 +50,21 @@ func _process(delta: float) -> void:
 
 func is_resting() -> bool:
 	return _resting
+
+
+func is_collected() -> bool:
+	return pickup.claimed
+
+
+func save_state() -> Dictionary:
+	return {"id": save_id, "x": global_position.x, "y": global_position.y,
+		"vx": velocity.x, "vy": velocity.y, "resting": _resting, "delay": maxf(pickup.pickup_delay, 0.0)}
+
+
+## Applies a saved state to a freshly created coin (before or right after it enters the tree).
+func restore_state(data: Dictionary) -> void:
+	save_id = str(data.id)
+	position = Vector2(float(data.x), float(data.y))
+	velocity = Vector2(float(data.vx), float(data.vy))
+	_resting = bool(data.resting)
+	($Pickup as CoinPickup).pickup_delay = float(data.delay)

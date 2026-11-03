@@ -52,6 +52,10 @@ func _spawn(result: CoinDropResult, container: Node) -> void:
 	for i in result.count:
 		var coin := coin_scene.instantiate() as Node2D
 		coin.position = result.position
+		# Stable save id from the source's own save id (Phase 8): "<enemy>_coin_<n>".
+		var source_id := str(result.source.get(&"save_id")) if result.source != null and &"save_id" in result.source else ""
+		if source_id != "" and &"save_id" in coin:
+			coin.set(&"save_id", "%s_coin_%d" % [source_id, i])
 		# Fan the coins out evenly; the spread is deterministic so it never depends on luck.
 		var t := 0.5 if result.count == 1 else float(i) / float(result.count - 1)
 		coin.set(&"velocity", Vector2(lerpf(-70.0, 70.0, t), -150.0 - 20.0 * float(i % 2)))

@@ -665,3 +665,16 @@ Where a decision refines an earlier section, this section is authoritative.
 - **Clues** are one or two short lines on signposts that become readable as a knight approaches.
 - **Progress.** Completed locks, latched gates and switches are remembered for the current run
   (and will be saved in Phase 8); a new run (team wipe) resets them.
+
+**Saving and team death (Phase 8, 2026-11-03)** (refines sections 11 and 12):
+- **Four slots**, each its own campaign, stored in `%APPDATA%\TwoKnightCoop\saves\`. A slot
+  can be empty, hold a campaign, be recovered from its backup, be damaged (never loaded or
+  replaced silently), or have lost its campaign to a team wipe.
+- **Automatic saving:** at save-point flags, when a cooperative lock is completed, when a new
+  level starts, when the campaign ends, and when the window is closed normally. Timed effects
+  keep the seconds they had when the game closed.
+- **Quitting is not dying.** Closing the window saves and resumes exactly where the knights were.
+- **Team death:** when either knight dies (any cause), the run is lost for both at once. The
+  world freezes briefly, then a completely new run starts at the first level (3/3 health, power
+  1, no upgrades, no coins, every item, enemy and puzzle back) and is saved. The lost run can
+  never be loaded again, not even by quitting during the reset. Other slots are untouched.

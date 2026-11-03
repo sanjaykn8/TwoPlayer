@@ -40,16 +40,9 @@ var _scope_key := ""
 var _registry: PuzzleRegistry
 
 
-## The level id puzzle states of `node` are stored under.
+## The level id puzzle states of `node` are stored under (see SaveIds.level_key).
 static func level_id_for(node: Node) -> String:
-	var at := node.get_parent()
-	while at != null:
-		if at.has_meta(&"level_id"):
-			return str(at.get_meta(&"level_id"))
-		if at.scene_file_path != "":
-			return at.scene_file_path
-		at = at.get_parent()
-	return ""
+	return SaveIds.level_key(node)
 
 
 func _enter_tree() -> void:
@@ -105,6 +98,16 @@ func restore_saved_state() -> void:
 
 func _save_state() -> Dictionary:
 	return {}
+
+
+## Temporary live state for a full save (timers, momentary lights). Empty: nothing temporary.
+## Saved and restored only by WorldSnapshot, never written to the run's puzzle registry.
+func capture_live() -> Dictionary:
+	return {}
+
+
+func apply_live(_data: Dictionary) -> void:
+	pass
 
 
 func _apply_saved_state(_state: Dictionary) -> void:

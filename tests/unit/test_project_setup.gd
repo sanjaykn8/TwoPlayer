@@ -52,7 +52,8 @@ func test_save_directory_identity() -> void:
 	assert_true(DirAccess.dir_exists_absolute("user://saves"), "user://saves exists")
 	var project_dir := ProjectSettings.globalize_path("res://")
 	assert_false(SavePaths.absolute_save_dir().begins_with(project_dir), "saves are outside the project folder")
-	assert_eq(SavePaths.slot_path(4), "user://saves/slot_4.json", "slot path format")
+	assert_eq(SavePaths.slot_path(4), "user://saves/slot_4.save", "slot path format")
+	assert_eq(SlotStore.new().path(4, SlotStore.Kind.SAVE), SavePaths.slot_path(4), "SlotStore uses the same file")
 
 
 func test_gameplay_actions_exist_with_correct_keys() -> void:

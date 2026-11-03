@@ -1073,3 +1073,68 @@ puzzle state, a speed effect and a timed gate pausing together.
 | Puzzle tests 1–18 (`docs/MANUAL_PUZZLE_TEST.md`) | **Pending user test** |
 | Phase 2–6 manual tests | **Still pending** |
 | Visual inspection of captured frames | Done by Claude from captures, **not** interactive play |
+
+## Phase 8: 2026-11-03
+
+### A. Validation
+
+| Check | Result |
+|---|---|
+| Import / compile of every new and changed script | All compile (also `test_all_scripts_parse`, scene instantiation test) |
+| Save harness launches (`--quit-after 400`) | Exit 0, no errors; wrote `saves_dev/slot_1.save` (inspected: header line, readable JSON) |
+| `user://saves/` resolves to | `C:/Users/Reaper/AppData/Roaming/TwoKnightCoop/saves/` (no slot files written there by tests or the harness) |
+| Windows rename onto an existing file (probe script) | Replaces it (OK); renaming a missing file fails cleanly |
+| Rendered run (captures) | Level 1 with items and save-point flag; puzzle gate opened (autosave `puzzle:w1l1_lock`); a lava death freezing the world with the wipe notice; the new run at the start with 3/3, power 1, items back, new campaign id, fresh save OK; level 2 |
+
+### B. Automated tests
+
+Command: `godot --headless --path . --fixed-fps 60 --script res://tests/run_tests.gd`
+
+Result: **345 passed, 0 failed**, exit code 0, **no `ERROR`/`WARNING` lines**, identical in two
+consecutive runs. That is 296 Phase 1–7 tests plus 49 Phase 8 tests. Two lines starting
+`[CampaignGame]` are the expected failure reports of the fault-injection tests.
+
+| Requirement (prompt Part N) | Tests |
+|---|---|
+| Four slots: create, save/load each, independent metadata, delete isolation, overwrite permission, invalid slot numbers, empty slot | `test_four_slots_are_independent`, `test_slot_metadata_without_loading_the_world`, `test_deleting_one_slot_leaves_the_others_byte_identical`, `test_overwrite_needs_explicit_permission`, `test_invalid_slot_numbers_are_rejected`, `test_empty_slot_is_handled`, `test_the_wipe_works_in_every_slot` |
+| Save/restore 1–14: positions, health, max health, upgrades, coins, collectibles, defeated enemies, stagger progress and time, puzzles, gates, platforms, effects, no expiry while closed, dropped coins | `test_everything_restores_after_a_relaunch`, `test_level_transition_saves_the_new_level_and_keeps_progress`, `test_playtime_counts_and_restores` |
+| Save/restore 15: nothing interacts before restoration finishes; unsafe restored positions corrected; bad entity falls back | `test_nothing_interacts_before_restoration_finishes`, `test_unsafe_restored_positions_are_corrected` |
+| Integrity: normal write + backup, temp validated, failed replacement keeps the last save (4 injected faults), backup recovery, corrupt primary / backup / both, invalid schema, unknown level, scene path injection, wrong slot, tampering, old/new format versions, duplicate ids, world validation | `test_normal_write_keeps_a_backup_and_no_temp_file`, `test_failed_writes_never_destroy_the_last_good_save`, `test_damaged_primary_is_recovered_from_backup`, `test_damaged_backup_alone_is_detected`, `test_both_damaged_is_reported_and_never_replaced_silently`, `test_only_a_temp_file_is_reported`, `test_tampered_or_mismatched_files_are_rejected`, `test_world_section_validation`, `test_campaign_levels_have_unique_ids`, `test_ids`, `test_level_catalog_is_a_closed_whitelist`, `test_run_snapshot_versions` |
+| Save on exit (real child process + window-close notification): saves before exit, progress/positions/effects restored after relaunch, correct slot, not a death, not confused with a fresh campaign | `test_closing_the_window_saves_before_the_process_exits` |
+| Autosave triggers | `test_save_point_autosaves_once_per_visit`, `test_puzzle_completion_autosaves`, `test_requests_in_one_frame_coalesce`, `test_finishing_the_last_level_marks_the_campaign_complete` |
+| Team wipe 1–17: P1, P2, lava, zero health, fatal fall; everything reset (coins, max health 3, power 1, range, speed, poison, items, enemies, puzzles); first level; fresh run saved; only the active slot | `test_player_one_death_resets_both`, `test_player_two_death_resets_both`, `test_lava_death_resets_both`, `test_zero_health_through_ordinary_hits_resets_both`, `test_fatal_fall_resets_both`, `test_only_the_active_slot_is_reset` |
+| Team wipe 18–20: old run unrecoverable via backup / delayed save / quitting during the wipe | `test_invalidation_makes_every_old_file_unloadable`, `test_a_pending_autosave_cannot_bring_the_old_run_back`, `test_close_request_during_the_wipe_never_saves_the_dead_run`, `test_quitting_during_a_team_wipe_never_restores_the_dead_run` (real process) |
+| Races: simultaneous deaths and duplicate signals (one wipe), death during a transition, death with a pending save, death while both take damage, stale requests | `test_both_dying_in_one_frame_wipes_once`, `test_death_during_a_level_transition_wins`, `test_a_pending_autosave_cannot_bring_the_old_run_back`, `test_stale_save_requests_are_refused` |
+| Storage failures: marker cannot be written (halt, fail-closed), fresh run cannot be saved (old stays dead, retried) | `test_marker_failure_is_fail_closed`, `test_invalidation_failure_halts_instead_of_pretending`, `test_fresh_run_save_failure_keeps_the_old_run_dead` |
+
+### C. Regression (prompt Part O)
+
+All 296 Phase 1–7 tests pass. The changed shared code (`RunState` snapshot v3, slime save id
+and defeat record, coin ids, platform and puzzle live state, `SaveIds` level key) is
+exercised by both the old and new tests. Progression across two level scenes is tested in
+`test_level_transition_saves_the_new_level_and_keeps_progress`.
+
+### Defects found and fixed during Phase 8
+
+1. **Restore safety checks saw nothing.** Physics queries do not see a level added in the same
+   frame, so "knight inside a wall" and "platform solid around a knight" checks passed silently
+   (`test_unsafe_restored_positions_are_corrected`). They are now geometric (tile cells,
+   closed gates, solid platform rectangles).
+2. **Team wipe from a fall or lava disabled collision objects inside a physics callback**
+   (engine error in `test_fatal_fall_resets_both`). The physics freeze is now deferred to the
+   end of the frame; the logical lock and the on-disk invalidation stay immediate.
+3. **Path-like ids accepted** (`res://x.tscn` passed id validation; `test_ids`). Rejected now.
+4. **A corrupt file printed an engine JSON error** to the log; the decoder now uses the
+   instance parser and reports the problem itself.
+5. **Test-only issues:** lethal test hits blocked by the shields the same test had granted
+   (kills now use raw depletion), a fall landing on the moving lift, the wrong expected count of
+   injected restore problems, a typed-variable inference error, an unqualified
+   `NOTIFICATION_WM_CLOSE_REQUEST` in a SceneTree script.
+
+### D. Manual tests
+
+| Test | Status |
+|---|---|
+| Save tests 1–14 (`docs/MANUAL_SAVE_TEST.md`), including closing with the real window X button | **Pending user test** |
+| Phase 2–7 manual tests | **Still pending** |
+| Visual inspection of captured frames | Done by Claude from captures, **not** interactive play |
