@@ -645,3 +645,23 @@ Where a decision refines an earlier section, this section is authoritative.
 - **Timed platforms** blink red before vanishing and fade back in; **disappearing platforms**
   do this on a fixed schedule; **collapsing platforms** shake after a knight lands, fall away,
   and return about 3 s later. A platform never reappears inside a knight or an enemy.
+
+**Cooperative puzzles (Phase 7, 2026-11-03)** (refines section 10):
+- **No extra buttons.** Knights interact by standing (pressure plates, areas) and by their
+  normal attack (switches and targets). Only marked mechanisms react to attacks; attacks never
+  work through walls; slimes never operate mechanisms.
+- **Plates** need a living knight standing on them. Held plates work only while held; latched
+  ones stay pressed; timed ones run for a set time. Some plates need both knights or a specific
+  knight (shown by colour).
+- **"Different knights."** Mechanisms meant for two knights cannot be completed by one knight
+  alone, but can always be finished when the other knight joins in.
+- **Synchronised strikes.** Paired targets must be struck by both knights within about 2 s; a
+  late strike resets the attempt.
+- **Gates** never close on a knight or an enemy and never hurt anyone; a closing gate reopens if
+  someone steps into it. Timed gates warn before closing and can be reopened.
+- **Recovery.** Every puzzle can be retried; every one-way crossing has a way back (a far-side
+  switch or plate). Failed timed attempts reset themselves.
+- **Risk.** Some puzzles let one knight take a small, survivable risk (1 HP) to help the other.
+- **Clues** are one or two short lines on signposts that become readable as a knight approaches.
+- **Progress.** Completed locks, latched gates and switches are remembered for the current run
+  (and will be saved in Phase 8); a new run (team wipe) resets them.

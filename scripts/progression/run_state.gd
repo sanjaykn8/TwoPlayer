@@ -6,6 +6,7 @@ extends RefCounted
 ## Held in a static variable, so it survives level and scene changes without an autoload
 ## (and works the same in the headless test runner). RunState.reset() starts a fresh run:
 ## used by tests now, and by new game / team wipe in Phase 8.
+## Puzzle progress lives in `puzzles` (PuzzleRegistry), so it shares the run's lifetime.
 ## snapshot() / restore() produce and accept plain JSON-compatible dictionaries for the
 ## Phase 8 four-slot SaveManager. This class performs no disk I/O.
 
@@ -17,7 +18,8 @@ signal item_collected(id: String, player_id: int, kind: String)
 ## restore() replaced the state; bound knights resynchronise.
 signal restored
 
-const VERSION := 1
+## 2: adds "puzzles" (a version-1 snapshot without it restores with no puzzle progress).
+const VERSION := 2
 const PROGRESSION_CONFIG := "res://resources/config/progression_config.tres"
 const KNIGHT_CONFIG := "res://resources/config/knight_config.tres"
 const COMBAT_CONFIG := "res://resources/config/combat_config.tres"
@@ -31,6 +33,8 @@ var coins := 0
 var collected := {}
 ## Rolls the coin healing chance. Seed it for deterministic tests.
 var coin_rng := RandomNumberGenerator.new()
+## Saved puzzle states and live puzzle registration for this run.
+var puzzles := PuzzleRegistry.new()
 
 var _players := {}
 
@@ -106,7 +110,8 @@ func snapshot() -> Dictionary:
 	var players := {}
 	for id in PLAYER_IDS:
 		players[str(id)] = _players[id].snapshot()
-	return {"version": VERSION, "coins": coins, "collected": items, "players": players}
+	return {"version": VERSION, "coins": coins, "collected": items, "players": players,
+		"puzzles": puzzles.snapshot()}
 
 
 ## Restores a snapshot. Everything is validated before anything changes; returns false
@@ -130,10 +135,16 @@ func restore(data: Variant) -> bool:
 		var probe := PlayerStats.new(id, config, knight.base_max_health, combat.base_attack_power, combat.base_range_multiplier)
 		if not data.players.has(str(id)) or not probe.restore(data.players[str(id)]):
 			return false
+	var puzzle_data: Variant = data.get("puzzles", {"version": PuzzleRegistry.VERSION, "states": {}})
+	if int(data.version) >= 2 and not data.has("puzzles"):
+		return false
+	if not PuzzleRegistry.is_valid_snapshot(puzzle_data):
+		return false
 	for id in PLAYER_IDS:
 		_players[id].restore(data.players[str(id)])
 	coins = coin_total
 	collected = items
+	puzzles.restore(puzzle_data)
 	coins_changed.emit(coins)
 	restored.emit()
 	return true

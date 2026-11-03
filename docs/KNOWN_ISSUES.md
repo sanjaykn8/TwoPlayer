@@ -1,6 +1,6 @@
 # Known Issues
 
-Updated 2026-11-03 (end of Phase 6).
+Updated 2026-11-03 (end of Phase 7).
 
 ## Open
 
@@ -12,13 +12,22 @@ Updated 2026-11-03 (end of Phase 6).
 | KI-32 | Verification gap | Phase 4 manual enemy tests (`docs/MANUAL_ENEMY_TEST.md`) not yet performed | User |
 | KI-38 | Verification gap | Phase 5 manual collectible tests (`docs/MANUAL_COLLECTIBLE_TEST.md`) not yet performed | User |
 | KI-46 | Verification gap | Phase 6 manual hazard tests (`docs/MANUAL_HAZARD_TEST.md`) not yet performed | User |
+| KI-55 | Verification gap | Phase 7 manual puzzle tests (`docs/MANUAL_PUZZLE_TEST.md`) not yet performed, including whether the clues are understandable and the solo-proof timings feel fair | User |
+| KI-56 | Info | No pushable or carryable objects (crates, weights). Plates are pressed only by knights (or, when enabled, living slimes) | Add if level design needs it (Phase 10) |
+| KI-57 | Info | Level exits / portals and level-to-level transitions are not implemented | Phase 8 / Phase 10 |
+| KI-58 | Minor | Gate, plate and target visuals are drawn by code (portcullis, slab, ring target); switches reuse the "!" blocks. Placeholder art | Art polish |
+| KI-59 | Info | Design rule: a gate bounces open when a knight reaches its doorway while closing, so a crossing that must need a partner has to take longer than the close delay + 0.3 s slide | Level design (documented in ARCHITECTURE §18) |
+| KI-60 | Info | Only completed locks, latched gates/plates and toggled/latched switches are saved. Running timers, held plates and platform positions restart safely on reload | By design; revisit in Phase 8 |
+| KI-61 | Info | In the room's separate-route section the camera stays shared (both routes fit one view); split-screen puzzle use is covered by a separate test | By design |
+| KI-62 | Info | Puzzle feedback sounds reuse `tap.wav` and `power_up.wav` (pitch-varied) | Phase 9 |
+| KI-64 | Info | Live puzzle elements keep the registry they registered with; after `RunState.reset()` they use the new run only once the level is reloaded (the dev rooms' F5 and the planned Phase 8 team wipe both reload) | Phase 8: reload the level on reset |
+| KI-63 | Info | A knight standing on a plate may have that spot recorded as its safe respawn position; a fall then respawns it onto the plate. Harmless (it can step off) | Accepted |
 | KI-47 | Major (Phase 8) | Lava and fatal falls kill only that knight. The campaign-wide team wipe and restart from level 1 (GDD §9, §12) are not implemented; dead knights stay dead (dev rooms revive with F3) | Phase 8 |
 | KI-48 | Info | Hazard and platform states and safe positions are not saved. Platforms restart their cycles when a level loads | Decide in Phase 8 |
 | KI-49 | Minor | Spike art (`assets/created/spikes.png`) is generated placeholder art; the bundle has no spikes. Hot ground reuses the red-earth tile with a drawn glow | Art polish |
 | KI-50 | Minor | `platforms.png` has no repeatable middle piece, so platforms wider than two tiles show a seam every two tiles (and a short end piece for odd widths) | Draw a middle piece during art polish |
 | KI-51 | Minor | Under the test-room lava pit the next tile row is drawn as grass-topped ground (auto-tiling sees open space above it) | Cosmetic; production lava pits in Phase 10 |
 | KI-52 | Info | Older dev rooms (camera, combat, enemy, collectible) now apply 1 FALL damage when a knight falls out, through the new tracker, before their old no-damage teleport | Expected Phase 6 behaviour |
-| KI-53 | Info | Timed platforms cycle on their own (auto-reactivation) until Phase 7 switches call `activate()` | Phase 7 |
 | KI-54 | Info | Hazard sounds reuse `hurt.wav` and `explosion.wav`; no fall-specific sound | Phase 9 |
 | KI-39 | Minor | The bundle has no red bottle: the red jar is the magenta bottle tinted red (plus a faint glint) | Draw a red jar during art polish |
 | KI-40 | Minor | Effect feedback is pips above the knight and short pop-up text; there is no proper HUD yet (Phase 9). Effect icons are coloured squares, not sprites | Phase 9 HUD |
@@ -58,6 +67,7 @@ Updated 2026-11-03 (end of Phase 6).
 
 | ID | Issue | Resolution |
 |---|---|---|
+| KI-53 | Timed platforms could only cycle on their own | Phase 7: `PlatformController` TRIGGER calls `activate()` (the default scene still auto-reactivates when unwired) |
 | KI-35 | Dropped coins could not be collected | Phase 5: CoinPickup, shared RunState total, 10 % heal |
 | KI-11 | No camera system | Phase 2 `SplitScreenRig` (camera test room) |
 | KI-1 | Linear (blurry) texture filtering | Nearest filter (Phase 1); SubViewports set Nearest explicitly (Phase 2) |

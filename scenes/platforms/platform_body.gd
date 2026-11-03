@@ -15,7 +15,7 @@ const UNSAFE_GROUND := &"unsafe_ground"
 const HEIGHT := 9.0
 const ONE_WAY_THICKNESS := 6.0
 ## Bodies and hurtboxes that block reappearance: players (3), enemies (4), player hurtboxes (5).
-const OCCUPANT_MASK := (1 << 2) | (1 << 3) | (1 << 4)
+const OCCUPANT_MASK := SpaceQuery.OCCUPANT_MASK
 
 @export_range(1, 16) var width_tiles := 3:
 	set(value):
@@ -38,8 +38,6 @@ var visual_tint := Color.WHITE
 
 var _shape_node: CollisionShape2D
 var _collision_on := true
-var _query := PhysicsShapeQueryParameters2D.new()
-var _query_shape := RectangleShape2D.new()
 
 
 func _ready() -> void:
@@ -64,14 +62,8 @@ func set_collision_enabled(on: bool) -> void:
 
 ## True when a knight (body or hurtbox) or an enemy overlaps the platform's space.
 func is_occupied() -> bool:
-	_query_shape.size = Vector2(width_px(), HEIGHT) + Vector2(2, 2)
-	_query.shape = _query_shape
-	_query.transform = Transform2D(0.0, global_position + Vector2(width_px() * 0.5, HEIGHT * 0.5))
-	_query.collision_mask = OCCUPANT_MASK
-	_query.collide_with_areas = true
-	_query.collide_with_bodies = true
-	_query.exclude = [get_rid()]
-	return not get_world_2d().direct_space_state.intersect_shape(_query, 1).is_empty()
+	var rect := Rect2(global_position - Vector2.ONE, Vector2(width_px(), HEIGHT) + Vector2(2, 2))
+	return SpaceQuery.rect_occupied(get_world_2d(), rect, OCCUPANT_MASK, [get_rid()])
 
 
 func _rebuild() -> void:

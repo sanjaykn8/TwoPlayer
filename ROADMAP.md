@@ -445,8 +445,9 @@ Always prioritize a stable playable game over rapidly generated content.
 | Phase 4: Slime Enemies and Enemy AI | Implemented and auto-tested (144/144 including Phase 1–3 regression); **manual enemy tests pending** | `docs/PHASE_4_SUMMARY.md`, `docs/TEST_REPORT.md`, `docs/MANUAL_ENEMY_TEST.md` |
 | Phase 5: Collectibles and Progression | Implemented and auto-tested (178/178 including Phase 1–4 regression); **manual collectible tests pending** | `docs/PHASE_5_SUMMARY.md`, `docs/TEST_REPORT.md`, `docs/MANUAL_COLLECTIBLE_TEST.md` |
 | Phase 6: Hazards and Platforming Mechanics | Implemented and auto-tested (229/229 including Phase 1–5 regression); **manual hazard tests pending** | `docs/PHASE_6_SUMMARY.md`, `docs/TEST_REPORT.md`, `docs/MANUAL_HAZARD_TEST.md` |
-| Phase 7: Cooperative Puzzle Systems | Not started | Waiting for authorisation |
-| Phases 8–12 | Not started | — |
+| Phase 7: Cooperative Puzzle Systems | Implemented and auto-tested (296/296 including Phase 1–6 regression); **manual puzzle tests pending** | `docs/PHASE_7_SUMMARY.md`, `docs/TEST_REPORT.md`, `docs/MANUAL_PUZZLE_TEST.md` |
+| Phase 8: Death, Campaign Reset and Save System | Not started | Waiting for authorisation |
+| Phases 9–12 | Not started | — |
 
 Phase 1 task tracking:
 
@@ -557,3 +558,24 @@ Phase 6 task tracking:
 | Narrow passages | Existing Phase 1 crouch tunnel and corridor; level use is Phase 10 |
 | Climbing areas | Existing Phase 1 ladders and passages; hazards detect climbing knights (hurtbox layer) |
 | Precision jumps | Hazard room gaps and platform rows; tuning is manual-test / Phase 10 work |
+
+Phase 7 task tracking:
+
+| Task | Status |
+|---|---|
+| Pressure plates | Tested |
+| Simultaneous activation | Tested (plates with different knights; synchronised targets) |
+| Switch-controlled doors | Tested |
+| Timed gates | Tested |
+| Separate paths | Tested |
+| Moving-platform coordination | Tested |
+| Enemy distraction puzzles | Tested |
+| Multiple targets | Tested |
+| Shared mechanisms | Tested (either-side plates, chained locks) |
+| Environmental clues | Tested (presence, length, reveal); readability pending manual test |
+| Optional sacrifice/risk mechanics | Tested (1 HP hot-ground plate) |
+| Players arriving in different orders | Tested |
+| One player dying during a puzzle | Tested (plate release, gate waits; campaign reset is Phase 8) |
+| Players moving away from activated switches | Tested |
+| Pausing during timed mechanisms | Tested |
+| Reloading after puzzle progress is saved | Tested (room reload and snapshot restore; disk saving is Phase 8) |

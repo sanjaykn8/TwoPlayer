@@ -1005,3 +1005,71 @@ the rooms' old no-damage teleport would apply. No earlier test depended on falli
 | Hazard tests 1–17 (`docs/MANUAL_HAZARD_TEST.md`) | **Pending user test** |
 | Phase 2, 3, 4 and 5 manual tests | **Still pending** |
 | Visual inspection of captured frames | Done by Claude from captures, **not** interactive play |
+
+## Phase 7: 2026-11-03
+
+### A. Validation
+
+| Check | Result |
+|---|---|
+| Import / compile of every new and changed script | All compile (also `test_all_scripts_parse`, `test_scenes_instantiate_with_valid_paths_signals_and_shapes`) |
+| Puzzle room launches standalone (`--quit-after 600`) | Exit 0, no errors |
+| Rendered run (windowed captures) | All ten sections; portcullis gates rising when both plates are pressed; lit targets with time ring; timed gate with countdown bar; bridge carrying a knight; hot-ground plate; overlay with locks, gates, saved-state count and event log; debug ids/states (F9) |
+
+### B. Automated tests
+
+Command: `godot --headless --path . --fixed-fps 60 --script res://tests/run_tests.gd`
+
+Result: **296 passed, 0 failed**, exit code 0, **no `ERROR`/`WARNING` lines**, identical in two
+consecutive runs: 229 Phase 1–6 tests and 67 Phase 7 tests.
+
+| Requirement (prompt Part R) | Tests |
+|---|---|
+| Plates: one knight, two plates/two knights, one knight cannot satisfy two plates, same-frame arrival, hold release, removal, completion once, two-knight plate, player-specific, timed, death | `test_single_plate_detects_the_knight_and_releases`, `test_two_plates_need_two_different_knights`, `test_one_knight_cannot_satisfy_two_plates`, `test_both_knights_arriving_on_the_same_frame`, `test_follow_gate_follows_a_held_plate`, `test_removed_knight_releases_the_plate`, `test_dead_knight_releases_the_plate`, `test_two_knight_plate_needs_both_on_it`, `test_player_specific_plate`, `test_timed_plate_runs_out_even_while_standing`, `test_s1_two_plates_open_gate_for_good` |
+| Switches: valid attack, out of range, wall, non-attackable, toggle stability and cooldown, momentary, repeated frames / same attack, two knights in one frame, direction and player filters, enemies cannot | `test_attack_activates_a_switch`, `test_attack_out_of_range_does_nothing`, `test_wall_blocks_the_attack`, `test_non_attackable_switch_ignores_attacks`, `test_toggle_is_stable_and_respects_cooldown`, `test_momentary_switch_turns_itself_off`, `test_direction_and_player_filters`, `test_enemies_cannot_activate_switches` |
+| Synchronisation: in window, late strike, safe reset and retry, both directions, same knight twice | `test_targets_struck_within_the_window_complete`, `test_late_second_strike_fails_and_resets`, `test_same_knight_cannot_strike_both_targets`, `test_s3_targets_in_one_heartbeat`, `test_s3_failed_sync_resets_and_can_be_retried` |
+| Timed gates: opens, timer, warning, closes when clear, never on a knight, bounce, pause, reopen | `test_timed_gate_cycle`, `test_gate_never_closes_on_a_knight`, `test_closing_gate_bounces_open_when_entered`, `test_pause_stops_gate_timers`, `test_s4_one_strikes_one_runs`, `test_s4_cannot_be_done_alone`, `test_s4_timer_expiry_and_pause` |
+| Separate routes: each knight reaches its mechanism (ladder climb, spike jumps), both required, roles swapped, recoverable wrong credit, reunion | `test_s5_upper_and_lower_routes`, `test_s5_routes_work_with_roles_swapped`, `test_s5_one_knight_on_both_switches_is_recoverable` |
+| Moving platforms: switch drives partner's lift, two knights on two platforms, timed platform triggered, bridge carries each knight, no duplicate instances, falling rider recoverable | `test_switch_drives_the_partners_platform`, `test_both_knights_on_different_platforms_at_once`, `test_timed_platform_triggered_by_a_plate`, `test_s7_bridge_carries_each_knight_across`, `test_s7_falling_rider_is_recoverable` |
+| Enemy distraction: slime targets the lurer, the other opens the gate untouched, dead knights dropped as targets, slimes never trigger switches or ordinary plates, staggered slimes release slime plates | `test_s8_one_lures_the_slime_while_the_other_strikes`, `test_s8_slime_ignores_dead_knights_and_never_triggers_the_switch`, `test_slimes_never_press_plates_unless_allowed` |
+| Opposite sides, risk, reunion, clues | `test_s6_each_knight_holds_the_gate_for_the_other`, `test_s6_cannot_be_done_alone`, `test_s9_one_pays_both_pass`, `test_s9_cannot_be_done_alone`, `test_end_zone_needs_both_knights`, `test_clues_are_short_and_reveal_when_near` |
+| Softlocks: timer expiry, removal, falling, deactivation (holder leaves / dies with partner in doorway), wrong order, reset, reload, repeated activation, separation (split screen), failed sync | `test_s4_timer_expiry_and_pause`, `test_removed_knight_releases_the_plate`, `test_s7_falling_rider_is_recoverable`, `test_s2_holder_leaving_early_never_traps_the_partner`, `test_s2_holder_dies_while_partner_in_doorway`, `test_sequence_wrong_order_fails_and_resets`, `test_unlatched_sync_lock_resets_after_its_active_time`, `test_reload_keeps_completed_puzzles_and_upgrades`, `test_s1_two_plates_open_gate_for_good`, `test_split_screen_does_not_affect_puzzles`, `test_late_second_strike_fails_and_resets` |
+| State: registry scopes, signals, snapshot validation, duplicates, run snapshot v2 / v1, new run forgets, level ids, live restore, unique ids, config | `test_puzzle_logic.gd` (9 tests), `test_snapshot_restore_updates_live_puzzles`, `test_every_puzzle_id_is_unique_and_registered`, `test_latch_gate_stays_open` |
+
+### C. Regression (prompt Part S)
+
+All 229 Phase 1–6 tests pass unchanged (movement, camera, combat, slimes, collectibles,
+hazards, platforms). Explicit cross-system checks in Phase 7 tests: puzzle activation during
+split screen, attacks activating switches, a holder dying while a partner is in the doorway,
+moving platforms carrying both knights, a jar upgrade surviving a room reload together with
+puzzle state, a speed effect and a timed gate pausing together.
+
+### Defects found and fixed during Phase 7
+
+1. **Second knight on a pressed plate was ignored by "different knights" locks.** The plate's
+   on/off state did not change, so the lock never re-checked who stood where
+   (`test_one_knight_cannot_satisfy_two_plates`). Added `credit_changed`.
+2. **A latched switch credited to the wrong knight made a "different knights" lock
+   unsolvable.** Found at design time; a latched switch struck again is now re-credited.
+3. **Lone knights could solve the "both sides" gate** because the gate (correctly) bounces open
+   when someone reaches the doorway while it closes (`test_s6_cannot_be_done_alone`). Plates
+   moved further out; section 9's close delay reduced; design rule documented.
+4. **Gates were invisible** (same brick as the walls) in the first render: now a drawn
+   portcullis. Plates were made thicker and three clues moved off walls.
+5. **Spike jump in section 2 too precise** (14 px take-off window): spikes shortened to 32 px.
+6. **Overlay crashed on a removed knight** (script errors in the removal test): it now skips
+   freed knights.
+7. **Unconfigured PlatformController errored when instanced standalone** by the validator: it
+   reports only when placed in a level.
+8. **Test-only issues:** strikes inside the switch cooldown, a second knight landing on the
+   first knight's head, a knight teleported into a gate in the frame it began opening, a test
+   knight placed behind a closed gate, a respawn point recorded on a plate, timing assumptions
+   replaced by waiting for states.
+
+### D. Manual tests
+
+| Test | Status |
+|---|---|
+| Puzzle tests 1–18 (`docs/MANUAL_PUZZLE_TEST.md`) | **Pending user test** |
+| Phase 2–6 manual tests | **Still pending** |
+| Visual inspection of captured frames | Done by Claude from captures, **not** interactive play |

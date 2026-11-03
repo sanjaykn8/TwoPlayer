@@ -970,3 +970,58 @@ respawn protection, safe-ground frames, fall margin. Platform timings are per-in
   `SafeSpotTracker.debug_visible` draws safe-position markers.
 - `tools/build_phase6_content.gd`: `-- art` writes `assets/created/spikes.png`; `-- content`
   regenerates the room.
+
+## 18. Cooperative puzzles and mechanisms (implemented in Phase 7)
+
+### Contract (`scenes/puzzles/puzzle_source.gd`, class `PuzzleSource`)
+
+Every puzzle element is a `PuzzleSource` (Node2D, `@tool`):
+
+| Member | Meaning |
+|---|---|
+| `changed(active)` | the on/off state changed (emitted only on a real change) |
+| `pulsed(player_id)` | a fresh activation (plate pressed, switch struck); SYNC / SEQUENCE locks and TIMED gates use it |
+| `credit_changed` | `active_players()` changed while the state did not (a second knight joined a pressed plate) |
+| `is_active()`, `active_players()`, `reset_source()` | state, credited knight ids, return to the safe initial state |
+| `puzzle_id`, `scope`, `persistent` | identity (unique per scope), LEVEL or CAMPAIGN, whether it may be saved |
+
+Elements never call each other's internals: receivers connect to these signals through NodePath
+exports. There is no puzzle manager singleton; tracking lives in the run's `PuzzleRegistry`.
+
+### Elements
+
+| Scene / class | Behaviour |
+|---|---|
+| `pressure_plate.tscn` `PressurePlate` | Origin = left end of the plate's top surface. Sensor (6 px) on the player-hurtbox layer (plus enemy hurtboxes with `accept_slimes`). Counts living knights **on the floor**; occupants re-validated every physics frame (dead, freed, teleported, airborne knights do not count). HOLD / LATCH / TIMED; `required_count` (1–2 knights on this plate); `allowed_player`; drawn plate sinks and glows, with the player's colour if restricted |
+| `trigger_zone.tscn` `TriggerZone` | PressurePlate without the floor requirement; invisible; `size` |
+| `attack_switch.tscn`, `puzzle_target.tscn` `AttackSwitch` | Owns an ordinary `HurtboxComponent` on layer 7, so the knights' existing `CombatComponent` finds it (range, hitbox overlap, line of sight against walls, one hit per target per swing). Ignores non-MELEE events, repeats of the same `attack_id`, hits within `switch_cooldown`, filtered directions and players. TOGGLE / MOMENTARY / LATCH; a latched switch struck again is re-credited to the striker. Non-solid. Slimes have no melee hitbox, so they can never activate it |
+| `puzzle_logic.tscn` `PuzzleLogic` | Lock over `inputs`. ALL (optional `distinct_players`: a perfect matching of inputs to different knights, `can_assign_distinct`), ANY (forwards pulses), SYNC (`window`), SEQUENCE. `latch` → COMPLETED once (`completed` emitted once, saved). Non-latched SYNC/SEQUENCE stay ACTIVE for `active_time`, then reset their inputs. Failures show FAILED for `fail_display_time`, reset the inputs, return to INACTIVE |
+| `puzzle_gate.tscn`, `timed_gate.tscn` `PuzzleGate` | Drawn iron portcullis; internal StaticBody2D on the world layer, solid only when CLOSED. FOLLOW (`close_delay` with warning) / LATCH (saved) / TIMED (`open_time`, `warning_time`, restart on each pulse). States CLOSED, OPENING, OPEN, WARNING, WAITING, CLOSING. Closing requires an empty doorway (`SpaceQuery`, knight bodies, knight hurtboxes, enemies, `gate_clear_margin`); CLOSING re-checks every frame and bounces back to OPENING. Countdown bar above the doorway |
+| `platform_controller.tscn` `PlatformController` | Drives a Phase 6 platform: RUN_WHILE_ACTIVE (`MovingPlatform.set_running`), EXTEND_WHILE_ACTIVE (`move_to(1/0)`), TRIGGER (`TimedPlatform.activate()`, or send a MovingPlatform to the other end). The platform's physics and rider carrying are unchanged |
+| `puzzle_clue.tscn` `PuzzleClue` | Signpost (world_tileset (8,3)/(8,4)) and one or two short lines in PixelOperator8; alpha rises from `clue_min_alpha` to 1 as a knight approaches |
+
+`MovingPlatform` gained `auto_start`, `running`, `target_progress`, `set_running()`, `move_to()`
+and `snap_to()`; with the defaults it behaves exactly as in Phase 6.
+
+### State and persistence (`scripts/puzzles/puzzle_registry.gd`)
+
+- `RunState.current().puzzles` is the single store: `scope key → puzzle id → Dictionary`.
+- Scope key: the level id (`level_id` metadata on the level root, else the level's scene path)
+  for LEVEL scope, `"campaign"` for CAMPAIGN scope. Two levels can reuse an id without
+  overwriting each other.
+- Only completed locks (`{"completed": true}`), latched plates and gates, and toggled/latched
+  switches are written; held plates, timers and momentary states never are, so a reload starts
+  them safe.
+- Elements register in `_enter_tree` and unregister in `_exit_tree` (the camera rig re-parents
+  levels, so this stays balanced); duplicate live ids are reported. They connect to the
+  registry's `restored` signal there too, so `RunState.restore()` updates live puzzles.
+- `RunState.snapshot()` (version 2) includes `"puzzles": {"version", "states"}`; restore
+  validates it before changing anything; version-1 snapshots load with no puzzle progress.
+- `RunState.reset()` (new run, future team wipe) discards all puzzle progress.
+
+### Puzzle test room (`scenes/dev/puzzle_test_room.tscn`)
+
+Generated by `tools/build_phase7_content.gd -- content`. Ten sections (plates, hold, sync
+targets, timed gate, separate routes, both sides, bridge, distraction, risk, reunion), a clue
+in each; dev keys F1–F9 (F4 jumps to the next section). Solutions are in
+`docs/MANUAL_PUZZLE_TEST.md`.

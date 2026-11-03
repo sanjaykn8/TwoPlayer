@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scenes/puzzles/puzzle_gate.gd" id="1_s"]
+
+[node name="TimedGate" type="Node2D"]
+script = ExtResource("1_s")
+mode = 2
+open_time = 4.0
+warning_time = 1.5

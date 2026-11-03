@@ -1,0 +1,15 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/dev/puzzle_test_room.gd" id="1_xbqjw"]
+[ext_resource type="PackedScene" path="res://scenes/dev/puzzle_test_level.tscn" id="2_fjxht"]
+[ext_resource type="PackedScene" path="res://scenes/camera/split_screen_rig.tscn" id="3_cgtja"]
+[ext_resource type="PackedScene" path="res://scenes/dev/puzzle_debug_hud.tscn" id="4_ea1xd"]
+
+[node name="PuzzleTestRoom" type="Node" unique_id=9544689]
+script = ExtResource("1_xbqjw")
+
+[node name="Level" parent="." unique_id=478940338 instance=ExtResource("2_fjxht")]
+
+[node name="SplitScreenRig" parent="." unique_id=1117703665 instance=ExtResource("3_cgtja")]
+
+[node name="PuzzleDebugHud" parent="." unique_id=549259821 instance=ExtResource("4_ea1xd")]
