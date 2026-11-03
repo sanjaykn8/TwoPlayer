@@ -9,6 +9,9 @@ const GAME := "res://scenes/campaign/campaign_game.tscn"
 
 ## Deletes every file in `dir` (creating it if needed).
 static func clean(dir := DIR) -> void:
+	# Phase 8-9 save tests are written against the two development levels.
+	LevelCatalog.use_development()
+	RunState.reset()
 	DirAccess.make_dir_recursive_absolute(dir)
 	for file in DirAccess.get_files_at(dir):
 		DirAccess.remove_absolute(dir + file)

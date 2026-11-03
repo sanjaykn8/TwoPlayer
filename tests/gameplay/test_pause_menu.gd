@@ -23,11 +23,11 @@ func after_each() -> void:
 
 
 func _play(slot := 1, level_id := "w1_l1") -> void:
-	if level_id != LevelCatalog.FIRST_LEVEL:
+	if level_id != LevelCatalog.first_level():
 		UiTestUtil.write_campaign(slot, 0, level_id)
 	app = UiTestUtil.make_app(self)
 	await get_tree().process_frame
-	var err := app.continue_campaign(slot) if level_id != LevelCatalog.FIRST_LEVEL else app.start_new_campaign(slot)
+	var err := app.continue_campaign(slot) if level_id != LevelCatalog.first_level() else app.start_new_campaign(slot)
 	assert_eq(err, OK, "campaign started")
 	await physics_frames(10)
 
@@ -149,7 +149,7 @@ func test_restart_requires_confirmation_and_is_not_a_death() -> void:
 	await physics_frames(3)
 	var fresh := RunState.current()
 	assert_true(fresh.campaign.campaign_id != old_id, "a new campaign")
-	assert_eq([fresh.coins, fresh.player(1).attack_power(), fresh.collected.size(), fresh.campaign.level_id], [0, 1, 0, LevelCatalog.FIRST_LEVEL], "coins, upgrades, items and level reset")
+	assert_eq([fresh.coins, fresh.player(1).attack_power(), fresh.collected.size(), fresh.campaign.level_id], [0, 1, 0, LevelCatalog.first_level()], "coins, upgrades, items and level reset")
 	assert_eq([_k(0).health.current_health, _k(1).health.current_health], [3, 3], "both knights reset")
 	assert_eq(app.campaign.wipes, 0, "not a team wipe")
 	assert_eq(app.saves.store.read_marker(1), "", "no death marker")

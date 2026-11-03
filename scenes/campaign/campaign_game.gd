@@ -305,7 +305,7 @@ func start_team_wipe() -> void:
 
 func _finish_team_wipe() -> void:
 	RunState.reset()  # clears coins, collected items, upgrades, effects, puzzles, enemies, campaign
-	if _load_level(LevelCatalog.FIRST_LEVEL, {}) != "":
+	if _load_level(LevelCatalog.first_level(), {}) != "":
 		phase = Phase.WIPE_FAILED
 		team_wipe_failed.emit("the first level could not be loaded")
 		return
@@ -344,7 +344,7 @@ func restart_run() -> Error:
 		_notice("Could not restart the campaign: %s" % saves.last_error)
 		return err
 	fresh_run_unsaved = false
-	if _load_level(LevelCatalog.FIRST_LEVEL, {}) != "":
+	if _load_level(LevelCatalog.first_level(), {}) != "":
 		return ERR_CANT_CREATE
 	last_save_reason = "restart"
 	last_save_ok = true

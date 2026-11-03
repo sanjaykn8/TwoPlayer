@@ -43,8 +43,8 @@ static func write_campaign(slot: int, coins := 0, level_id := "w1_l1") -> String
 	manager.start_new_run(slot, true)
 	var run := RunState.current()
 	run.coins = coins
-	if level_id != LevelCatalog.FIRST_LEVEL:
-		run.campaign.complete_level(LevelCatalog.FIRST_LEVEL)
+	if level_id != LevelCatalog.first_level():
+		run.campaign.complete_level(LevelCatalog.first_level())
 		run.campaign.enter_level(level_id)
 	manager.save_active_run({}, run.campaign.campaign_id)
 	var id := run.campaign.campaign_id

@@ -95,10 +95,14 @@ func update_meta(data: Dictionary) -> void:
 		_coins.text = str(int(meta.coins))
 		_time.text = "Time " + format_playtime(float(meta.playtime))
 		var saved := "Saved " + format_local_time(float(meta.saved_at_unix))
+		if bool(meta.get("finished", false)):
+			saved = "CAMPAIGN COMPLETE - " + saved
 		_detail.text = saved if str(info[2]) == "" else "%s %s" % [info[2], saved]
 	else:
 		_location.text = ""
 		_detail.text = info[2]
+		if status() == "CORRUPTED" and str(meta.get("warnings", [])).contains("different campaign build"):
+			_detail.text = "Saved by an earlier development build; it cannot be loaded here."
 	_detail.add_theme_color_override(&"font_color", UiTheme.TEXT_DIM if status() in ["VALID", "EMPTY"] else info[1])
 	tooltip_text = ""
 

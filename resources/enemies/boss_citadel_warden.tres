@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="BossStats" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/enemies/boss_stats.gd" id="1_bs"]
+[ext_resource type="SpriteFrames" path="res://resources/enemies/purple_slime_frames.tres" id="2_frames"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/purple_slime.tscn" id="3_minion"]
+
+[resource]
+script = ExtResource("1_bs")
+display_name = "CITADEL WARDEN"
+tint = Color(0.62, 0.6, 0.75, 1)
+max_health = 12
+walk_speed = 32.0
+telegraph_time = 0.75
+leap_speed = 400.0
+leap_cooldown = 1.9
+shock_radius = 64.0
+daze_time = 1.5
+sync_armor = true
+sync_window = 1.2
+minion_every_leaps = 3
+max_minions = 1
+ember_time = 2.5
+ember_width = 40.0
+coin_min = 14
+coin_max = 16
+sprite_frames = ExtResource("2_frames")
+minion_scene = ExtResource("3_minion")

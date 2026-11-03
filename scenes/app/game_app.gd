@@ -209,6 +209,10 @@ func _start(slot: int, start_mode: CampaignGame.StartMode, overwrite: bool) -> E
 	_set_mode(Mode.PLAYING)
 	audio.play_level(RunState.current().campaign.level_id)
 	_fade_in()
+	# A finished campaign keeps its result: continuing it shows the results again (the
+	# players can still walk the last level after closing them).
+	if start_mode == CampaignGame.StartMode.LOAD and RunState.current().campaign.flags.get("finished", false):
+		show_victory(false)
 	return OK
 
 

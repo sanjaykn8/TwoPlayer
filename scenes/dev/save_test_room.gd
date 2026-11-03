@@ -16,6 +16,7 @@ const DEV_SAVE_DIR := "user://saves_dev/"
 
 func _init() -> void:
 	save_dir = DEV_SAVE_DIR
+	LevelCatalog.use_development()  # this harness exercises the two Phase 8 levels
 
 
 func _unhandled_input(event: InputEvent) -> void:

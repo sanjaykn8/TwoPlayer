@@ -170,7 +170,7 @@ func test_new_game_on_an_empty_slot_starts_at_once() -> void:
 	await get_tree().process_frame
 	assert_true(app.campaign != null, "campaign started without a question")
 	assert_eq(app.saves.active_slot, 3, "in slot 3")
-	assert_eq(RunState.current().campaign.level_id, LevelCatalog.FIRST_LEVEL, "first level")
+	assert_eq(RunState.current().campaign.level_id, LevelCatalog.first_level(), "first level")
 	assert_eq(SaveTestUtil.read(UiTestUtil.DIR, "slot_1.save"), keep, "slot 1 untouched")
 
 
@@ -192,7 +192,7 @@ func test_overwrite_requires_confirmation() -> void:
 	assert_true(app.campaign != null, "new campaign after confirming")
 	var meta := app.saves.get_slot_metadata(2)
 	assert_true(meta.campaign_id != old_id, "a different campaign now")
-	assert_eq([int(meta.coins), str(meta.level_id)], [0, LevelCatalog.FIRST_LEVEL], "fresh start")
+	assert_eq([int(meta.coins), str(meta.level_id)], [0, LevelCatalog.first_level()], "fresh start")
 	assert_eq(SaveTestUtil.read(UiTestUtil.DIR, "slot_3.save"), slot3, "slot 3 untouched")
 
 

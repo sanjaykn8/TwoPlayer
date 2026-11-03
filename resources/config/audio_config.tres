@@ -19,6 +19,36 @@ music_tracks = {
 "path": "res://assets/music/time_for_adventure.mp3",
 "pitch": 1.0,
 "volume_db": -11.0
+},
+"forest": {
+"path": "res://assets/music/time_for_adventure.mp3",
+"pitch": 1.0,
+"volume_db": -11.0
+},
+"caves": {
+"path": "res://assets/music/time_for_adventure.mp3",
+"pitch": 0.88,
+"volume_db": -12.0
+},
+"ruins": {
+"path": "res://assets/music/time_for_adventure.mp3",
+"pitch": 0.95,
+"volume_db": -11.0
+},
+"lava": {
+"path": "res://assets/music/time_for_adventure.mp3",
+"pitch": 1.06,
+"volume_db": -10.0
+},
+"fortress": {
+"path": "res://assets/music/time_for_adventure.mp3",
+"pitch": 0.82,
+"volume_db": -12.0
+},
+"citadel": {
+"path": "res://assets/music/time_for_adventure.mp3",
+"pitch": 0.92,
+"volume_db": -10.0
 }
 }
 context_tracks = {
@@ -27,6 +57,12 @@ context_tracks = {
 "victory": "victory"
 }
 world_tracks = {
+"caves": "caves",
+"citadel": "citadel",
+"forest": "forest",
+"fortress": "fortress",
+"lava": "lava",
+"ruins": "ruins",
 "w1": "world_1"
 }
 default_world_track = "world_1"

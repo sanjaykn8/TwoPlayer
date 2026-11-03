@@ -16,7 +16,7 @@ extends RefCounted
 
 const MAGIC := "TKCSAVE"
 const FORMAT_VERSION := 1
-const GAME_VERSION := "dev-phase8"
+const GAME_VERSION := "dev-phase10"
 const MAX_COINS := 10000000
 const MAX_PLAYTIME := 1.0e8
 
@@ -41,6 +41,8 @@ static func build(slot: int, run: RunState, world: Dictionary) -> Dictionary:
 			"playtime": run.campaign.playtime,
 			"coins": run.coins,
 			"players": players,
+			"finished": bool(run.campaign.flags.get("finished", false)),
+			"levels_completed": run.campaign.completed_levels.size(),
 		},
 		"run": run.snapshot(),
 		"world": world,
@@ -103,7 +105,7 @@ static func validate(doc: Dictionary, expected_slot: int) -> String:
 	if int(header.slot) != expected_slot:
 		return "save belongs to slot %d, not %d" % [int(header.slot), expected_slot]
 	if not LevelCatalog.is_known_level(str(header.level_id)) or not LevelCatalog.is_known_world(str(header.world_id)):
-		return "unknown world or level id"
+		return "unknown world or level id (saved by a different campaign build)"
 	var coins := float(header.coins)
 	var time := float(header.playtime)
 	if coins < 0 or coins > MAX_COINS or time < 0.0 or time > MAX_PLAYTIME:

@@ -1,0 +1,44 @@
+[gd_resource type="Resource" script_class="CampaignDefinition" format=3]
+
+[ext_resource type="Script" path="res://scripts/campaign/campaign_definition.gd" id="1_hxmli"]
+[ext_resource type="Script" path="res://scripts/campaign/world_definition.gd" id="2_ckfoc"]
+[ext_resource type="Script" path="res://scripts/campaign/level_definition.gd" id="3_a3b4x"]
+
+[sub_resource type="Resource" id="Resource_o6y7e"]
+script = ExtResource("3_a3b4x")
+id = "w1_l1"
+title = "Level 1"
+world_id = "w1"
+order = 1
+scene_path = "res://scenes/levels/w1/w1_l1.tscn"
+theme = "forest"
+spawn_p1 = Vector2(40, 448)
+spawn_p2 = Vector2(72, 448)
+optional_content = PackedStringArray()
+
+[sub_resource type="Resource" id="Resource_8dmut"]
+script = ExtResource("3_a3b4x")
+id = "w1_l2"
+title = "Level 2"
+world_id = "w1"
+order = 2
+scene_path = "res://scenes/levels/w1/w1_l2.tscn"
+theme = "forest"
+spawn_p1 = Vector2(40, 448)
+spawn_p2 = Vector2(72, 448)
+optional_content = PackedStringArray()
+
+[sub_resource type="Resource" id="Resource_t1o3g"]
+script = ExtResource("2_ckfoc")
+id = "w1"
+title = "World 1"
+theme = "forest"
+music_track = "world_1"
+levels = Array[ExtResource("3_a3b4x")]([SubResource("Resource_o6y7e"), SubResource("Resource_8dmut")])
+
+[resource]
+script = ExtResource("1_hxmli")
+id = "development"
+title = "Development campaign"
+development = true
+worlds = Array[ExtResource("2_ckfoc")]([SubResource("Resource_t1o3g")])

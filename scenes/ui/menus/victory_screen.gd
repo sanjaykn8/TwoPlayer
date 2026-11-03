@@ -27,7 +27,7 @@ func build() -> void:
 		box.add_child(note)
 	else:
 		box.add_child(MenuScreen.label("Congratulations! Both knights reached the end of the campaign.", &"", HORIZONTAL_ALIGNMENT_CENTER))
-		if LevelCatalog.DEVELOPMENT_CAMPAIGN:
+		if LevelCatalog.is_development():
 			box.add_child(MenuScreen.label("Development campaign: only the test levels exist so far.", &"DimLabel", HORIZONTAL_ALIGNMENT_CENTER))
 	stats_grid = GridContainer.new()
 	stats_grid.name = "Stats"
@@ -65,7 +65,15 @@ static func summary(r: RunState) -> Array:
 		["Coins", str(r.coins)],
 		["Play time", SaveSlotCard.format_playtime(r.campaign.playtime)],
 		["Jars and fruit found", str(r.collected.size())],
+		["Slimes defeated", str(r.puzzles.count_with_prefix(SaveIds.ENEMY_PREFIX, "_slime"))],
+		["Optional bosses", "%d defeated" % r.puzzles.count_with_prefix(SaveIds.ENEMY_PREFIX, "_boss")],
 	]
+	if not r.campaign.level_times.is_empty():
+		var fastest := ""
+		for id: String in r.campaign.level_times:
+			if fastest == "" or float(r.campaign.level_times[id]) < float(r.campaign.level_times[fastest]):
+				fastest = id
+		rows.append(["Fastest level", "%s (%s)" % [LevelCatalog.level_title(fastest), SaveSlotCard.format_playtime(float(r.campaign.level_times[fastest]))]])
 	for id in RunState.PLAYER_IDS:
 		var p := r.player(id)
 		var ups := PlayerStatusPanel.upgrade_summary(p)

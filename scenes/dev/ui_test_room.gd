@@ -94,8 +94,8 @@ static func seed_slots(manager: SaveManager) -> void:
 	# 1: ACTIVE, with progress in level 2.
 	manager.start_new_run(1, true)
 	var run := RunState.current()
-	run.campaign.complete_level("w1_l1")
-	run.campaign.enter_level("w1_l2")
+	run.campaign.complete_level(LevelCatalog.first_level())
+	run.campaign.enter_level(LevelCatalog.next_level(LevelCatalog.first_level()))
 	run.coins = 23
 	run.campaign.playtime = 1312.0
 	run.player(1).collect_jar(PlayerStats.JarType.GREEN)

@@ -52,6 +52,7 @@ func get_slot_metadata(slot: int) -> Dictionary:
 		"campaign_id": "", "world_id": "", "level_id": "", "saved_at": "", "saved_at_unix": 0.0,
 		"coins": 0, "p1_health": 0, "p1_max_health": 0, "p2_health": 0, "p2_max_health": 0,
 		"playtime": 0.0, "format_version": SaveSchema.FORMAT_VERSION, "warnings": resolved.warnings,
+		"finished": false, "levels_completed": 0,
 	}
 	if resolved.doc.is_empty():
 		return meta
@@ -68,6 +69,9 @@ func get_slot_metadata(slot: int) -> Dictionary:
 	meta.p1_max_health = int(h.players["1"].max_health)
 	meta.p2_health = int(h.players["2"].health)
 	meta.p2_max_health = int(h.players["2"].max_health)
+	# Optional header fields (Phase 10); older saves simply lack them.
+	meta.finished = bool(h.get("finished", false))
+	meta.levels_completed = int(h.get("levels_completed", 0))
 	return meta
 
 

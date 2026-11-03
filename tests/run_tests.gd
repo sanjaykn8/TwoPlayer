@@ -38,6 +38,7 @@ func _run() -> void:
 			var test_name: String = method.name
 			if not test_name.begins_with("test_"):
 				continue
+			LevelCatalog.use_production()  # tests needing the Phase 8 levels switch to development
 			RunState.reset()  # every test starts a fresh run (no progression leaks between tests)
 			await suite.before_each()
 			await suite.call(test_name)

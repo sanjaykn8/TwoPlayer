@@ -79,7 +79,7 @@ func _make_progress() -> void:
 func _assert_fresh(old_id: String) -> void:
 	var run := RunState.current()
 	assert_true(run.campaign.campaign_id != old_id, "a new campaign id")
-	assert_eq(run.campaign.level_id, LevelCatalog.FIRST_LEVEL, "first level")
+	assert_eq(run.campaign.level_id, LevelCatalog.first_level(), "first level")
 	assert_eq(run.campaign.completed_levels.size(), 0, "no completed levels")
 	assert_eq(run.coins, 0, "coins back to zero")
 	assert_eq(run.collected.size(), 0, "no collected items")
@@ -195,7 +195,7 @@ func test_death_during_a_level_transition_wins() -> void:
 	assert_eq(game.phase, CampaignGame.Phase.TRANSITIONING, "transitioning")
 	_kill(_k(0))                    # ... and a knight dies before it runs
 	assert_true(await _wait_wipe(), "new run")
-	assert_eq(RunState.current().campaign.level_id, LevelCatalog.FIRST_LEVEL, "back at the first level, not level 2")
+	assert_eq(RunState.current().campaign.level_id, LevelCatalog.first_level(), "back at the first level, not level 2")
 	_assert_fresh(old_id)
 
 

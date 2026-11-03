@@ -40,7 +40,7 @@ func test_config_only_names_existing_files() -> void:
 		assert_true(config.cues.has(cue), "cue %s configured" % cue)
 	assert_true(config.track_for_context("menu") != "", "menu music")
 	assert_true(config.track_for_world("w1") != "", "world 1 music")
-	for world in LevelCatalog.WORLDS:
+	for world in LevelCatalog.world_ids():
 		assert_true(config.music_tracks.has(config.track_for_world(world)), "%s has a track" % world)
 
 

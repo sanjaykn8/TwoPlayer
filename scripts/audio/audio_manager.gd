@@ -49,9 +49,13 @@ func play_context(context: String) -> void:
 	play_track(config.track_for_context(context))
 
 
-## Plays the track for the world that contains `level_id` (LevelCatalog).
+## Plays the level's track: the registry's (level, then world) if the config knows it,
+## otherwise the config's track for the world.
 func play_level(level_id: String) -> void:
-	play_track(config.track_for_world(LevelCatalog.world_of(level_id)))
+	var track := LevelCatalog.music_track(level_id)
+	if track == "" or config.track(track).is_empty():
+		track = config.track_for_world(LevelCatalog.world_of(level_id))
+	play_track(track)
 
 
 ## Switches to `track_id` ("" = fade to silence). The same track never restarts.

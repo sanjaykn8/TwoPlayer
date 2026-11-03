@@ -1,0 +1,53 @@
+[gd_scene load_steps=9 format=3]
+
+[ext_resource type="Script" path="res://scenes/enemies/boss/boss_slime.gd" id="1_boss"]
+[ext_resource type="Script" path="res://components/combat/hurtbox_component.gd" id="2_hurtbox"]
+[ext_resource type="Script" path="res://components/loot/coin_dropper.gd" id="3_dropper"]
+[ext_resource type="PackedScene" path="res://scenes/objects/dropped_coin.tscn" id="4_coin"]
+[ext_resource type="Resource" path="res://resources/enemies/boss_brood_mother.tres" id="5_stats"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
+size = Vector2(30, 18)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hurtbox"]
+size = Vector2(38, 26)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_contact"]
+size = Vector2(30, 18)
+
+[node name="BossSlime" type="CharacterBody2D"]
+collision_layer = 8
+collision_mask = 3
+floor_snap_length = 4.0
+script = ExtResource("1_boss")
+stats = ExtResource("5_stats")
+
+[node name="Sprite" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -12)
+
+[node name="Body" type="CollisionShape2D" parent="."]
+position = Vector2(0, -9)
+shape = SubResource("RectangleShape2D_body")
+
+[node name="Hurtbox" type="Area2D" parent="."]
+collision_layer = 64
+collision_mask = 0
+monitoring = false
+script = ExtResource("2_hurtbox")
+
+[node name="Shape" type="CollisionShape2D" parent="Hurtbox"]
+position = Vector2(0, -13)
+shape = SubResource("RectangleShape2D_hurtbox")
+
+[node name="ContactArea" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 16
+monitorable = false
+
+[node name="Shape" type="CollisionShape2D" parent="ContactArea"]
+position = Vector2(0, -9)
+shape = SubResource("RectangleShape2D_contact")
+
+[node name="CoinDropper" type="Node" parent="."]
+script = ExtResource("3_dropper")
+coin_scene = ExtResource("4_coin")

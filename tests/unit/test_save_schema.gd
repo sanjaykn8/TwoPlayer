@@ -1,8 +1,13 @@
 extends GameTestCase
 ## Level catalog, campaign state, ids, the save encoding and RunState snapshot versions.
 
+
+func before_each() -> void:
+	LevelCatalog.use_development()  # written against the Phase 8 development levels
+	RunState.reset()
+
 func test_level_catalog_is_a_closed_whitelist() -> void:
-	assert_true(LevelCatalog.is_known_level(LevelCatalog.FIRST_LEVEL), "first level known")
+	assert_true(LevelCatalog.is_known_level(LevelCatalog.first_level()), "first level known")
 	assert_eq(LevelCatalog.world_of("w1_l2"), "w1", "world of a level")
 	assert_eq(LevelCatalog.next_level("w1_l1"), "w1_l2", "campaign order")
 	assert_eq(LevelCatalog.next_level("w1_l2"), "", "end of the campaign")

@@ -16,6 +16,7 @@ func _initialize() -> void:
 
 func _run() -> void:
 	var mode: String = OS.get_cmdline_user_args()[0]
+	LevelCatalog.use_development()  # the exit tests use the Phase 8 levels
 	RunState.reset()
 	var game := (load(GAME) as PackedScene).instantiate() as CampaignGame
 	game.save_dir = DIR

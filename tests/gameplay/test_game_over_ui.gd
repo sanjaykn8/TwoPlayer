@@ -66,7 +66,7 @@ func test_wipe_shows_run_lost_after_durable_invalidation() -> void:
 	assert_true(get_tree().paused, "the fresh run waits for the players")
 	var meta := SaveManager.new(UiTestUtil.DIR).get_slot_metadata(1)
 	assert_true(str(meta.campaign_id) != old_id, "slot 1 now holds a different campaign")
-	assert_eq([int(meta.coins), str(meta.level_id)], [0, LevelCatalog.FIRST_LEVEL], "the fresh run at the first level")
+	assert_eq([int(meta.coins), str(meta.level_id)], [0, LevelCatalog.first_level()], "the fresh run at the first level")
 	var check := SaveManager.new(UiTestUtil.DIR).load_run(1)
 	assert_true(check.ok and RunState.current().campaign.campaign_id != old_id, "loading slot 1 never returns the lost run")
 	for file: String in others:
@@ -86,7 +86,7 @@ func test_begin_again_plays_the_fresh_run() -> void:
 	assert_true(app.stack.is_empty(), "screen closed")
 	var run := RunState.current()
 	assert_true(run.campaign.campaign_id != old_id, "a new run")
-	assert_eq([run.coins, run.player(1).attack_power(), run.campaign.level_id], [0, 1, LevelCatalog.FIRST_LEVEL], "nothing carried over")
+	assert_eq([run.coins, run.player(1).attack_power(), run.campaign.level_id], [0, 1, LevelCatalog.first_level()], "nothing carried over")
 	assert_eq([app.campaign.knights[0].health.current_health, app.campaign.knights[1].health.current_health], [3, 3], "both knights at 3/3")
 	assert_eq(app.saves.active_slot, 1, "same slot")
 
@@ -105,7 +105,7 @@ func test_main_menu_never_offers_the_lost_run() -> void:
 	var card := slots.card(1)
 	assert_true(str(card.meta.campaign_id) != old_id, "slot 1 offers only the fresh run")
 	assert_eq(str(card._coins.text), "0", "no coins from the lost run")
-	assert_eq(card._location.text, LevelCatalog.location_title(LevelCatalog.FIRST_LEVEL), "at the first level")
+	assert_eq(card._location.text, LevelCatalog.location_title(LevelCatalog.first_level()), "at the first level")
 
 
 func test_storage_failure_offers_only_quitting() -> void:

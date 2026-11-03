@@ -56,6 +56,17 @@ func clear_scope(scope_key: String) -> void:
 	_states.erase(scope_key)
 
 
+## How many saved states, over every level, have an id starting with `prefix` (for example
+## defeated enemies: SaveIds.ENEMY_PREFIX).
+func count_with_prefix(prefix: String, contains := "") -> int:
+	var n := 0
+	for scope: String in _states:
+		for id: String in _states[scope]:
+			if id.begins_with(prefix) and (contains == "" or id.contains(contains)):
+				n += 1
+	return n
+
+
 func scope_keys() -> Array:
 	var keys := _states.keys()
 	keys.sort()

@@ -77,7 +77,7 @@ func back() -> void:
 ## The wipe finished: the fresh run exists (saved = written to disk).
 func show_ready(slot: int, saved: bool) -> void:
 	state = State.READY
-	var start := LevelCatalog.location_title(LevelCatalog.FIRST_LEVEL)
+	var start := LevelCatalog.location_title(LevelCatalog.first_level())
 	detail.text = "A new run begins in slot %d at %s." % [slot, start] if saved \
 		else "A new run begins in slot %d at %s. It could not be saved yet; the lost run stays erased." % [slot, start]
 	_show_buttons([begin_button, menu_button])
