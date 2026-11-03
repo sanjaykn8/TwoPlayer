@@ -448,7 +448,8 @@ Always prioritize a stable playable game over rapidly generated content.
 | Phase 7: Cooperative Puzzle Systems | Implemented and auto-tested (296/296 including Phase 1–6 regression); **manual puzzle tests pending** | `docs/PHASE_7_SUMMARY.md`, `docs/TEST_REPORT.md`, `docs/MANUAL_PUZZLE_TEST.md` |
 | Phase 8: Death, Campaign Reset and Save System | Implemented and auto-tested (345/345 including Phase 1–7 regression); **manual save tests pending** | `docs/PHASE_8_SUMMARY.md`, `docs/TEST_REPORT.md`, `docs/MANUAL_SAVE_TEST.md` |
 | Phase 9: Game Interface and Audio | Implemented and auto-tested (412/412 including Phase 1–8 regression); **manual UI tests pending** | `docs/PHASE_9_SUMMARY.md`, `docs/TEST_REPORT.md`, `docs/MANUAL_UI_TEST.md` |
-| Phases 10–12 | Not started | — |
+| Phase 10: World and Level Production | Implemented and auto-tested (24 levels; full suite in `docs/TEST_REPORT.md`); **manual campaign playtest pending (no level played by people yet); campaign length unmeasured** | `docs/PHASE_10_SUMMARY.md`, `docs/CAMPAIGN_PLAN.md`, `docs/CAMPAIGN_PLAYTEST.md`, `docs/TEST_REPORT.md` |
+| Phases 11–12 | Not started | — |
 
 Phase 1 task tracking:
 
@@ -621,3 +622,24 @@ Phase 9 task tracking:
 | Sound effects (menu, combat, damage, transitions; SFX bus; limits) | Tested; listening pending |
 | Keyboard navigation of every menu | Tested with real key events; physical keyboard pending |
 | Initial tutorial screen (GDD §14) | Not implemented (KI-82) |
+
+Phase 10 task tracking:
+
+| Task | Status |
+|---|---|
+| Campaign registry (`LevelCatalog` over campaign / world / level definitions) | Tested |
+| Six worlds, four levels each, linear order | Tested |
+| 24 level scenes built from specs; ids stable and unique | Tested |
+| Spawns safe in every level (static and runtime) | Tested |
+| Exit reachable in every level without optional content (static) | Tested |
+| Every collectible, plate and switch reachable (static) | Tested |
+| Either knight completes the level; both move on; progress kept | Tested |
+| Save and resume in every world | Tested |
+| Team wipe in a later world | Tested |
+| Optional bosses (worlds 2, 4, 6): behaviour, rules, defeat and reward persistence | Tested |
+| Final victory with real results; result kept; replay needs confirmation | Tested |
+| Campaign plan and playtest checklist (24 levels) | Written (generated from the content) |
+| Manual two-player playtest of all levels | **Pending** |
+| Measured campaign length (target 90–120 min) | **Not measured** |
+| Initial tutorial screen (GDD §14) | Not implemented (KI-82) |
+

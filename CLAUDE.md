@@ -619,3 +619,9 @@ The goal is a complete and reliable game, not a collection of generated files.
 - Every quit goes through `GameApp.shutdown()` or `CampaignGame.quit_handler`. These stop audio before exiting.
 - Phase 9 harness: `scenes/dev/ui_test_room.tscn` (its own save folder and settings file; dev keys in its script).
 - Test runner caveat: a test that hits a `SCRIPT ERROR` is still counted as passed, so check full-run logs for `SCRIPT ERROR`.
+- Campaign: `LevelCatalog` is the registry (production campaign by default; `use_development()` gives the two Phase 8 test levels for older tests). Never hard-code level ids or scene paths elsewhere; use `first_level()`, `next_level()`, `level()`, `world_ids()`.
+- Levels are generated. Edit the specs in `tools/campaign/world_*.gd` (op format in `tools/campaign/campaign_builder.gd`), then run `--script res://tools/build_phase10_content.gd` and `--script res://tools/campaign_report.gd`. Never edit `scenes/worlds/**` or `resources/campaign/*.tres` by hand.
+- Level design limits (checked by `tools/level_analyzer.gd` and calibrated in `test_campaign_physics.gd`): jump up 3 tiles within 2 columns, up 2 within 3, up 1 or level within 4; gaps of 3 tiles at most. Clear a cell before putting a ladder top in solid terrain. Lifts start flush in a cleared floor cell. Every lava crossing needs a route within those limits; every pit a knight can fall into needs a way out.
+- Optional bosses: `scenes/enemies/boss/boss_slime.tscn` with `BossStats`, plus a `BossSeal` that opens the reward gate (LATCH). A boss must never be needed for the exit.
+- Placed coins use `scenes/collectibles/coin_stash.tscn` with a `collectible_id`, never dropped coins.
+

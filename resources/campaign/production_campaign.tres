@@ -343,8 +343,77 @@ theme = "fortress"
 music_track = "fortress"
 levels = Array[ExtResource("3_i6uxm")]([SubResource("Resource_u403a"), SubResource("Resource_umks0"), SubResource("Resource_8uh7d"), SubResource("Resource_kpu0d")])
 
+[sub_resource type="Resource" id="Resource_ua8xl"]
+script = ExtResource("3_i6uxm")
+id = "l21"
+title = "Frost Causeway"
+world_id = "citadel"
+order = 21
+scene_path = "res://scenes/worlds/world_06_final_citadel/level_21.tscn"
+difficulty = 8
+estimated_minutes = 5.5
+theme = "citadel"
+spawn_p1 = Vector2(56, 544)
+spawn_p2 = Vector2(88, 544)
+camera_bounds = Rect2(0, 0, 3040, 736)
+optional_content = PackedStringArray("l21_jar_yellow_1", "l21_fruit_red_1", "l21_coins_1")
+
+[sub_resource type="Resource" id="Resource_ydxek"]
+script = ExtResource("3_i6uxm")
+id = "l22"
+title = "Spire of Silence"
+world_id = "citadel"
+order = 22
+scene_path = "res://scenes/worlds/world_06_final_citadel/level_22.tscn"
+difficulty = 9
+estimated_minutes = 5.5
+theme = "citadel"
+spawn_p1 = Vector2(72, 1056)
+spawn_p2 = Vector2(104, 1056)
+camera_bounds = Rect2(0, 0, 1920, 1120)
+optional_content = PackedStringArray("l22_jar_green_1", "l22_coins_1")
+
+[sub_resource type="Resource" id="Resource_2birh"]
+script = ExtResource("3_i6uxm")
+id = "l23"
+title = "Warden's Vault"
+world_id = "citadel"
+order = 23
+scene_path = "res://scenes/worlds/world_06_final_citadel/level_23.tscn"
+difficulty = 9
+estimated_minutes = 6.0
+theme = "citadel"
+spawn_p1 = Vector2(56, 576)
+spawn_p2 = Vector2(88, 576)
+camera_bounds = Rect2(0, 0, 3200, 800)
+optional_content = PackedStringArray("l23_boss_1", "l23_jar_blue_1", "l23_coins_1")
+boss_id = "l23_boss_1"
+
+[sub_resource type="Resource" id="Resource_ku5vf"]
+script = ExtResource("3_i6uxm")
+id = "l24"
+title = "Crown of Dawn"
+world_id = "citadel"
+order = 24
+scene_path = "res://scenes/worlds/world_06_final_citadel/level_24.tscn"
+difficulty = 10
+estimated_minutes = 7.0
+theme = "citadel"
+spawn_p1 = Vector2(56, 704)
+spawn_p2 = Vector2(88, 704)
+camera_bounds = Rect2(0, 0, 3680, 800)
+optional_content = PackedStringArray("l24_fruit_green_1", "l24_coins_1")
+
+[sub_resource type="Resource" id="Resource_ae7r3"]
+script = ExtResource("2_dgm12")
+id = "citadel"
+title = "Final Citadel"
+theme = "citadel"
+music_track = "citadel"
+levels = Array[ExtResource("3_i6uxm")]([SubResource("Resource_ua8xl"), SubResource("Resource_ydxek"), SubResource("Resource_2birh"), SubResource("Resource_ku5vf")])
+
 [resource]
 script = ExtResource("1_3ls8l")
 id = "main"
 title = "Main campaign"
-worlds = Array[ExtResource("2_dgm12")]([SubResource("Resource_xe87w"), SubResource("Resource_5ffdt"), SubResource("Resource_eu6go"), SubResource("Resource_xs6a3"), SubResource("Resource_jxvc0")])
+worlds = Array[ExtResource("2_dgm12")]([SubResource("Resource_xe87w"), SubResource("Resource_5ffdt"), SubResource("Resource_eu6go"), SubResource("Resource_xs6a3"), SubResource("Resource_jxvc0"), SubResource("Resource_ae7r3")])

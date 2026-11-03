@@ -1,6 +1,6 @@
 # Known Issues
 
-Updated 2026-11-03 (end of Phase 9).
+Updated 2026-11-03 (end of Phase 10).
 
 ## Open
 
@@ -13,11 +13,10 @@ Updated 2026-11-03 (end of Phase 9).
 | KI-38 | Verification gap | Phase 5 manual collectible tests (`docs/MANUAL_COLLECTIBLE_TEST.md`) not yet performed | User |
 | KI-46 | Verification gap | Phase 6 manual hazard tests (`docs/MANUAL_HAZARD_TEST.md`) not yet performed | User |
 | KI-75 | Verification gap | Phase 9 manual UI tests (`docs/MANUAL_UI_TEST.md`) not yet performed: menus with the real keyboard, the audio mix by ear, fullscreen on the real monitor, settings after a real restart, HUD readability during play | User |
-| KI-76 | Info | The bundle has one music track. Menu, world 1 and victory music are that track at different pitch and volume (`audio_config.tres`); game over is silent. Per-world tracks are configurable (`world_tracks`) | Add tracks when available |
+| KI-76 | Info | The bundle has one music track. Menu, each of the six worlds and victory music are that track at different pitch and volume (`audio_config.tres`); game over is silent. Per-world tracks are configurable (`world_tracks`) | Add tracks when available |
 | KI-77 | Info | New sound cues reuse the six bundle sounds: attack = `tap.wav`, enemy hit / stagger and player damage = `hurt.wav`, enemy and player death / game over = `explosion.wav`, level transition and victory = `power_up.wav`, menu sounds = `tap.wav`. No dedicated swing, gate, transition, victory or game-over sound exists | Accepted (asset bundle) |
 | KI-78 | Info | Display options are windowed sizes at whole multiples of 640x360 that fit the screen, and borderless fullscreen. No exclusive fullscreen, monitor choice or vsync option | Revisit in Phase 12 if needed |
 | KI-79 | Info | Menus use Godot's standard navigation (arrow keys, Enter/Space, Esc) plus the mouse. W/S do not move through menus (gameplay mappings were not changed) | Revisit after the manual keyboard test |
-| KI-80 | Info | After victory the finished campaign stays in its slot (flag `finished`); Continue resumes its last level. Post-completion slot handling (e.g. a "completed" badge) belongs with the real final level | Phase 10 |
 | KI-81 | Info | In the stacked split, Player Two's panel stays top-right (over Player One's top view), so each panel keeps one consistent position in every camera mode (prompt requirement) | By design |
 | KI-82 | Info | GDD §14 lists an initial tutorial screen; not implemented. The Controls screen and in-level clues cover the basics for now | Decide in Phase 10 (level design) |
 | KI-83 | Minor (tooling) | The test runner fails a test only on assertion failures; a test that hits a `SCRIPT ERROR` is still reported as passed. Full-run logs are therefore checked for `SCRIPT ERROR` lines | Improve the runner in a later phase |
@@ -25,8 +24,16 @@ Updated 2026-11-03 (end of Phase 9).
 | KI-85 | Info | The window title comes from `ui_config.tres` ("UNTITLED") at runtime; `application/config/name` is still "2p", which exports and the task bar may show until a title is chosen | Set when the title is chosen |
 | KI-86 | Info | Main-menu backdrop tiles the purple sky strip horizontally, so its cloud band repeats visibly | Art polish |
 | KI-87 | Info | Victory statistics show what the run records (levels, coins, play time, items found, health and upgrades). Enemy-defeat counts and deaths are not tracked by the run | Phase 10/11 if wanted |
+| KI-88 | Verification gap | **No level has been played by people yet.** Phase 10 manual playtest (`docs/CAMPAIGN_PLAYTEST.md`, 24 levels) pending: clarity of clues and routes, fairness of jumps and timings, difficulty curve, camera in each level | User (two players) |
+| KI-89 | Major risk | Campaign length is **unmeasured**. Design estimates total 124 min; the analyzer's pure-movement floor is 9.5 min. Real two-player first play could be below the 90-minute target | Measure in the playtest; Phase 11 balancing |
+| KI-90 | Info | Boss fights are not saved mid-fight: after loading, a boss that was not defeated is back at full health; its minions and burning patches are gone | By design (defeat itself is saved) |
+| KI-91 | Info | The level analyzer is a tile model: it ignores timing (timed gates, blinking and crumbling platforms, sync windows, moving-platform phase) and enemy pressure. It proves routes exist, not that they are comfortable | Playtest (KI-88) |
+| KI-92 | Minor | Level art limits: flat banded skies with faint silhouettes, no terrain edge or corner tiles, thin wall columns above gates read as poles, levels are mostly rectangular rooms | Art polish |
+| KI-93 | Info | Saves made by the Phase 8-9 development builds (levels `w1_l1`/`w1_l2`) cannot be loaded by the production campaign; the slot says so (an existing real slot 1 from 12:26 on 2026-11-03 is affected). Start a new campaign there | Accepted |
+| KI-94 | Info | Coins dropped by boss minions get generated save ids (like KI-73) | Accepted |
+| KI-95 | Info | Either-knight exit rule: in levels with a plate-held door, one knight can reach the exit while the other is still holding the plate; both move on together. Intended (GDD) | By design |
+| KI-96 | Info | Collapsing and blinking platforms over lava mean a missed jump ends the run (lava kills, and a knight's death resets the campaign). Every such crossing is jumpable on the analyzer's limits, but whether it feels fair is a playtest question | Playtest (KI-88) |
 | KI-65 | Verification gap | Phase 8 manual save tests (`docs/MANUAL_SAVE_TEST.md`) not yet performed, including closing with the real window X button and Alt+F4 (automated tests send the same close notification to a real child process) | User |
-| KI-67 | Major (Phase 10) | Only two development campaign levels (`w1_l1`, `w1_l2`) exist in `LevelCatalog` | Phase 10 |
 | KI-68 | Info | Save on exit covers a normal close (window X, Alt+F4). A killed process or power loss keeps the last completed save (atomic writes protect it), but progress since the last autosave is lost. Not claimed recoverable | By design |
 | KI-69 | Info | If the team-wipe marker cannot be written (storage failure), the game halts (fail-closed): the game-over screen shows a storage error and only Quit (no Main Menu, so the lost run cannot be continued in that session). The lost campaign is still on disk and would load on the next launch | Inherent; reported to the player |
 | KI-70 | Info | The wipe marker is removed once the fresh run's save is verified. A copy of an old save file restored by hand from outside the game would load again; manual file restoration is out of scope | Accepted |
@@ -77,6 +84,8 @@ Updated 2026-11-03 (end of Phase 9).
 
 | ID | Issue | Resolution |
 |---|---|---|
+| KI-80 | After victory the finished campaign stays in its slot (flag `finished`); Continue resumes its last level. Post-completion slot handling (e.g. a "completed" badge) belongs with the real final level | Phase 10: a finished campaign keeps its result; the slot shows CAMPAIGN COMPLETE and Continue opens the victory screen again; starting over asks for confirmation |
+| KI-67 | Only two development campaign levels (`w1_l1`, `w1_l2`) exist in `LevelCatalog` | Phase 10: the production campaign has six worlds and 24 levels (`LevelCatalog`, `scenes/worlds/`); the two development levels remain only for tests |
 | KI-57 | Level exits / portals and level-to-level transitions were not implemented | Phase 8 (`LevelExit`, `CampaignGame.complete_level`); this entry was left open by mistake and closed during the Phase 9 review. Production exits come with the Phase 10 levels |
 | KI-66 | No main menu, slot-selection, overwrite-confirmation or game-over screen yet. The campaign is played through `scenes/campaign/campaign_game.tscn` (slot 1, continue) or the dev harness; the frozen world plus a text notice is the only wipe presentation | Phase 9: main menu, four-slot screen, overwrite/delete confirmations and the game-over screen exist (`scenes/ui/menus/`) |
 | KI-72 | During the team-wipe delay the whole level is frozen, including the dying knight's animation | Phase 9: the frozen world is now covered by the "RUN LOST" game-over screen, which fades in and offers choices once the fresh run exists |

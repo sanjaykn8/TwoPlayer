@@ -704,3 +704,36 @@ Where a decision refines an earlier section, this section is authoritative.
   - window size in whole multiples of 640×360. The picture is never stretched.
 - **Audio.** Music fades between menu, world, victory and silence on game over, and never
   restarts. Sound effects are limited so bursts stay quiet.
+
+**Campaign (Phase 10, 2026-11-03)** (refines sections 11 and 12):
+- **Worlds.** Six worlds of four levels, played in order. Names are working names:
+
+  | World | Name | Levels |
+  |---|---|---|
+  | 1 | Ancient Forest | The Mossy Path, Rootway Hollows, Old Watchtrees, Heart of the Grove |
+  | 2 | Underground Caves | Crystal Descent, Echoing Shafts, Brood Caverns, The Sunless Lift |
+  | 3 | Abandoned Ruins | Sunken Gatehouse, Hall of Echoes, Twin Sanctums, The Gilded Seal |
+  | 4 | Lava Kingdom | Ashen Steps, Cinder Bridges, Forge of Embers, Heart of the Mountain |
+  | 5 | Dark Fortress | Iron Gate Keep, Clockwork Halls, Broken Towers, The Black Bastion |
+  | 6 | Final Citadel | Frost Causeway, Spire of Silence, Warden's Vault, Crown of Dawn |
+
+- **Exit.** Either living knight reaching a level's exit completes it. Both knights continue
+  together at the next level's start, keeping their own health (nothing is refilled), upgrades
+  and effects, plus the shared coins.
+- **Victory.** Finishing Crown of Dawn completes the campaign. The result stays in the slot,
+  and Continue shows it again. A new campaign there needs confirmation.
+- **Optional bosses** (never required):
+
+  | Boss | Level | How to hurt it | Reward |
+  |---|---|---|---|
+  | Brood Mother | 7 | Any time except mid-leap | Red jar |
+  | Magma Heart | 15 | Only while dazed after a landing | Green jar |
+  | Citadel Warden | 23 | Only when both knights strike together | Blue jar |
+
+  Each telegraphs its leap (it squashes, shows "!" and marks the landing spot). The landing
+  shockwave hurts knights standing close by. A defeated boss stays defeated for the run, and
+  its reward room stays open.
+- **Lava** kills, and so ends the run. Every lava crossing has a route on stones or platforms
+  that a careful pair can make.
+- **Placed coins** are found in hidden places. Like jars, each one is collected once per run.
+

@@ -1229,3 +1229,84 @@ The shared code changed in this phase is exercised by the old tests as well as t
 | UI tests 1–20 (`docs/MANUAL_UI_TEST.md`): menus by keyboard, listening to the mix, settings persistence after a real restart, fullscreen on the real monitor, HUD readability in play | **Pending user test** |
 | Phase 2–8 manual tests | **Still pending** |
 | Visual inspection of captured frames | Done by Claude from captures, **not** interactive play; no audio was listened to |
+
+## Phase 10: 2026-11-03
+
+### A. Validation
+
+| Check | Result |
+|---|---|
+| Campaign build (`tools/build_phase10_content.gd`) | 24 scenes and both registries written, no errors, no leaks |
+| Static playability (`tools/level_analyzer.gd`, all 24 levels) | Spawns safe; exit reachable without optional content; every non-boss gate openable; every collectible, plate and switch reachable (with optional bosses); no lock needs more than two knights |
+| Analyzer calibration (real knight, real input) | Flat 3-tile gap, 1-up over 3, 2-up over 2 and 3-up over 1 tile all land; 5-tile gaps and 4-row climbs are refused by the analyzer |
+| Rendered overviews | Every World 1-2 level plus samples of worlds 3-6 rendered whole; layout mistakes found this way and by the analyzer were fixed (see below) |
+| Gameplay captures (640x360) | Level 1 start, Brood Mother fight (name bar, landing mark), Ashen Steps lava pool, Crown of Dawn seal room, Echoing Shafts in stacked split |
+| Main scene boot | No errors; the player's real `saves/` folder unchanged |
+
+### B. Automated tests
+
+Command: `godot --headless --path . --fixed-fps 60 --script res://tests/run_tests.gd`
+
+Result: **440 passed, 0 failed**, exit code 0, with no `ERROR`, `WARNING` or `SCRIPT ERROR`
+lines. The result was identical in two consecutive runs.
+
+- **Tests:** 412 Phase 1–9 tests plus 28 Phase 10 tests.
+- **Expected output:** five lines starting `[CampaignGame]`, the expected fault-injection reports.
+
+| Requirement (prompt Parts P, Q, T, X) | Tests |
+|---|---|
+| Six worlds × four levels, unique ids, linear order, trusted scene paths, metadata | `test_six_worlds_of_four_levels`, `test_registry_is_linear_and_trusted` |
+| Every scene complete: spawns match the registry, camera bounds, one exit, fall boundary, knights; unique collectible / puzzle / save ids; valid enemy and hazard placements | `test_every_level_scene_is_complete` |
+| Reachable spawns, exits, gates, inputs and collectibles; optional content never blocks; no impossible locks | `test_every_level_is_playable`, `test_the_analyzer_finds_blocked_levels` |
+| Analyzer agrees with physics | `test_campaign_physics.gd` (5 tests) |
+| Every level loads in CampaignGame with both knights safe, on the floor, unhurt, not next to a slime; camera uses the new bounds | `test_every_level_spawns_both_knights_safely` |
+| One knight at the exit moves both; health not refilled; upgrades, coins and level time kept; new level saved | `test_one_knight_at_the_exit_moves_both_and_keeps_progress` |
+| Exit during split-screen; one transition only | `test_split_screen_exit_and_single_transition` |
+| Save and resume in every world | `test_save_and_resume_in_every_world` |
+| Team wipe in world 6 resets everything to level 1 | `test_team_wipe_in_a_later_world_resets_everything` |
+| Optional bosses: defeat, seal, reward gate, persistence after reload; exits work with bosses alive; boss behaviour (wake, telegraph, leap, shockwave, daze), rules (daze-only, both knights together), minions, embers | `test_optional_boss_defeat_and_reward_persist`, `test_main_route_never_needs_a_boss`, `test_three_optional_bosses`, `test_boss.gd` (4 tests) |
+| Final level completes the campaign; result saved; team wipe beats victory | `test_final_level_completes_the_campaign`, `test_wipe_beats_victory` |
+| Victory screen with real totals (24 of 24); result kept; Continue shows it; replay asks first | `test_victory_result_is_kept_and_replay_needs_confirmation` |
+| Every collectible type placed; difficulty rises by world | `test_every_collectible_type_is_placed`, `test_difficulty_rises_by_world` |
+
+### C. Regression (prompt Part T)
+
+All 412 Phase 1–9 tests pass. They run on the two development levels, which are kept as the
+development campaign; the test runner selects production before every test.
+
+### Defects found and fixed during Phase 10
+
+1. **The analyzer found blocked levels while they were being built:**
+   - Crystal Descent: a spike bed too wide to jump; a pocket with no floor; a ladder top inside
+     rock.
+   - Echoing Shafts: a leftover rock fill sealed the upper chamber; a 5-tile gap.
+   - Brood Caverns: the boss cave floor was carved away; a ladder was cleared after it was placed.
+   - The Sunless Lift: a fill swallowed the treasure room.
+   - Broken Towers: the tower door was carved in the floor instead of the wall; a 5-tile hop.
+   - The Black Bastion: a ledge 4 rows up.
+
+   All are fixed and pass.
+2. **Analyzer bugs:**
+   - Lift relays were only re-checked twice (now repeated until the area stops growing).
+   - Controlled platforms were treated as always moving.
+   - Jump clearance was too strict.
+3. **Visual fixes found in the renders:**
+   - Background silhouettes were too dark and read as walls.
+   - The citadel's fill tile repeated a snow cap on every tile.
+   - The fortress pillar tile was sand brick.
+   - Scenery overlapped clue signs and ladders.
+   - Two clues overlapped each other; a clue overlapped the summit exit.
+4. **Engine error:** `boss_slime.tscn` instanced on its own (the scene-validation test) had no
+   stats; it now defaults to the Brood Mother's.
+5. **Test-only issues:**
+   - The split-screen test checked for split after the level had changed.
+   - The completeness counts moved to their own file, so milestone commits passed.
+
+### D. Manual tests
+
+| Test | Status |
+|---|---|
+| Two-player playtest of all 24 levels (`docs/CAMPAIGN_PLAYTEST.md`) | **Pending; no level has been played by people** |
+| Campaign duration | **Not measured** (design estimate 124 min; movement floor 9.5 min) |
+| Phase 2–9 manual tests | Still pending |
+| Visual inspection | Claude, from rendered overviews and captures only |

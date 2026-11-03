@@ -87,6 +87,7 @@ func build(level_spec: Dictionary, world_theme: Dictionary) -> Node2D:
 	for op: Array in spec.ops:
 		_terrain_op(op)
 	_background()
+	_backdrop()
 	var terrain := _terrain()
 	_add(root, terrain)
 	var bounds: Node2D = (load("res://components/camera/camera_bounds.gd") as GDScript).new()
@@ -193,6 +194,40 @@ func _background() -> void:
 	sky.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	sky.z_index = -20
 	_add(root, sky)
+
+
+## Far scenery: dark, non-colliding silhouettes of the world's own wall tiles (ruined
+## columns, cave pillars, towers) standing on the ground behind the play space. Seeded by the
+## level id, so every build is identical.
+func _backdrop() -> void:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = hash(spec.id + "_far")
+	var tex := AtlasTexture.new()
+	tex.atlas = WORLD_PNG
+	var cell: Vector2i = theme.wall
+	tex.region = Rect2(cell.x * T, cell.y * T, T, T)
+	var x := rng.randi_range(2, 8)
+	while x < spec.width - 2:
+		var surface := -1
+		for r in range(2, spec.height):
+			if solid.has(Vector2i(x, r)):
+				surface = r
+				break
+		if surface > 6:
+			var rows := rng.randi_range(3, mini(12, surface - 3))
+			var cols := rng.randi_range(1, 3)
+			var column := TextureRect.new()
+			column.texture = tex
+			column.stretch_mode = TextureRect.STRETCH_TILE
+			column.position = Vector2(x * T, (surface - rows) * T)
+			column.size = Vector2(cols * T, rows * T)
+			# Faint and translucent: clearly scenery, never mistaken for a wall.
+			var tint: Color = Color(theme.sky_bottom).lerp(Color(theme.sky_top), 0.5)
+			column.modulate = Color(tint.lightened(0.1), 0.28)
+			column.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			column.z_index = -15
+			_add(_group("FarScenery"), column)
+		x += rng.randi_range(9, 20)
 
 
 ## Background scenery from the world's palette on open floor, behind everything, placed

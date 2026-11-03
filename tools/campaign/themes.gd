@@ -31,7 +31,7 @@ const THEMES := {
 		"deco": [[7, 3, 1], [7, 4, 1], [8, 4, 1], [9, 4, 1], [2, 8, 1], [8, 7, 1]],
 	},
 	"citadel": {
-		"top": Vector2i(7, 0), "fill": Vector2i(7, 1), "wall": Vector2i(6, 1), "platform_row": 3,
+		"top": Vector2i(7, 0), "fill": Vector2i(6, 1), "wall": Vector2i(8, 1), "platform_row": 3,
 		"sky_top": Color("1b2133"), "sky_bottom": Color("7d8fb0"), "deco_tint": Color(0.9, 0.95, 1.0),
 		"deco": [[6, 3, 3], [6, 6, 1], [6, 8, 1], [6, 2, 1], [7, 3, 1]],
 	},

@@ -1361,3 +1361,121 @@ gates, puzzles, hazards) are unchanged and now use the SFX bus.
 - force side-by-side or stacked splits.
 
 Tests use `user://test_saves_ui/` and `user://test_settings_ui.cfg` (`tests/framework/ui_test_util.gd`).
+
+## 21. The campaign (implemented in Phase 10)
+
+### Registry (`scripts/campaign/level_catalog.gd`, `LevelCatalog`)
+
+`LevelCatalog` is the only source of level order, worlds, scenes, names and music. It is a
+static facade over a `CampaignDefinition` resource, which holds `WorldDefinition`s, which hold
+`LevelDefinition`s. A `LevelDefinition` records:
+
+- **Identity:** id, title, world, order, and the scene path (trusted, never taken from a save).
+- **Design:** difficulty and estimated minutes.
+- **Presentation:** music track and theme.
+- **Layout:** both spawns and the camera bounds.
+- **Rules:** completion rule (`"exit"`), optional content ids, and the boss id.
+
+| Campaign | Resource | Contents |
+|---|---|---|
+| production (default) | `resources/campaign/production_campaign.tres` | 6 worlds × 4 levels, `l01`–`l24` |
+| development | `resources/campaign/development_campaign.tres` | The Phase 8 levels `w1_l1`, `w1_l2`, kept for the Phase 8–9 tests |
+
+- `use_production()` / `use_development()` switch the active campaign.
+  - The test runner selects production before every test.
+  - `SaveTestUtil.clean()` selects development.
+  - The Phase 8 save harness uses development.
+- Only the active campaign's metadata is loaded; level scenes load one at a time
+  (`CampaignGame._load_level`).
+- The old constants became functions (`first_level()`, `world_ids()`, `is_development()`).
+  New helpers: `previous_level`, `is_final_level`, `levels_of`, `music_track`, `level`, `world`.
+- A save naming a level outside the active campaign is refused ("saved by a different campaign
+  build"). The slot card says it was saved by an earlier development build.
+
+### World and level content
+
+- **Scenes:** `scenes/worlds/world_0N_<name>/level_NN.tscn`.
+- **Generator:** `tools/build_phase10_content.gd` builds them from the level specs in
+  `tools/campaign/world_1.gd` … `world_6.gd`, using `tools/campaign/campaign_builder.gd` and
+  the themes in `tools/campaign/themes.gd`. Edit the specs and re-run it; never edit the
+  generated scenes.
+- **Spec format:** tile coordinates and an op list (terrain, ladders, hazards, slimes,
+  collectibles, puzzle elements wired by name, platforms, controllers, boss, seal), documented
+  in the builder's header.
+- **Ids:** every persistent id is `<level id>_<node name>`, written into the scene at build time.
+  Collectible ids are therefore unique across the campaign.
+- **Scene contents:** each level scene has `Terrain` (TileMapLayer, source 0 solid / source 1
+  one-way), `CameraBounds` (the whole map), `SpawnP1`/`SpawnP2`, `Knights/Knight1..2` at the
+  spawns, `Campaign/Exit`, `Hazards/FallBoundary`, and its entity groups.
+- **Scenery:** the background is a banded sky, faint far silhouettes of the world's wall tiles,
+  and bundle scenery on open floor. All of it is non-colliding and seeded by the level id.
+
+### Progression
+
+- **Exit:** `LevelExit` fires when either living knight enters it. `CampaignGame.complete_level`
+  then:
+  1. marks the level completed, which also records `CampaignState.level_times[level]`;
+  2. moves to `LevelCatalog.next_level`;
+  3. loads the next level in one frame (Phase 8 restoration rules);
+  4. saves `level_start:<id>`.
+- **What carries over:** health, upgrades, effects and coins live in `RunState`, so they carry
+  over and nothing is refilled.
+- **Guards:** a team wipe in progress blocks completion (phase check). A level completes once per
+  call, because the TRANSITIONING phase blocks a second call.
+- **Last level:** after it, the `finished` flag is set and the campaign is saved;
+  `campaign_completed` opens the victory screen.
+- **Victory statistics:** levels completed of total, coins, play time, items found, slimes
+  defeated, optional bosses defeated, fastest level, and both knights' health and upgrades.
+  Continuing a finished campaign shows the result again.
+- **Save header (optional fields, format unchanged):** `finished`, `levels_completed`.
+- **`CampaignState` (optional fields):** `level_times`, `level_started_at`. Older snapshots
+  still load.
+
+### Optional bosses (`scenes/enemies/boss/`)
+
+| Boss | Level | Rule | Extras | Reward |
+|---|---|---|---|---|
+| Brood Mother | 7 | Hurt any time except in the air | Minions | Red jar |
+| Magma Heart | 15 | Hurt only while dazed | Burning patches | Green jar |
+| Citadel Warden | 23 | Hits count only when both knights strike within 1.2 s | Minions, burning patches | Blue jar |
+
+- **One scene, three configurations:** `BossSlime` uses `BossStats` (`resources/enemies/boss_*.tres`).
+- **Fight loop:** it is dormant until a knight enters its arena, then stalks, telegraphs (squash,
+  "!", a red landing mark), leaps, lands with a shockwave (grounded knights within
+  `shock_radius` take a CONTACT hit), and is then dazed.
+- **Bounds:** it never leaves its arena.
+- **Damage:** knights' ordinary melee `DamageEvent`s; no new controls.
+- **Persistence:**
+  - Defeat is recorded in the run's puzzle registry as `enemy:<save_id>`, like slimes.
+  - A `BossSeal` (`PuzzleSource`) latches and opens the reward niche's LATCH gate; it is saved
+    like any latched puzzle, so the reward stays reachable after loading.
+  - A team wipe resets everything.
+- **Not saved:** live fight state; a boss restarts at full health after loading (KI-90).
+- **Main route:** every boss level's exit is reachable without the boss (analyzer pass without
+  seals; runtime test).
+
+### Placed coins (`scenes/collectibles/coin_stash.gd`)
+
+`CoinStash` is a unique `Collectible` (needs `collectible_id`) that gives N coins through
+`RunState.collect_coin`. That includes the shared total and the 10 % heal roll. It never
+returns in the same run.
+
+### Validation (`tools/level_analyzer.gd`)
+
+- **Movement model:** a static tile model of standing cells, walking, falling, dropping through
+  one-way tiles, ladders, moving-platform paths and jumps (up 3 within 2 columns, up 2 within 3,
+  up 1 or level within 4, down within 4 + half the drop).
+- **Physics check:** `tests/gameplay/test_campaign_physics.gd` performs the limit jumps with the
+  real knight and real input, and checks impossible ones are refused.
+- **Puzzles:** staged. Gates open when their controller can be activated from the reachable
+  area; platforms with a controller move only once it can; the loop repeats until nothing
+  changes (lift relays).
+- **Checks per level:**
+  - spawns standable and safe;
+  - exit reachable without optional content;
+  - every non-boss gate openable;
+  - everything reachable once bosses count;
+  - no lock needs more than two knights holding at once.
+- **Report:** `tools/campaign_report.gd` writes `docs/CAMPAIGN_PLAN.md` and
+  `docs/CAMPAIGN_PLAYTEST.md` from the registry, the scenes, the specs' design notes and the
+  analyzer.
