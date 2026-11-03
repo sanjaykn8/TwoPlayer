@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="SlimeStats" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/enemies/slime_stats.gd" id="1_stats"]
+[ext_resource type="SpriteFrames" path="res://resources/enemies/green_slime_frames.tres" id="2_frames"]
+
+[resource]
+script = ExtResource("1_stats")
+display_name = "Green Slime"
+debug_tag = "G"
+sprite_frames = ExtResource("2_frames")
+stagger_threshold = 2
+stagger_duration = 10.0
+patrol_speed = 30.0
+acceleration = 400.0
+gravity = 900.0
+max_fall_speed = 300.0
+idle_time = 1.0
+turn_pause = 0.4
+detection_radius = 96.0
+sense_interval = 0.1
+target_switch_margin = 24.0
+lose_target_time = 1.0
+detect_reaction_time = 0.2
+give_up_time = 3.0
+reacquire_delay = 1.5
+contact_damage = 1
+contact_interval = 0.25
+hit_pause = 0.15
+recover_time = 0.4
+coin_min = 4
+coin_max = 6

@@ -1,6 +1,6 @@
 # Known Issues
 
-Updated 2026-11-03 (end of Phase 3).
+Updated 2026-11-03 (end of Phase 4).
 
 ## Open
 
@@ -9,6 +9,12 @@ Updated 2026-11-03 (end of Phase 3).
 | KI-5 | Major (for Phase 12) | Windows export templates for 4.7.2 are not installed (`%APPDATA%/Godot/export_templates/` is empty). Export and offline verification are impossible until installed | User installs via Editor → Manage Export Templates |
 | KI-18 | Verification gap | Phase 2 manual camera tests (`docs/MANUAL_CAMERA_TEST.md`) not yet performed | User |
 | KI-25 | Verification gap | Phase 3 manual combat tests (`docs/MANUAL_COMBAT_TEST.md`) not yet performed | User |
+| KI-32 | Verification gap | Phase 4 manual enemy tests (`docs/MANUAL_ENEMY_TEST.md`) not yet performed | User |
+| KI-33 | Minor | The slime sheets have no death or attack animation. Death is a placeholder: hit-flash frame, then a 0.5 s squash and fade made by scaling (briefly non-integer scale). Contact damage has no attack animation | Create death frames during art polish |
+| KI-34 | Minor | Slimes cannot jump or path-find; a knight on another level makes them wait, then give up after 3 s | By design for Phase 4 (GDD §18); an enemy-jump capability can be added later |
+| KI-35 | Minor | Dropped coins cannot be collected and stay in the level; nothing totals them except the dev room's preview counter | Phase 5 (collection, shared total, 10 % heal) |
+| KI-36 | Info | When both knights' distinct attacks land in the same tick, one can stagger a slime and the other kill it immediately. This follows the rule (the staggering attack never kills; any other attack does) | By design; revisit after manual testing |
+| KI-37 | Info | Defeated slimes are freed. Saving which enemies are defeated (persistent ids) is Phase 8 | Phase 8 |
 | KI-26 | Minor | No knight attack body animation exists in the asset pack. The generated knife slash (`assets/created/knife_slash.png`, placeholder art) overlays the knight's normal idle/run frames | Create attack pose frames during art polish |
 | KI-27 | Minor | The knife slash art does not grow with the range multiplier (pixel art cannot be scaled by 1.1–1.3 cleanly). Red-fruit range upgrades will reach further than the drawn arc | Phase 5: add a longer arc variant or a range indicator |
 | KI-28 | Info | On solid ground Up also jumps, so an up attack from the ground is always a jump attack | By design (GDD controls); documented in GDD §18 |

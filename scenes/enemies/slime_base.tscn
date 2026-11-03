@@ -1,0 +1,90 @@
+[gd_scene load_steps=12 format=3]
+
+[ext_resource type="Script" path="res://scenes/enemies/slime.gd" id="1_slime"]
+[ext_resource type="Script" path="res://components/combat/hurtbox_component.gd" id="2_hurtbox"]
+[ext_resource type="Script" path="res://components/loot/coin_dropper.gd" id="3_dropper"]
+[ext_resource type="PackedScene" path="res://scenes/objects/dropped_coin.tscn" id="4_coin"]
+[ext_resource type="Resource" path="res://resources/enemies/green_slime.tres" id="5_stats"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
+size = Vector2(12, 10)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hurtbox"]
+size = Vector2(14, 12)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_contact"]
+size = Vector2(12, 10)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_detection"]
+radius = 96.0
+
+[node name="Slime" type="CharacterBody2D"]
+collision_layer = 8
+collision_mask = 3
+floor_snap_length = 4.0
+script = ExtResource("1_slime")
+stats = ExtResource("5_stats")
+
+[node name="Sprite" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, -12)
+
+[node name="Body" type="CollisionShape2D" parent="."]
+position = Vector2(0, -5)
+shape = SubResource("RectangleShape2D_body")
+
+[node name="Hurtbox" type="Area2D" parent="."]
+collision_layer = 64
+collision_mask = 0
+monitoring = false
+script = ExtResource("2_hurtbox")
+
+[node name="Shape" type="CollisionShape2D" parent="Hurtbox"]
+position = Vector2(0, -6)
+shape = SubResource("RectangleShape2D_hurtbox")
+
+[node name="ContactArea" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 16
+monitorable = false
+
+[node name="Shape" type="CollisionShape2D" parent="ContactArea"]
+position = Vector2(0, -5)
+shape = SubResource("RectangleShape2D_contact")
+
+[node name="DetectionArea" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 16
+monitorable = false
+
+[node name="Shape" type="CollisionShape2D" parent="DetectionArea"]
+position = Vector2(0, -6)
+shape = SubResource("CircleShape2D_detection")
+
+[node name="CoinDropper" type="Node" parent="."]
+script = ExtResource("3_dropper")
+coin_scene = ExtResource("4_coin")
+
+[node name="Alert" type="Label" parent="."]
+visible = false
+offset_left = -4.0
+offset_top = -32.0
+offset_right = 4.0
+offset_bottom = -24.0
+theme_override_colors/font_color = Color(1, 0.86, 0.2, 1)
+theme_override_colors/font_outline_color = Color(0.05, 0.05, 0.07, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 8
+text = "!"
+horizontal_alignment = 1
+
+[node name="DebugLabel" type="Label" parent="."]
+visible = false
+offset_left = -40.0
+offset_top = -42.0
+offset_right = 40.0
+offset_bottom = -34.0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_colors/font_outline_color = Color(0, 0, 0, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 8
+horizontal_alignment = 1

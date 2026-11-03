@@ -442,8 +442,9 @@ Always prioritize a stable playable game over rapidly generated content.
 | Phase 1: Core Project and Player Foundation | Tested. Physical keyboard: **user-reported pass** (model and layout not supplied) | `docs/PHASE_1_SUMMARY.md`, `docs/TEST_REPORT.md`; commit `4d5c6b0` |
 | Phase 2: Camera and Split-Screen | Implemented and auto-tested (74/74 including Phase 1 regression); **manual camera tests pending** | `docs/PHASE_2_SUMMARY.md`, `docs/TEST_REPORT.md`, `docs/MANUAL_CAMERA_TEST.md` |
 | Phase 3: Combat and Health | Implemented and auto-tested (110/110 including Phase 1–2 regression); **manual combat tests pending** | `docs/PHASE_3_SUMMARY.md`, `docs/TEST_REPORT.md`, `docs/MANUAL_COMBAT_TEST.md` |
-| Phase 4: Slime Enemies and Enemy AI | Not started | Waiting for authorisation |
-| Phases 5–12 | Not started | — |
+| Phase 4: Slime Enemies and Enemy AI | Implemented and auto-tested (144/144 including Phase 1–3 regression); **manual enemy tests pending** | `docs/PHASE_4_SUMMARY.md`, `docs/TEST_REPORT.md`, `docs/MANUAL_ENEMY_TEST.md` |
+| Phase 5: Collectibles and Progression | Not started | Waiting for authorisation |
+| Phases 6–12 | Not started | — |
 
 Phase 1 task tracking:
 
@@ -497,3 +498,23 @@ Phase 3 task tracking:
 | Damage processing (categories) | Tested |
 | Temporary post-hit immunity | Tested |
 | Death handling (per knight; campaign reset is Phase 8) | Tested |
+
+Phase 4 task tracking:
+
+| Task | Status |
+|---|---|
+| Reusable slime base scene | Tested |
+| Green slime | Tested |
+| Purple slime | Tested |
+| Patrol movement | Tested |
+| Detection area | Tested |
+| Player detection (line of sight) | Tested |
+| Chase state | Tested |
+| Twice-normal chase speed | Tested (exact) |
+| Contact damage | Tested |
+| Stagger thresholds | Tested |
+| Stagger animations | Implemented (puddle frames, pulse, stars); visual check from captures only |
+| Vulnerability window (>= 10 s) | Tested (exactly 600 ticks) |
+| Recovery | Tested |
+| Enemy death | Tested |
+| Coin drop (4-6, event + visible coins) | Tested; collection is Phase 5 |

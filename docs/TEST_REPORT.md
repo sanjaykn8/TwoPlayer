@@ -469,3 +469,222 @@ Coverage of the requested Phase 3 checks:
 | Combat tests 1–14 (`docs/MANUAL_COMBAT_TEST.md`) | **Pending user test** |
 | Phase 2 manual camera tests | **Still pending** (not reported by the user) |
 | Visual inspection of captured frames | Done by Claude from captures, **not** interactive play |
+
+## Phase 4: 2026-11-03
+
+### A. Validation
+
+| Check | Result |
+|---|---|
+| Import / editor open | No errors |
+| Enemy room launches standalone (`res://scenes/dev/enemy_test_room.tscn --quit-after 300`) | Exit 0, no errors |
+| Resource validation (every scene, including slimes and coins, instantiated) | Pass. It found that `slime_base.tscn` had no stats when instanced alone; fixed by defaulting it to the green stats |
+| Rendered run (windowed) | "!" alert on detection; chase; staggered green slime as a pulsing puddle with circling stars; death; 5 coins (`coin.png`) settling on the floor; listener total = 5; overlay and debug drawing (detection circles, line of sight, patrol limits, edge probes) |
+
+### B. Automated tests
+
+Command: `godot --headless --path . --fixed-fps 60 --script res://tests/run_tests.gd`
+
+Result: **144 passed, 0 failed**, exit code 0, no `ERROR`/`WARNING` lines. Identical over two
+runs. That is 42 Phase 1, 32 Phase 2, 36 Phase 3 and 34 Phase 4 tests.
+
+```
+res://tests/gameplay/test_camera_rig.gd
+PASS test_shared_mode_at_start
+PASS test_world_is_simulated_once
+PASS test_pixel_art_settings
+PASS test_horizontal_separation_splits_side_by_side
+PASS test_vertical_separation_splits_stacked
+PASS test_assignment_is_fixed_even_when_knights_cross
+PASS test_split_triggers_at_threshold_while_walking
+PASS test_independent_tracking
+PASS test_reunification_by_walking
+PASS test_reunification_initiated_by_either_player
+PASS test_no_flicker_inside_hysteresis_band
+PASS test_jitter_at_split_threshold_switches_once
+PASS test_merge_requires_hold_time
+PASS test_orientation_hysteresis_and_hold
+PASS test_cameras_respect_level_bounds
+PASS test_tall_section_tracking
+PASS test_layout_follows_rig_size
+PASS test_camera_does_not_affect_simulation
+PASS test_camera_updates_never_move_knights
+PASS test_repeated_switching_does_not_accumulate_resources
+PASS test_phase1_mechanics_inside_the_rig
+res://tests/gameplay/test_combat.gd
+PASS test_player_one_attacks_independently
+PASS test_player_two_attacks_independently
+PASS test_simultaneous_attacks
+PASS test_attack_does_not_interrupt_other_player
+PASS test_knights_cannot_hit_each_other
+PASS test_four_directions_and_animation_selection
+PASS test_down_attack_from_ladder_hits_target_below
+PASS test_hit_frames_and_animation_are_synchronised
+PASS test_cooldown_and_input_buffer
+PASS test_one_hit_per_target_per_attack
+PASS test_one_swing_hits_several_targets
+PASS test_attack_power_sets_damage
+PASS test_range_edge
+PASS test_walls_block_attacks
+PASS test_low_obstacle_and_corner
+PASS test_one_way_platform_does_not_block
+PASS test_room_thin_wall_target_is_protected
+PASS test_knights_have_independent_health
+PASS test_contact_damage_with_invulnerability_on_knight
+PASS test_death_state
+PASS test_dead_knight_while_climbing
+PASS test_attack_while_running
+PASS test_attacks_during_camera_transitions
+PASS test_combat_never_changes_camera_state
+PASS test_no_nodes_created_per_attack
+res://tests/gameplay/test_knight_movement.gd
+PASS test_knights_spawn_independent
+PASS test_players_move_independently_and_simultaneously
+PASS test_left_and_right_together_cancel
+PASS test_full_jump_height_and_landing
+PASS test_variable_jump_height
+PASS test_no_double_jump_and_no_hold_bunny_hop
+PASS test_jump_buffer_before_landing
+PASS test_both_jump_in_same_frame
+PASS test_crouch_under_low_ceiling
+PASS test_down_on_solid_floor_does_not_drop
+PASS test_drop_through_one_way_and_jump_back_up
+PASS test_drop_passes_only_one_platform
+PASS test_other_knight_unaffected_by_drop
+PASS test_ladder_climb_up_hold_and_exit_top
+PASS test_ladder_climb_down_from_top
+PASS test_ladder_side_release
+PASS test_passage_allows_free_movement
+PASS test_attack_inputs_are_independent
+PASS test_attack_direction_from_input
+PASS test_push_moves_the_other_knight
+PASS test_push_against_wall_does_not_trap
+PASS test_corridor_mutual_push_never_locks
+PASS test_push_off_platform_edge
+PASS test_standing_on_knight_carry_and_lift
+PASS test_spawn_overlap_resolves_without_impulse
+PASS test_raw_key_events_drive_both_knights
+res://tests/gameplay/test_slimes.gd
+PASS test_patrol_stays_within_bounds
+PASS test_patrol_turns_at_platform_edges
+PASS test_patrol_turns_at_walls
+PASS test_patrol_and_chase_speeds
+PASS test_detects_visible_player_and_chases
+PASS test_wall_blocks_detection
+PASS test_detects_knight_on_ladder_or_platform_through_one_way
+PASS test_nearest_player_selected
+PASS test_target_selection_does_not_flicker
+PASS test_dead_target_is_abandoned
+PASS test_returns_to_patrol_after_grace_period
+PASS test_unreachable_target_gives_up
+PASS test_green_stagger_and_kill
+PASS test_green_recovers_and_can_be_staggered_again
+PASS test_purple_stagger_and_kill
+PASS test_upgraded_attack_power
+PASS test_staggered_slime_does_not_move
+PASS test_real_knight_attacks_green_then_purple
+PASS test_contact_damage_respects_invulnerability
+PASS test_staggered_and_dead_slimes_are_harmless
+PASS test_contact_stops_after_slime_is_removed
+PASS test_death_and_coin_drop_happen_once
+PASS test_every_slime_rolls_its_own_drop
+PASS test_both_knights_fight_several_slimes_simultaneously
+PASS test_recovered_slime_reacquires_visible_knight
+res://tests/unit/test_camera_math.gd
+PASS test_midpoint
+PASS test_separation_ratio_axes
+PASS test_split_and_merge_thresholds_with_hysteresis
+PASS test_orientation_selection_and_hysteresis
+PASS test_layout_rectangles
+PASS test_sub_view_center_is_seamless
+PASS test_clamp_center_to_bounds
+PASS test_deadzone
+PASS test_smoothing_is_frame_rate_independent
+PASS test_camera_config_validation
+PASS test_camera_bounds_rect_and_tilemap_fit
+res://tests/unit/test_combat_logic.gd
+PASS test_direction_rules
+PASS test_new_knight_default_facing
+PASS test_profiles
+PASS test_hitbox_rectangles
+PASS test_range_is_short_and_scales_separately_from_power
+PASS test_combat_config_valid
+PASS test_damage_category_rules
+PASS test_health_operations
+PASS test_invulnerability_blocks_then_expires
+PASS test_fall_lava_and_protection_filters
+PASS test_death_emitted_once_and_no_silent_revival
+res://tests/unit/test_enemy_logic.gd
+PASS test_green_stagger_sequence
+PASS test_purple_stagger_sequence
+PASS test_upgraded_attack_power
+PASS test_duration_minimum_and_recovery
+PASS test_hits_do_not_restart_the_timer
+PASS test_non_melee_progress_cannot_kill
+PASS test_target_selector
+PASS test_coin_roll_range_and_reproducibility
+PASS test_slime_stats
+res://tests/unit/test_logic.gd
+PASS test_attack_direction_table
+PASS test_vertical_intent_priority_table
+PASS test_input_frame_edges_and_axes
+PASS test_health_limits
+PASS test_health_max_changes
+res://tests/unit/test_project_setup.gd
+PASS test_rendering_and_window_settings
+PASS test_save_directory_identity
+PASS test_gameplay_actions_exist_with_correct_keys
+PASS test_actions_are_exclusive_per_player
+PASS test_alt_variants_and_modifier_independence
+PASS test_profiles_reference_valid_actions
+res://tests/unit/test_resource_validation.gd
+PASS test_all_scripts_parse
+PASS test_all_resources_and_scenes_load
+PASS test_scenes_instantiate_with_valid_paths_signals_and_shapes
+PASS test_game_code_is_offline
+PASS test_knight_sprite_frames
+```
+
+Coverage of the requested Phase 4 checks:
+
+| Requested check | Test |
+|---|---|
+| Enters patrol; stays within bounds | `test_patrol_stays_within_bounds` |
+| Walls and platform edges | `test_patrol_turns_at_walls`, `test_patrol_turns_at_platform_edges` |
+| Detects a visible player, enters chase | `test_detects_visible_player_and_chases` |
+| Wall blocks detection | `test_wall_blocks_detection` (one-way platforms do not: `test_detects_knight_on_ladder_or_platform_through_one_way`) |
+| Chase = exactly 2 × patrol | `test_patrol_and_chase_speeds` (velocities exactly 30 and 60; 20-tick distance), `test_slime_stats` |
+| Nearest player; no flicker | `test_nearest_player_selected`, `test_target_selection_does_not_flicker`, `test_target_selector` |
+| Dead target abandoned | `test_dead_target_is_abandoned` |
+| Returns to patrol when the target is lost | `test_returns_to_patrol_after_grace_period`, `test_unreachable_target_gives_up` |
+| Staggered slime does not move | `test_staggered_slime_does_not_move` |
+| Green: 0 → 1 → stagger; the trigger does not kill; ≥ 10 s; next distinct attack kills; recovers; resets; staggers again; harmless | `test_green_stagger_and_kill`, `test_green_recovers_and_can_be_staggered_again`, `test_green_stagger_sequence`, `test_duration_minimum_and_recovery` |
+| Purple: 1, 2, 3, stagger on 4; the trigger does not kill; ≥ 10 s; distinct attack kills; resets; harmless | `test_purple_stagger_and_kill`, `test_purple_stagger_sequence` |
+| Attack power 2 | `test_upgraded_attack_power` (gameplay and unit) |
+| Real knight attacks end to end | `test_real_knight_attacks_green_then_purple` (2+1 and 4+1 real swings) |
+| Contact damage 1, invulnerability, staggered/dead harmless, stops after removal | `test_contact_damage_respects_invulnerability`, `test_staggered_and_dead_slimes_are_harmless`, `test_contact_stops_after_slime_is_removed` |
+| Drop once, integer, 4–6, valid position, independent per enemy | `test_death_and_coin_drop_happen_once` (includes 2 simultaneous killing hits), `test_every_slime_rolls_its_own_drop` (12 seeded slimes), `test_coin_roll_range_and_reproducibility` (1 000 rolls) |
+| Multiple enemies, both knights, camera undisturbed | `test_both_knights_fight_several_slimes_simultaneously` |
+
+### C. Regression
+
+All 42 Phase 1, 32 Phase 2 and 36 Phase 3 tests pass unchanged. No Phase 1–3 script or
+scene was modified in Phase 4.
+
+### Defects found during Phase 4
+
+1. **`slime_base.tscn` instanced alone had no stats** (found by the scene validator). It now
+   defaults to the green stats; the variants override them.
+2. **Test-only issues:**
+   - a jitter test let the chase carry a knight's position inside the pillar, so line of sight
+     was genuinely blocked;
+   - a fight test teleported both knights without re-centring the camera, so the visibility
+     guard split the screen as designed.
+
+### D. Manual tests
+
+| Test | Status |
+|---|---|
+| Enemy tests 1–14 (`docs/MANUAL_ENEMY_TEST.md`) | **Pending user test** |
+| Phase 2 camera and Phase 3 combat manual tests | **Still pending** |
+| Visual inspection of captured frames | Done by Claude from captures, **not** interactive play |

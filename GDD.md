@@ -580,3 +580,22 @@ Where a decision refines an earlier section, this section is authoritative.
   Falling and lava ignore invulnerability and every protection. Lava kills instantly.
 - **Death.** A knight at 0 health is dead: it cannot move, attack, be healed or take damage.
   It only comes back through an explicit revive (development reset now, campaign reset in Phase 8).
+
+**Slime behaviour (Phase 4, 2026-11-03)** (refines sections 5 and 6):
+- **Shared design.** Green and purple slimes behave identically except for the stagger
+  threshold (2 and 4 attack-power points) and their sprites.
+- **Patrol and chase.** They patrol at 30 px/s within a per-slime area, never walking off
+  edges or into walls. On seeing a knight they show **!** for 0.2 s, then chase at exactly
+  60 px/s (twice the patrol speed).
+- **Seeing knights.** Sight is blocked by solid terrain, not by one-way platforms. A slime
+  chases the nearest visible knight and does not switch for small distance differences. It
+  ignores dead knights and gives up 1 s after losing sight.
+- **Unreachable knights.** Slimes cannot jump. A knight on another level makes the slime wait
+  below or above it, then give up after 3 s.
+- **Contact.** Touching a slime costs 1 health, subject to the knight's 1 s invulnerability.
+- **Stagger.** Each distinct melee hit adds the attacker's attack power. At the threshold the
+  slime is staggered for 10 s: it is harmless and still, and it pulses with circling stars.
+  The next hit from a different attack kills it. After 10 s it recovers and its progress
+  starts again from zero.
+- **Defeat.** A defeated slime drops 4–6 coins that land on the ground. Collecting them, the
+  shared coin total and the 10 % healing chance arrive in Phase 5.

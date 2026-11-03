@@ -1,7 +1,7 @@
 # Architecture
 
-Status: Phase 0 proposal, with **Phases 1–3 implemented**. Section 7 (camera),
-section 13 (players) and section 14 (combat and health) describe what exists now. The rest of sections 3–12 remain the target
+Status: Phase 0 proposal, with **Phases 1–4 implemented**. Section 7 (camera),
+section 13 (players), section 14 (combat and health) and section 15 (slimes) describe what exists now. The rest of sections 3–12 remain the target
 design; where the implementation deviates, those sections say so.
 
 ## 1. Existing project (as audited 2026-11-03)
@@ -567,6 +567,8 @@ Invulnerability, shields and damage kinds are Phase 3.
 | Regenerate Phase 2 content | `... --headless --path . --script res://tools/build_phase2_content.gd` |
 | Play the combat test room | `Godot_v4.7.2-stable_win64.exe --path . res://scenes/dev/combat_test_room.tscn` |
 | Regenerate Phase 3 content | `... --script res://tools/build_phase3_content.gd -- art`, then `--import`, then `-- content` |
+| Play the enemy test room | `Godot_v4.7.2-stable_win64.exe --path . res://scenes/dev/enemy_test_room.tscn` |
+| Regenerate Phase 4 content | `... --script res://tools/build_phase4_content.gd -- frames`, then `-- content` |
 
 ## 14. Combat and health (implemented in Phase 3)
 
@@ -683,3 +685,97 @@ damage. Gravity still applies, so a knight killed on a ladder falls to the floor
 - **Hitbox drawing:** `HitboxComponent.debug_visible` (static, default false) draws hitboxes
   only when it is true **and** `OS.is_debug_build()`. Only development rooms turn it on, and
   they turn it off again on exit. Nothing in the knight or components reads dev keys.
+
+## 15. Slime enemies (implemented in Phase 4)
+
+### Scene
+
+```
+GreenSlime / PurpleSlime            = slime_base.tscn + stats (green_slime.tres / purple_slime.tres)
+Slime (CharacterBody2D, slime.gd)   layer 4 enemies; mask world + one_way; origin at the feet
+├─ Sprite (AnimatedSprite2D)        stats.sprite_frames (generated from slime_green/purple.png)
+├─ Body (CollisionShape2D 12x10)
+├─ Hurtbox (HurtboxComponent)       layer 7 enemy_hurtbox, 14x12: what knights' attacks hit
+├─ ContactArea (Area2D)             mask 5 player_hurtbox: contact damage
+├─ DetectionArea (Area2D)           mask 5 player_hurtbox, circle radius = detection radius
+├─ CoinDropper                      4-6 coins, spawns DroppedCoin scenes
+├─ Alert (Label "!")                gameplay feedback when a knight is noticed
+└─ DebugLabel                       development builds only
+```
+
+Slimes do not physically block knights (knights' mask excludes layer 4). Touching is
+handled by the contact area. Detection uses the knights' **hurtboxes** (layer 5) rather
+than their bodies, because a knight's body leaves the "players" layer while climbing a ladder.
+
+### Behaviour
+
+| State | Behaviour | Leaves when |
+|---|---|---|
+| IDLE | Stands still (start: 1 s; after turning: 0.4 s; after recovery: 0.4 s rising) | Timer ends → PATROL; target seen → DETECT_PLAYER |
+| PATROL | Walks at `patrol_speed` between `home_x + patrol_left` and `home_x + patrol_right`. Turns (with a short idle) at a limit, a wall or a missing floor. Outside its area after a chase, walks back | Target seen → DETECT_PLAYER |
+| DETECT_PLAYER | Stops, faces the knight, shows "!" (0.2 s) | → CHASE (or PATROL if the target was lost) |
+| CHASE | Walks toward the target at `chase_speed() = patrol_speed × 2` (exact). Stops at walls, edges and on top of the target | Target lost → PATROL. Stuck below/above an unreachable target, or at an edge or wall, for 3 s → gives up (that knight is ignored for 1.5 s) |
+| STAGGERED | Does not move, deal contact damage or sense. Pulsing puddle with circling stars | 10 s without a hit → IDLE (recovering); distinct melee hit → DEAD |
+| DEAD | Hurtbox, contact and detection off, collision layer cleared, coins dropped, squash-and-fade (0.5 s), then freed | — |
+
+- **Ground checks:** two reused rays per tick while walking. Downward ahead of the slime
+  (world + one-way): no floor means an edge. Forward at body height (world): a hit means a wall.
+- **Senses:** every `sense_interval` (0.1 s) each knight inside the circle is checked:
+  - alive (`is_dead()` false), in the tree, and not temporarily ignored;
+  - visible: a line-of-sight ray from the slime's eye to the knight's body centre on the
+    **world** layer only. Solid terrain blocks it; one-way platforms do not.
+- **Target selection:** `TargetSelector.pick()`:
+  - takes the nearest visible knight, with ties going to Player One;
+  - keeps the current target unless another is closer by more than 24 px.
+
+  A dead target is dropped on the next tick. A living target out of sight is kept for
+  `lose_target_time` (1 s) while the slime heads for it.
+- **Being hit:** reveals the attacker as a target.
+
+### Contact damage
+
+On every tick when `can_damage()` is true (not STAGGERED or DEAD), each enabled player
+hurtbox overlapping the ContactArea receives `DamageEvent(CONTACT, contact_damage)`. To
+avoid sending an event every tick, the slime waits `contact_interval` (0.25 s) per knight
+between events. The knight's `HealthComponent` still decides: the 1 s invulnerability blocks
+repeats, and the blocked events show up as `damage_blocked(…, &"invulnerable")`.
+
+### Stagger (`scripts/enemies/slime_stagger.gd`)
+
+- `register_melee_hit(points, attack_id)`: points are the event's `amount`, which is the
+  attacker's `CombatStats.attack_power`.
+  - Progress accumulates. Reaching `threshold` (green 2, purple 4) staggers the slime for
+    `max(stagger_duration, 10 s)`.
+  - While staggered, a hit from the **same** attack id is ignored; a hit from any other attack
+    id kills.
+  - Further hits never restart the timer.
+- `add_stagger_progress(points)`, exposed on the slime as `add_stagger_progress(points, source)`:
+  non-melee progress (Phase 5 poison). It can stagger, never kills, and is ignored while staggered.
+- `tick(delta)`: on expiry the slime is no longer staggered and progress returns to 0.
+  Only one timer exists per slime.
+- **Simultaneous hits:** the first killing hit sets DEAD and disables the hurtbox, so a
+  second knight's hit in the same tick is ignored. `defeated` fires once.
+
+### Coin drops (`components/loot/coin_dropper.gd`)
+
+On death, `CoinDropper.drop(position, slime, level)` does the following, once per enemy:
+1. Rolls `randi_range(4, 6)` with the dropper's own `RandomNumberGenerator`. It is
+   randomised per enemy, or seeded via `rng_seed` for tests.
+2. Builds a `CoinDropResult {count, position, source, source_name}`.
+3. Emits `coins_dropped` and calls `on_coins_dropped(result)` on every node in the
+   `coin_drop_listeners` group. The Phase 5 shared coin manager will join this group.
+4. Spawns `count` `DroppedCoin` nodes into the level. They pop out, bounce and rest, spinning
+   with `coin.png`.
+
+The slime also emits `defeated(slime, result)`.
+**Not implemented (Phase 5):** collecting coins, the shared coin total, the 10 % healing
+chance per coin.
+
+### Debugging (development builds only)
+
+- **`Slime.debug_visible`** (static, default false; the enemy room turns it on in debug
+  builds) draws the detection circle, patrol limits, line of sight to the target and the
+  edge probe, and shows the label.
+- **Overlay:** `enemy_debug_hud` lists, per slime: state, patrol/chase speed, detection radius,
+  target, line of sight, stagger progress and timer, contact status and coin count.
+- **Release builds:** every drawing check also requires `OS.is_debug_build()`.

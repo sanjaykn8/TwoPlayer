@@ -1,0 +1,244 @@
+[gd_resource type="SpriteFrames" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/slime_purple.png" id="1_hugtb"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xvjtr"]
+atlas = ExtResource("1_hugtb")
+region = Rect2(0, 24, 24, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mewen"]
+atlas = ExtResource("1_hugtb")
+region = Rect2(24, 24, 24, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fmc3n"]
+atlas = ExtResource("1_hugtb")
+region = Rect2(48, 24, 24, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vsr4w"]
+atlas = ExtResource("1_hugtb")
+region = Rect2(72, 24, 24, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kplun"]
+atlas = ExtResource("1_hugtb")
+region = Rect2(0, 48, 24, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cb1x8"]
+atlas = ExtResource("1_hugtb")
+region = Rect2(24, 48, 24, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f8bsb"]
+atlas = ExtResource("1_hugtb")
+region = Rect2(48, 48, 24, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6m3ce"]
+atlas = ExtResource("1_hugtb")
+region = Rect2(72, 48, 24, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_370bt"]
+atlas = ExtResource("1_hugtb")
+region = Rect2(0, 24, 24, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t6ckl"]
+atlas = ExtResource("1_hugtb")
+region = Rect2(24, 24, 24, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4ip8y"]
+atlas = ExtResource("1_hugtb")
+region = Rect2(48, 24, 24, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_npdfr"]
+atlas = ExtResource("1_hugtb")
+region = Rect2(72, 24, 24, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_78o4o"]
+atlas = ExtResource("1_hugtb")
+region = Rect2(0, 48, 24, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s5b3a"]
+atlas = ExtResource("1_hugtb")
+region = Rect2(24, 48, 24, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_terkl"]
+atlas = ExtResource("1_hugtb")
+region = Rect2(0, 24, 24, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ti0bo"]
+atlas = ExtResource("1_hugtb")
+region = Rect2(24, 24, 24, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k0p56"]
+atlas = ExtResource("1_hugtb")
+region = Rect2(48, 24, 24, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hybcr"]
+atlas = ExtResource("1_hugtb")
+region = Rect2(72, 24, 24, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f2bpm"]
+atlas = ExtResource("1_hugtb")
+region = Rect2(0, 48, 24, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fdosg"]
+atlas = ExtResource("1_hugtb")
+region = Rect2(24, 48, 24, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kdyft"]
+atlas = ExtResource("1_hugtb")
+region = Rect2(0, 0, 24, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v3erd"]
+atlas = ExtResource("1_hugtb")
+region = Rect2(24, 0, 24, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t0vto"]
+atlas = ExtResource("1_hugtb")
+region = Rect2(48, 0, 24, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mg8hs"]
+atlas = ExtResource("1_hugtb")
+region = Rect2(72, 0, 24, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3kvw8"]
+atlas = ExtResource("1_hugtb")
+region = Rect2(0, 0, 24, 24)
+filter_clip = true
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ub5tl"]
+atlas = ExtResource("1_hugtb")
+region = Rect2(24, 0, 24, 24)
+filter_clip = true
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xvjtr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mewen")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fmc3n")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vsr4w")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kplun")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cb1x8")
+}],
+"loop": 1,
+"name": &"chase",
+"speed": 16.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f8bsb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6m3ce")
+}],
+"loop": 0,
+"name": &"hurt",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_370bt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t6ckl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4ip8y")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_npdfr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_78o4o")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s5b3a")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_terkl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ti0bo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k0p56")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hybcr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f2bpm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fdosg")
+}],
+"loop": 1,
+"name": &"move",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kdyft")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v3erd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t0vto")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mg8hs")
+}],
+"loop": 0,
+"name": &"recover",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3kvw8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ub5tl")
+}],
+"loop": 1,
+"name": &"stagger",
+"speed": 3.0
+}]

@@ -1,0 +1,15 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/dev/enemy_test_room.gd" id="1_no6ec"]
+[ext_resource type="PackedScene" path="res://scenes/dev/enemy_test_level.tscn" id="2_4ajj8"]
+[ext_resource type="PackedScene" path="res://scenes/camera/split_screen_rig.tscn" id="3_pi5wa"]
+[ext_resource type="PackedScene" path="res://scenes/dev/enemy_debug_hud.tscn" id="4_dmkdq"]
+
+[node name="EnemyTestRoom" type="Node" unique_id=443507416]
+script = ExtResource("1_no6ec")
+
+[node name="Level" parent="." unique_id=649394118 instance=ExtResource("2_4ajj8")]
+
+[node name="SplitScreenRig" parent="." unique_id=104840209 instance=ExtResource("3_pi5wa")]
+
+[node name="EnemyDebugHud" parent="." unique_id=791332725 instance=ExtResource("4_dmkdq")]

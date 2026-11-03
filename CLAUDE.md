@@ -591,3 +591,6 @@ The goal is a complete and reliable game, not a collection of generated files.
 - Combat: knights attack through `CombatComponent` (`$Combat`). Damage always travels as a `DamageEvent` to a `HurtboxComponent` or to `HealthComponent.take_damage()`. Never subtract health directly in gameplay code. `apply_damage()` is the raw, rule-free operation for internal and development use only.
 - Enemies (Phase 4) put their hurtboxes on layer 7 (enemy_hurtbox) with a RectangleShape2D, and give the knights player-side `DamageEvent`s with category CONTACT. Hazards use SPIKE, HOT_GROUND, FALL or LAVA.
 - Development-only switches: `HitboxComponent.debug_visible` and `TrainingDummy.console_log`. Room dev keys live only in `scenes/dev/*_room.gd`.
+- Enemies: slimes are `scenes/enemies/green_slime.tscn` / `purple_slime.tscn` (shared `slime_base.tscn` + `scenes/enemies/slime.gd`; values in `resources/enemies/*.tres`). Place them under a level node and set `patrol_left` / `patrol_right` (relative to spawn) and optionally `detection_radius_override`. Stagger rules live only in `scripts/enemies/slime_stagger.gd`.
+- Coin drops: listen with the `coin_drop_listeners` group (`on_coins_dropped(result: CoinDropResult)`). The Phase 5 coin manager must join that group rather than connect to individual enemies.
+- Development-only switch: `Slime.debug_visible`.
