@@ -26,7 +26,7 @@ const THEMES := {
 		"deco": [[5, 3, 3], [5, 6, 1], [5, 7, 1], [5, 8, 1], [4, 8, 1], [7, 5, 1]],
 	},
 	"fortress": {
-		"top": Vector2i(8, 0), "fill": Vector2i(8, 1), "wall": Vector2i(3, 1), "platform_row": 1,
+		"top": Vector2i(8, 0), "fill": Vector2i(8, 1), "wall": Vector2i(8, 1), "platform_row": 1,
 		"sky_top": Color("120c1d"), "sky_bottom": Color("3b2a4d"), "deco_tint": Color(0.85, 0.8, 0.95),
 		"deco": [[7, 3, 1], [7, 4, 1], [8, 4, 1], [9, 4, 1], [2, 8, 1], [8, 7, 1]],
 	},
