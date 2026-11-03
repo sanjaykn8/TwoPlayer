@@ -1,0 +1,15 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/dev/combat_test_room.gd" id="1_m6txm"]
+[ext_resource type="PackedScene" path="res://scenes/dev/combat_test_level.tscn" id="2_4822l"]
+[ext_resource type="PackedScene" path="res://scenes/camera/split_screen_rig.tscn" id="3_w30ir"]
+[ext_resource type="PackedScene" path="res://scenes/dev/combat_debug_hud.tscn" id="4_7pb3y"]
+
+[node name="CombatTestRoom" type="Node" unique_id=1179805825]
+script = ExtResource("1_m6txm")
+
+[node name="Level" parent="." unique_id=1352644703 instance=ExtResource("2_4822l")]
+
+[node name="SplitScreenRig" parent="." unique_id=1125077988 instance=ExtResource("3_w30ir")]
+
+[node name="CombatDebugHud" parent="." unique_id=1218108585 instance=ExtResource("4_7pb3y")]

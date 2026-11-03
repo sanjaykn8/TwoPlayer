@@ -275,3 +275,197 @@ Requirement coverage:
 |---|---|
 | Camera tests 1–10 (`docs/MANUAL_CAMERA_TEST.md`) | **Pending user test** |
 | Visual inspection of captured frames (shared, side-by-side, stacked, merging, three window sizes) | Done by Claude from captures, **not** interactive play |
+
+## Phase 3: 2026-11-03
+
+### A. Validation
+
+| Check | Result |
+|---|---|
+| Import / editor open (`--import`, `--editor --quit`) | No errors |
+| Combat room launches standalone (`res://scenes/dev/combat_test_room.tscn --quit-after 120`) | Exit 0, no errors |
+| Rendered run (windowed, Compatibility) | Right slash captured on its first hit frame: weapon frame 1, hitbox open, target flashes and drops to 2/3. Up slash shown. P1 death pose and P2 invulnerability blink visible. Both knights attacking in split-screen. Pixel art sharp |
+| Room targets driven by a script | Jump + up attack hits "Above". One swing hits both "TWO AT ONCE" targets (same attack id). The EDGE target is hit from its stand tick; TOO FAR is not |
+
+### B. Automated tests
+
+Command: `godot --headless --path . --fixed-fps 60 --script res://tests/run_tests.gd`
+
+Result: **110 passed, 0 failed**, exit code 0, no `ERROR`/`WARNING` lines, identical over
+repeated runs. That is 42 Phase 1, 32 Phase 2 and 36 Phase 3 tests.
+
+```
+res://tests/gameplay/test_camera_rig.gd
+PASS test_shared_mode_at_start
+PASS test_world_is_simulated_once
+PASS test_pixel_art_settings
+PASS test_horizontal_separation_splits_side_by_side
+PASS test_vertical_separation_splits_stacked
+PASS test_assignment_is_fixed_even_when_knights_cross
+PASS test_split_triggers_at_threshold_while_walking
+PASS test_independent_tracking
+PASS test_reunification_by_walking
+PASS test_reunification_initiated_by_either_player
+PASS test_no_flicker_inside_hysteresis_band
+PASS test_jitter_at_split_threshold_switches_once
+PASS test_merge_requires_hold_time
+PASS test_orientation_hysteresis_and_hold
+PASS test_cameras_respect_level_bounds
+PASS test_tall_section_tracking
+PASS test_layout_follows_rig_size
+PASS test_camera_does_not_affect_simulation
+PASS test_camera_updates_never_move_knights
+PASS test_repeated_switching_does_not_accumulate_resources
+PASS test_phase1_mechanics_inside_the_rig
+res://tests/gameplay/test_combat.gd
+PASS test_player_one_attacks_independently
+PASS test_player_two_attacks_independently
+PASS test_simultaneous_attacks
+PASS test_attack_does_not_interrupt_other_player
+PASS test_knights_cannot_hit_each_other
+PASS test_four_directions_and_animation_selection
+PASS test_down_attack_from_ladder_hits_target_below
+PASS test_hit_frames_and_animation_are_synchronised
+PASS test_cooldown_and_input_buffer
+PASS test_one_hit_per_target_per_attack
+PASS test_one_swing_hits_several_targets
+PASS test_attack_power_sets_damage
+PASS test_range_edge
+PASS test_walls_block_attacks
+PASS test_low_obstacle_and_corner
+PASS test_one_way_platform_does_not_block
+PASS test_room_thin_wall_target_is_protected
+PASS test_knights_have_independent_health
+PASS test_contact_damage_with_invulnerability_on_knight
+PASS test_death_state
+PASS test_dead_knight_while_climbing
+PASS test_attack_while_running
+PASS test_attacks_during_camera_transitions
+PASS test_combat_never_changes_camera_state
+PASS test_no_nodes_created_per_attack
+res://tests/gameplay/test_knight_movement.gd
+PASS test_knights_spawn_independent
+PASS test_players_move_independently_and_simultaneously
+PASS test_left_and_right_together_cancel
+PASS test_full_jump_height_and_landing
+PASS test_variable_jump_height
+PASS test_no_double_jump_and_no_hold_bunny_hop
+PASS test_jump_buffer_before_landing
+PASS test_both_jump_in_same_frame
+PASS test_crouch_under_low_ceiling
+PASS test_down_on_solid_floor_does_not_drop
+PASS test_drop_through_one_way_and_jump_back_up
+PASS test_drop_passes_only_one_platform
+PASS test_other_knight_unaffected_by_drop
+PASS test_ladder_climb_up_hold_and_exit_top
+PASS test_ladder_climb_down_from_top
+PASS test_ladder_side_release
+PASS test_passage_allows_free_movement
+PASS test_attack_inputs_are_independent
+PASS test_attack_direction_from_input
+PASS test_push_moves_the_other_knight
+PASS test_push_against_wall_does_not_trap
+PASS test_corridor_mutual_push_never_locks
+PASS test_push_off_platform_edge
+PASS test_standing_on_knight_carry_and_lift
+PASS test_spawn_overlap_resolves_without_impulse
+PASS test_raw_key_events_drive_both_knights
+res://tests/unit/test_camera_math.gd
+PASS test_midpoint
+PASS test_separation_ratio_axes
+PASS test_split_and_merge_thresholds_with_hysteresis
+PASS test_orientation_selection_and_hysteresis
+PASS test_layout_rectangles
+PASS test_sub_view_center_is_seamless
+PASS test_clamp_center_to_bounds
+PASS test_deadzone
+PASS test_smoothing_is_frame_rate_independent
+PASS test_camera_config_validation
+PASS test_camera_bounds_rect_and_tilemap_fit
+res://tests/unit/test_combat_logic.gd
+PASS test_direction_rules
+PASS test_new_knight_default_facing
+PASS test_profiles
+PASS test_hitbox_rectangles
+PASS test_range_is_short_and_scales_separately_from_power
+PASS test_combat_config_valid
+PASS test_damage_category_rules
+PASS test_health_operations
+PASS test_invulnerability_blocks_then_expires
+PASS test_fall_lava_and_protection_filters
+PASS test_death_emitted_once_and_no_silent_revival
+res://tests/unit/test_logic.gd
+PASS test_attack_direction_table
+PASS test_vertical_intent_priority_table
+PASS test_input_frame_edges_and_axes
+PASS test_health_limits
+PASS test_health_max_changes
+res://tests/unit/test_project_setup.gd
+PASS test_rendering_and_window_settings
+PASS test_save_directory_identity
+PASS test_gameplay_actions_exist_with_correct_keys
+PASS test_actions_are_exclusive_per_player
+PASS test_alt_variants_and_modifier_independence
+PASS test_profiles_reference_valid_actions
+res://tests/unit/test_resource_validation.gd
+PASS test_all_scripts_parse
+PASS test_all_resources_and_scenes_load
+PASS test_scenes_instantiate_with_valid_paths_signals_and_shapes
+PASS test_game_code_is_offline
+PASS test_knight_sprite_frames
+```
+
+Coverage of the requested Phase 3 checks:
+
+| Requested check | Test |
+|---|---|
+| Up selects UP | `test_direction_rules` |
+| Down selects DOWN | `test_direction_rules` |
+| No vertical input or both held: last facing | `test_direction_rules` |
+| Facing unchanged by Up/Down | `test_four_directions_and_animation_selection`, Phase 1 `test_attack_direction_from_input` |
+| Default facing | `test_new_knight_default_facing` |
+| P1 / P2 attack independently | `test_player_one_attacks_independently`, `test_player_two_attacks_independently` |
+| Simultaneous attacks, no interruption | `test_simultaneous_attacks`, `test_attack_does_not_interrupt_other_player` |
+| Animation selection | `test_four_directions_and_animation_selection`, `test_down_attack_from_ladder_hits_target_below` |
+| Hitbox only on hit frames, synchronised | `test_hit_frames_and_animation_are_synchronised` |
+| Cooldown | `test_cooldown_and_input_buffer` |
+| One hit per target per attack | `test_one_hit_per_target_per_attack` |
+| Several targets per swing | `test_one_swing_hits_several_targets` |
+| Walls block | `test_walls_block_attacks`, `test_low_obstacle_and_corner`, `test_room_thin_wall_target_is_protected` |
+| One-way platforms do not block | `test_one_way_platform_does_not_block` |
+| Out of range | `test_range_edge` (1 px beyond the reach is not hit; ×1.3 range reaches it) |
+| Dead players cannot attack | `test_death_state` |
+| Health starts at 3, damage, heal, cap, max upgrade, never negative | `test_health_operations`, `test_knights_have_independent_health` |
+| Invulnerability blocks, then expires | `test_invulnerability_blocks_then_expires`, `test_contact_damage_with_invulnerability_on_knight` |
+| Death once, dead cannot play | `test_death_emitted_once_and_no_silent_revival`, `test_death_state`, `test_dead_knight_while_climbing` |
+| Categories | `test_damage_category_rules`, `test_fall_lava_and_protection_filters` |
+| No friendly fire | `test_knights_cannot_hit_each_other` |
+| Attacks during camera transitions | `test_attacks_during_camera_transitions` (6 attacks across split and merge, each hit exactly once) |
+| Combat never changes the camera | `test_combat_never_changes_camera_state` |
+| No node churn | `test_no_nodes_created_per_attack` |
+
+### C. Regression
+
+- **Phase 1:** all 42 tests pass. Phase 1 movement code was not modified. The only knight
+  changes are additive (combat, hurtbox, death); every Phase 1 test exercises the updated knight.
+- **Phase 2:** all 32 tests pass, including the Phase 1 mechanics run inside the rig.
+
+### Defects found and fixed during Phase 3
+
+1. **Cooldown off by one tick.** The start tick counted as 1/60 s elapsed, so attacks could start
+   17 ticks apart (0.283 s) instead of 18 (0.30 s). The start tick is now elapsed time 0.
+2. **Weapon frame lagged a hit.** Within the hit tick, hits were applied before the weapon frame
+   was updated. The visual is now updated first.
+3. **Test and room placements:**
+   - a running-attack target was beyond the actual swing position;
+   - a "hold" check pressed outside the buffer window;
+   - the camera test did not wait long enough for a merge;
+   - the room's "Above" target hung so low that the jump of an up attack carried the knight past it.
+
+### D. Manual tests
+
+| Test | Status |
+|---|---|
+| Combat tests 1–14 (`docs/MANUAL_COMBAT_TEST.md`) | **Pending user test** |
+| Phase 2 manual camera tests | **Still pending** (not reported by the user) |
+| Visual inspection of captured frames | Done by Claude from captures, **not** interactive play |

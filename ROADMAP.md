@@ -441,8 +441,9 @@ Always prioritize a stable playable game over rapidly generated content.
 | Phase 0: Existing Project Audit | Tested | `docs/AUDIT_REPORT.md` (2026-11-03) |
 | Phase 1: Core Project and Player Foundation | Tested. Physical keyboard: **user-reported pass** (model and layout not supplied) | `docs/PHASE_1_SUMMARY.md`, `docs/TEST_REPORT.md`; commit `4d5c6b0` |
 | Phase 2: Camera and Split-Screen | Implemented and auto-tested (74/74 including Phase 1 regression); **manual camera tests pending** | `docs/PHASE_2_SUMMARY.md`, `docs/TEST_REPORT.md`, `docs/MANUAL_CAMERA_TEST.md` |
-| Phase 3: Combat and Health | Not started | Waiting for authorisation |
-| Phases 4–12 | Not started | — |
+| Phase 3: Combat and Health | Implemented and auto-tested (110/110 including Phase 1–2 regression); **manual combat tests pending** | `docs/PHASE_3_SUMMARY.md`, `docs/TEST_REPORT.md`, `docs/MANUAL_COMBAT_TEST.md` |
+| Phase 4: Slime Enemies and Enemy AI | Not started | Waiting for authorisation |
+| Phases 5–12 | Not started | — |
 
 Phase 1 task tracking:
 
@@ -480,3 +481,19 @@ Phase 2 task tracking:
 | HUD positioning in both modes | Debug overlay sits outside the rig and works in all modes; the real HUD is Phase 9 |
 | Level camera bounds | Tested |
 | Window resizing | Tested (rig layout + rendered run at 3 window sizes); manual pending |
+
+Phase 3 task tracking:
+
+| Task | Status |
+|---|---|
+| Knife model or sprite | Implemented (generated `knife_slash.png`); placeholder art |
+| Sword-like swing animation | Implemented (4-frame arc, rotated per direction); body attack pose not available in assets |
+| Last-movement-based attack direction | Tested |
+| Four cardinal-direction hitboxes (+ D-2 low slash) | Tested |
+| Attack cooldown | Tested |
+| Attack animation timing | Tested (frame-exact) |
+| Single-hit-per-swing protection | Tested |
+| Health component | Tested |
+| Damage processing (categories) | Tested |
+| Temporary post-hit immunity | Tested |
+| Death handling (per knight; campaign reset is Phase 8) | Tested |

@@ -563,3 +563,20 @@ Where a decision refines an earlier section, this section is authoritative.
 - **Limits.** Each level defines camera bounds; cameras never show anything outside them.
   There is no zoom (D-8).
 - All values live in `resources/config/camera_config.tres`.
+
+**Combat and health behaviour (Phase 3, 2026-11-03)** (refines sections 3 and 5):
+- **Range and timing.** The knife reaches about 13 px beyond the body (one swing covers less than a
+  tile). The hit frames run from 0.05 s to 0.15 s, and a new attack can start every 0.30 s.
+  A press up to 0.10 s early is remembered.
+- **Up attacks.** On solid ground Up also jumps, so an up attack from the ground is a jump
+  attack. On a ladder the knight stays put.
+- **Hit rules.**
+  - One swing can damage several enemies, but each enemy at most once.
+  - Attacks never pass through solid terrain; one-way platforms do not block them.
+  - Knights cannot hurt each other.
+- **Damage and stagger.** Damage equals the attack power: 1, or more with red jars later.
+  Each hit adds that many points toward a slime's stagger threshold (Phase 4).
+- **Invulnerability.** After ordinary damage a knight is invulnerable for 1 s and blinks.
+  Falling and lava ignore invulnerability and every protection. Lava kills instantly.
+- **Death.** A knight at 0 health is dead: it cannot move, attack, be healed or take damage.
+  It only comes back through an explicit revive (development reset now, campaign reset in Phase 8).

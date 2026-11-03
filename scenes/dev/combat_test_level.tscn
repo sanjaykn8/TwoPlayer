@@ -1,0 +1,263 @@
+[gd_scene format=4]
+
+[ext_resource type="TileSet" path="res://resources/tilesets/dev_world_tileset.tres" id="1_c1apn"]
+[ext_resource type="Script" path="res://components/camera/camera_bounds.gd" id="2_uqmdm"]
+[ext_resource type="PackedScene" path="res://scenes/objects/ladder.tscn" id="3_2f3mb"]
+[ext_resource type="PackedScene" path="res://scenes/objects/training_dummy.tscn" id="4_ji3h3"]
+[ext_resource type="PackedScene" path="res://scenes/players/knight.tscn" id="5_2s5bh"]
+[ext_resource type="Resource" path="res://resources/players/p2_profile.tres" id="6_6fbvn"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_le4dx"]
+size = Vector2(4, 48)
+
+[node name="CombatTestLevel" type="Node2D" unique_id=1352644703]
+
+[node name="Sky" type="ColorRect" parent="." unique_id=883490045]
+offset_right = 1120.0
+offset_bottom = 480.0
+mouse_filter = 2
+color = Color(0.42, 0.72, 0.92, 1)
+
+[node name="Terrain" type="TileMapLayer" parent="." unique_id=795919580]
+tile_map_data = PackedByteArray("AAAAAAAAAAAIAAEAAAAAAAEAAAAIAAEAAAAAAAIAAAAIAAEAAAAAAAMAAAAIAAEAAAAAAAQAAAAIAAEAAAAAAAUAAAAIAAEAAAAAAAYAAAAIAAEAAAAAAAcAAAAIAAEAAAAAAAgAAAAIAAEAAAAAAAkAAAAIAAEAAAAAAAoAAAAIAAEAAAAAAAsAAAAIAAEAAAAAAAwAAAAIAAEAAAAAAA0AAAAIAAEAAAAAAA4AAAAIAAEAAAAAAA8AAAAIAAEAAAAAABAAAAAIAAEAAAAAABEAAAAIAAEAAAAAABIAAAAIAAEAAAAAABMAAAAIAAEAAAAAABQAAAAIAAEAAAAAABUAAAAIAAEAAAAAABYAAAAIAAEAAAAAABcAAAAIAAEAAAAAABgAAAAIAAEAAAAAABkAAAAIAAEAAAAAABoAAAAIAAEAAAAAABsAAAAIAAEAAAAAABwAAAAIAAEAAAAAAB0AAAAIAAEAAABFAAAAAAAIAAEAAABFAAEAAAAIAAEAAABFAAIAAAAIAAEAAABFAAMAAAAIAAEAAABFAAQAAAAIAAEAAABFAAUAAAAIAAEAAABFAAYAAAAIAAEAAABFAAcAAAAIAAEAAABFAAgAAAAIAAEAAABFAAkAAAAIAAEAAABFAAoAAAAIAAEAAABFAAsAAAAIAAEAAABFAAwAAAAIAAEAAABFAA0AAAAIAAEAAABFAA4AAAAIAAEAAABFAA8AAAAIAAEAAABFABAAAAAIAAEAAABFABEAAAAIAAEAAABFABIAAAAIAAEAAABFABMAAAAIAAEAAABFABQAAAAIAAEAAABFABUAAAAIAAEAAABFABYAAAAIAAEAAABFABcAAAAIAAEAAABFABgAAAAIAAEAAABFABkAAAAIAAEAAABFABoAAAAIAAEAAABFABsAAAAIAAEAAABFABwAAAAIAAEAAABFAB0AAAAIAAEAAAABAAAAAAAAAAAAAAACAAAAAAAAAAAAAAADAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAFAAAAAAAAAAAAAAAGAAAAAAAAAAAAAAAHAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAJAAAAAAAAAAAAAAAKAAAAAAAAAAAAAAALAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAANAAAAAAAAAAAAAAAOAAAAAAAAAAAAAAAPAAAAAAAAAAAA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")
+tile_set = ExtResource("1_c1apn")
+
+[node name="CameraBounds" type="Node2D" parent="." unique_id=579995491]
+script = ExtResource("2_uqmdm")
+size = Vector2(1120, 480)
+
+[node name="Climbables" type="Node2D" parent="." unique_id=1297923199]
+
+[node name="Ladder" parent="Climbables" unique_id=2072575323 instance=ExtResource("3_2f3mb")]
+position = Vector2(552, 352)
+size = Vector2(16, 96)
+
+[node name="ThinWall" type="StaticBody2D" parent="." unique_id=264066952]
+position = Vector2(682, 424)
+collision_mask = 0
+
+[node name="Shape" type="CollisionShape2D" parent="ThinWall" unique_id=56231313]
+shape = SubResource("RectangleShape2D_le4dx")
+
+[node name="Visual" type="ColorRect" parent="ThinWall" unique_id=1349389666]
+offset_left = -2.0
+offset_top = -24.0
+offset_right = 2.0
+offset_bottom = 24.0
+mouse_filter = 2
+color = Color(0.40392157, 0.2, 0.1764706, 1)
+
+[node name="Targets" type="Node2D" parent="." unique_id=1637322024]
+
+[node name="Left" parent="Targets" unique_id=2062032996 instance=ExtResource("4_ji3h3")]
+position = Vector2(40, 448)
+respawn_delay = 3.0
+
+[node name="Right" parent="Targets" unique_id=786274952 instance=ExtResource("4_ji3h3")]
+position = Vector2(232, 448)
+respawn_delay = 3.0
+
+[node name="RangeEdge" parent="Targets" unique_id=99525671 instance=ExtResource("4_ji3h3")]
+position = Vector2(342, 448)
+respawn_delay = 3.0
+
+[node name="OutOfRange" parent="Targets" unique_id=1943162768 instance=ExtResource("4_ji3h3")]
+position = Vector2(424, 448)
+respawn_delay = 3.0
+
+[node name="OnPlatform" parent="Targets" unique_id=1850901346 instance=ExtResource("4_ji3h3")]
+position = Vector2(312, 368)
+respawn_delay = 3.0
+
+[node name="Above" parent="Targets" unique_id=744494914 instance=ExtResource("4_ji3h3")]
+position = Vector2(480, 398)
+respawn_delay = 3.0
+
+[node name="LadderFoot" parent="Targets" unique_id=150823016 instance=ExtResource("4_ji3h3")]
+position = Vector2(552, 448)
+respawn_delay = 3.0
+
+[node name="JumpOver" parent="Targets" unique_id=1082769429 instance=ExtResource("4_ji3h3")]
+position = Vector2(616, 448)
+respawn_delay = 3.0
+
+[node name="BehindThinWall" parent="Targets" unique_id=1965689873 instance=ExtResource("4_ji3h3")]
+position = Vector2(690, 448)
+respawn_delay = 3.0
+
+[node name="BehindPillar" parent="Targets" unique_id=287076885 instance=ExtResource("4_ji3h3")]
+position = Vector2(774, 448)
+respawn_delay = 3.0
+
+[node name="Corridor" parent="Targets" unique_id=386436324 instance=ExtResource("4_ji3h3")]
+position = Vector2(920, 448)
+respawn_delay = 3.0
+
+[node name="PairA" parent="Targets" unique_id=718644906 instance=ExtResource("4_ji3h3")]
+position = Vector2(1036, 448)
+respawn_delay = 3.0
+
+[node name="PairB" parent="Targets" unique_id=1139372300 instance=ExtResource("4_ji3h3")]
+position = Vector2(1052, 448)
+respawn_delay = 3.0
+
+[node name="Labels" type="Node2D" parent="." unique_id=1692096504]
+
+[node name="LEFTLabel" type="Label" parent="Labels" unique_id=236600192]
+offset_left = 24.0
+offset_top = 404.0
+offset_right = 24.0
+offset_bottom = 404.0
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.1, 0.12, 0.2, 0.85)
+text = "LEFT"
+
+[node name="RIGHTLabel" type="Label" parent="Labels" unique_id=489816795]
+offset_left = 216.0
+offset_top = 404.0
+offset_right = 216.0
+offset_bottom = 404.0
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.1, 0.12, 0.2, 0.85)
+text = "RIGHT"
+
+[node name="STANDLabel" type="Label" parent="Labels" unique_id=478930659]
+offset_left = 306.0
+offset_top = 452.0
+offset_right = 306.0
+offset_bottom = 452.0
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.1, 0.12, 0.2, 0.85)
+text = "STAND"
+
+[node name="EDGELabel" type="Label" parent="Labels" unique_id=238515835]
+offset_left = 330.0
+offset_top = 404.0
+offset_right = 330.0
+offset_bottom = 404.0
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.1, 0.12, 0.2, 0.85)
+text = "EDGE"
+
+[node name="TOOFARLabel" type="Label" parent="Labels" unique_id=1651382991]
+offset_left = 406.0
+offset_top = 404.0
+offset_right = 406.0
+offset_bottom = 404.0
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.1, 0.12, 0.2, 0.85)
+text = "TOO FAR"
+
+[node name="STANDLabel2" type="Label" parent="Labels" unique_id=628714686]
+offset_left = 386.0
+offset_top = 452.0
+offset_right = 386.0
+offset_bottom = 452.0
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.1, 0.12, 0.2, 0.85)
+text = "STAND"
+
+[node name="ONPLATFORMLabel" type="Label" parent="Labels" unique_id=981325167]
+offset_left = 288.0
+offset_top = 322.0
+offset_right = 288.0
+offset_bottom = 322.0
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.1, 0.12, 0.2, 0.85)
+text = "ON PLATFORM"
+
+[node name="UPLabel" type="Label" parent="Labels" unique_id=433733055]
+offset_left = 474.0
+offset_top = 346.0
+offset_right = 474.0
+offset_bottom = 346.0
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.1, 0.12, 0.2, 0.85)
+text = "UP"
+
+[node name="LADDERDOWNLabel" type="Label" parent="Labels" unique_id=1318312401]
+offset_left = 520.0
+offset_top = 330.0
+offset_right = 520.0
+offset_bottom = 330.0
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.1, 0.12, 0.2, 0.85)
+text = "LADDER DOWN"
+
+[node name="JUMP+DOWNLabel" type="Label" parent="Labels" unique_id=829690856]
+offset_left = 592.0
+offset_top = 404.0
+offset_right = 592.0
+offset_bottom = 404.0
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.1, 0.12, 0.2, 0.85)
+text = "JUMP + DOWN"
+
+[node name="WALLLabel" type="Label" parent="Labels" unique_id=76974894]
+offset_left = 668.0
+offset_top = 380.0
+offset_right = 668.0
+offset_bottom = 380.0
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.1, 0.12, 0.2, 0.85)
+text = "WALL"
+
+[node name="PILLARLabel" type="Label" parent="Labels" unique_id=1437050377]
+offset_left = 736.0
+offset_top = 368.0
+offset_right = 736.0
+offset_bottom = 368.0
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.1, 0.12, 0.2, 0.85)
+text = "PILLAR"
+
+[node name="CORRIDORLabel" type="Label" parent="Labels" unique_id=318641901]
+offset_left = 900.0
+offset_top = 320.0
+offset_right = 900.0
+offset_bottom = 320.0
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.1, 0.12, 0.2, 0.85)
+text = "CORRIDOR"
+
+[node name="TWOATONCELabel" type="Label" parent="Labels" unique_id=60583632]
+offset_left = 1020.0
+offset_top = 404.0
+offset_right = 1020.0
+offset_bottom = 404.0
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.1, 0.12, 0.2, 0.85)
+text = "TWO AT ONCE"
+
+[node name="StandTick320" type="ColorRect" parent="Labels" unique_id=2037180575]
+offset_left = 319.0
+offset_top = 442.0
+offset_right = 321.0
+offset_bottom = 448.0
+mouse_filter = 2
+color = Color(0.2, 0.25, 0.6, 1)
+
+[node name="StandTick400" type="ColorRect" parent="Labels" unique_id=1960714156]
+offset_left = 399.0
+offset_top = 442.0
+offset_right = 401.0
+offset_bottom = 448.0
+mouse_filter = 2
+color = Color(0.2, 0.25, 0.6, 1)
+
+[node name="SpawnP1" type="Marker2D" parent="." unique_id=1355889179]
+position = Vector2(104, 448)
+
+[node name="SpawnP2" type="Marker2D" parent="." unique_id=120955362]
+position = Vector2(168, 448)
+
+[node name="Knights" type="Node2D" parent="." unique_id=2010846237]
+
+[node name="Knight1" parent="Knights" unique_id=1535148834 instance=ExtResource("5_2s5bh")]
+position = Vector2(104, 448)
+show_debug_tag = true
+
+[node name="Knight2" parent="Knights" unique_id=106655573 instance=ExtResource("5_2s5bh")]
+position = Vector2(168, 448)
+profile = ExtResource("6_6fbvn")
+show_debug_tag = true

@@ -1,6 +1,6 @@
 # Known Issues
 
-Updated 2026-11-03 (end of Phase 2).
+Updated 2026-11-03 (end of Phase 3).
 
 ## Open
 
@@ -8,6 +8,13 @@ Updated 2026-11-03 (end of Phase 2).
 |---|---|---|---|
 | KI-5 | Major (for Phase 12) | Windows export templates for 4.7.2 are not installed (`%APPDATA%/Godot/export_templates/` is empty). Export and offline verification are impossible until installed | User installs via Editor → Manage Export Templates |
 | KI-18 | Verification gap | Phase 2 manual camera tests (`docs/MANUAL_CAMERA_TEST.md`) not yet performed | User |
+| KI-25 | Verification gap | Phase 3 manual combat tests (`docs/MANUAL_COMBAT_TEST.md`) not yet performed | User |
+| KI-26 | Minor | No knight attack body animation exists in the asset pack. The generated knife slash (`assets/created/knife_slash.png`, placeholder art) overlays the knight's normal idle/run frames | Create attack pose frames during art polish |
+| KI-27 | Minor | The knife slash art does not grow with the range multiplier (pixel art cannot be scaled by 1.1–1.3 cleanly). Red-fruit range upgrades will reach further than the drawn arc | Phase 5: add a longer arc variant or a range indicator |
+| KI-28 | Info | On solid ground Up also jumps, so an up attack from the ground is always a jump attack | By design (GDD controls); documented in GDD §18 |
+| KI-29 | Info | A dead knight stays dead until `revive()`; only the combat room's F6 calls it. The campaign-wide reset is Phase 8 | By design for Phase 3 |
+| KI-30 | Info | Line of sight uses two rays per candidate target (centre and nearest point). A target hidden at both points but visible elsewhere (unusual shapes) is protected | Accepted; revisit if enemies get large hurtboxes |
+| KI-31 | Info | Hit feedback is visual only (flash and shake); attack and hit sounds are Phase 9 | Phase 9 |
 | KI-9 | Minor (verification gap) | Physical keyboard test is a **user-reported pass**; the keyboard model and layout were not supplied, so results cannot be tied to specific hardware | Re-run `docs/MANUAL_KEYBOARD_TEST.md` on any new keyboard |
 | KI-10 | Minor | Jump, fall, crouch and climb use **placeholder** frames | Create frames before art polish (M-3/M-5) |
 | KI-17 | Minor | While two nearby knights wait out a merge (hold 0.25 s + alignment 0.3 s), both appear in both halves of the screen. It is one world seen by two cameras, not duplicated objects | Inherent to split-screen; tune `merge_hold_time` / `transition_duration` after manual testing |

@@ -26,3 +26,4 @@ standing_size = Vector2(10, 18)
 crouch_size = Vector2(10, 11)
 push_speed = 45.0
 base_max_health = 3
+invulnerability_time = 1.0

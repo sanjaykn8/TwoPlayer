@@ -1,0 +1,41 @@
+[gd_scene load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scenes/objects/training_dummy.gd" id="1_dummy"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world_tileset.png" id="2_tiles"]
+[ext_resource type="Script" path="res://components/health/health_component.gd" id="3_health"]
+[ext_resource type="Script" path="res://components/combat/hurtbox_component.gd" id="4_hurtbox"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dummy"]
+size = Vector2(10, 16)
+
+[node name="TrainingDummy" type="Node2D"]
+script = ExtResource("1_dummy")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("2_tiles")
+offset = Vector2(0, -8)
+region_enabled = true
+region_rect = Rect2(32, 128, 16, 16)
+
+[node name="Health" type="Node" parent="."]
+script = ExtResource("3_health")
+
+[node name="Hurtbox" type="Area2D" parent="."]
+collision_layer = 64
+collision_mask = 0
+monitoring = false
+script = ExtResource("4_hurtbox")
+
+[node name="Shape" type="CollisionShape2D" parent="Hurtbox"]
+position = Vector2(0, -8)
+shape = SubResource("RectangleShape2D_dummy")
+
+[node name="Label" type="Label" parent="."]
+offset_left = -12.0
+offset_top = -28.0
+offset_right = 12.0
+offset_bottom = -20.0
+theme_override_colors/font_color = Color(0.1, 0.12, 0.2, 1)
+theme_override_font_sizes/font_size = 8
+text = "3/3"
+horizontal_alignment = 1

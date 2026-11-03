@@ -1,7 +1,7 @@
 # Architecture
 
-Status: Phase 0 proposal, with **Phase 1 and Phase 2 implemented**. Section 7 (camera)
-and section 13 (players) describe what exists now. The rest of sections 3–12 remain the target
+Status: Phase 0 proposal, with **Phases 1–3 implemented**. Section 7 (camera),
+section 13 (players) and section 14 (combat and health) describe what exists now. The rest of sections 3–12 remain the target
 design; where the implementation deviates, those sections say so.
 
 ## 1. Existing project (as audited 2026-11-03)
@@ -565,3 +565,121 @@ Invulnerability, shields and damage kinds are Phase 3.
 | Play the test room in its own window | `Godot_v4.7.2-stable_win64.exe --path .` |
 | Play the camera test room | `Godot_v4.7.2-stable_win64.exe --path . res://scenes/dev/camera_test_room.tscn` |
 | Regenerate Phase 2 content | `... --headless --path . --script res://tools/build_phase2_content.gd` |
+| Play the combat test room | `Godot_v4.7.2-stable_win64.exe --path . res://scenes/dev/combat_test_room.tscn` |
+| Regenerate Phase 3 content | `... --script res://tools/build_phase3_content.gd -- art`, then `--import`, then `-- content` |
+
+## 14. Combat and health (implemented in Phase 3)
+
+### Knight scene additions
+
+```
+Knight
+├─ Hurtbox (HurtboxComponent, Area2D)   layer 5 player_hurtbox; box follows standing/crouch size
+│  └─ Shape (RectangleShape2D)
+└─ Combat (CombatComponent, Node2D)     config = combat_config.tres; stats = CombatStats
+   ├─ Hitbox (HitboxComponent, Node2D)  ONE reusable damage area, reshaped per attack
+   └─ Weapon (Sprite2D)                 knife_slash.png, 4 frames, rotated/mirrored per direction
+```
+
+Both knights use the same scene and script. Combat lives in the component, not in `knight.gd`.
+The knight only resolves the direction and calls `combat.request_attack(direction, grounded)`.
+
+### Attack flow
+
+1. **Direction.** The knight resolves it with `AttackDirection.resolve(up_held, down_held, facing)`:
+   Up wins, then Down; both or neither give the last horizontal facing. Only horizontal input
+   changes `facing`, which defaults to right.
+2. **Shape.** `HitboxGeometry.profile_for(direction, grounded)` picks SIDE, UP, DOWN or LOW.
+   LOW is a grounded DOWN, the low forward slash of D-2.
+   `HitboxGeometry.local_rect()` builds the rectangle from `CombatConfig` and
+   `CombatStats.range_multiplier` (it scales only the reach) and the current body height.
+3. **Timeline.** The tick an attack starts on is elapsed time 0. All times are in `combat_config.tres`.
+
+   | Elapsed | State | Hitbox | Weapon frame |
+   |---|---|---|---|
+   | 0–0.05 s (ticks 0–3) | ATTACKING (windup) | closed | 0 |
+   | 0.05–0.15 s (ticks 4–9) | ATTACKING (hit frames) | **open** | 1, then 2 |
+   | 0.15–0.23 s | ATTACK_RECOVERY | closed | 3 (trail) |
+   | until 0.30 s | ATTACK_RECOVERY | closed | hidden |
+   | 0.30 s | IDLE | — | — |
+
+   A press within 0.10 s of the end of the cooldown is buffered and starts exactly at 0.30 s.
+   Earlier presses are dropped. Holding the button never repeats. The weapon frame is updated
+   before hits are applied, so damage always lands while a slash frame is showing.
+4. **Hits.** On every open tick, `HitboxComponent.find_targets()` runs one shape query against
+   `hit_mask` (layer 7, enemy_hurtbox). It then keeps only the hurtboxes that are:
+   - enabled;
+   - not the attacker's own;
+   - in line of sight.
+
+   Each target entity is hit at most once per attack (`attack_id`, unique across both knights).
+   One swing can hit several targets. Each hit sends a `DamageEvent(MELEE, attack_power,
+   attack_id, direction, attacker_player_id)` to `HurtboxComponent.receive_hit()`.
+5. **Line of sight.** A ray on `obstruction_mask` (layer 1, world) runs from the attack origin
+   to the target's centre and to the target point nearest the origin. The origin is the body
+   centre, or 4 px above the feet for the low slash. The hit counts if either ray is clear.
+   Thin walls and pillars block attacks, a target peeking over a low step can be hit, and one-way
+   platforms (layer 2) never block.
+6. **Friendly fire.** Knights' hurtboxes are on layer 5 (player_hurtbox), which knight attacks
+   never query, so there is no friendly fire.
+
+No node is created or freed per attack; a test checks the node count over 20 attacks.
+
+### Health and damage
+
+`HealthComponent.take_damage(event)` applies the category rules in this order:
+
+| Step | Rule |
+|---|---|
+| 1 | Already dead → blocked (`damage_blocked(event, &"dead")`) |
+| 2 | `LAVA` → all remaining health removed, ignoring everything else |
+| 3 | Invulnerable and the category respects invulnerability → blocked (`&"invulnerable"`) |
+| 4 | Category can be protected → each protection filter may block it (`&"protected"`) |
+| 5 | Remove `amount`; `damage_received(event, applied)`; if still alive start invulnerability |
+
+| Category | Invulnerability | Protection (future shields, fruit, jars) |
+|---|---|---|
+| MELEE, CONTACT, SPIKE, HOT_GROUND | respected | can block |
+| FALL | ignored | cannot block (D-4) |
+| LAVA | ignored (instant death) | cannot block |
+
+- **Invulnerability:** `invulnerability_time` (knights 1.0 s from `knight_config.tres`;
+  training dummies 0) is counted down in `_physics_process`, which is enabled only while
+  active. The knight shows it by blinking its sprite to 35 % opacity every 0.08 s.
+- **Operations:** `apply_damage` (raw), `heal`, `increase_max_health(n, fill)`,
+  `set_max_health`, `set_current_health`, `restore_full`, `is_alive`, `is_invulnerable`,
+  `revive`.
+- **Signals:** `health_changed`, `damaged`, `damage_received`, `damage_blocked`, `healed`,
+  `depleted` (exactly once), `revived`, `invulnerability_changed`.
+- **Revival:** healing, `set_current_health`, `restore_full` and max-health changes never
+  revive a depleted entity. Only `revive()` does.
+
+### Death
+
+On `depleted` the knight:
+- leaves any ladder;
+- cancels its attack (hitbox closed, weapon hidden) and disables combat;
+- enters `State.DEAD` and emits `died` once;
+- plays `death`.
+
+While dead it ignores input, cannot attack, push, lift or be healed, and takes no further
+damage. Gravity still applies, so a knight killed on a ladder falls to the floor.
+`knight.revive()` is the only way back: the development reset now, the campaign reset in Phase 8.
+
+### Training dummy (`scenes/objects/training_dummy.tscn`, development only)
+
+- **Hurtbox:** a 10×16 hurtbox on layer 7, with a `HealthComponent` (configurable `max_health`,
+  no invulnerability).
+- **Feedback:** each hit is logged in `damage_log` (and printed in debug builds); the dummy
+  flashes white and shakes 1 px.
+- **Breaking:** it breaks (greyed, hurtbox disabled) at 0 HP. It repairs after
+  `respawn_delay` seconds, or on `reset()`.
+- **Art:** the wooden post from `world_tileset.png` (cell 2,8).
+- **Excluded:** no AI, stagger or drops.
+
+### Development-only tools
+
+- **Room keys:** `scenes/dev/combat_test_room.tscn` keys F1–F7 and F9, and its overlay.
+- **Hitbox drawing:** `HitboxComponent.debug_visible` (static, default false) draws hitboxes
+  only when it is true **and** `OS.is_debug_build()`. Only development rooms turn it on, and
+  they turn it off again on exit. Nothing in the knight or components reads dev keys.

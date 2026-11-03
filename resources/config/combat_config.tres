@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="CombatConfig" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/combat/combat_config.gd" id="1_cc"]
+
+[resource]
+script = ExtResource("1_cc")
+base_attack_power = 1
+base_range_multiplier = 1.0
+windup_time = 0.05
+active_time = 0.1
+cooldown = 0.3
+input_buffer_time = 0.1
+trail_time = 0.08
+side_near = 4.0
+side_reach = 14.0
+side_thickness = 14.0
+vertical_reach = 14.0
+vertical_thickness = 16.0
+vertical_overlap = 2.0
+low_reach = 14.0
+low_thickness = 8.0
+hit_mask = 64
+obstruction_mask = 1
+max_targets = 8

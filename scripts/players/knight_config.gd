@@ -45,6 +45,8 @@ extends Resource
 
 @export_group("Health")
 @export_range(1, 99) var base_max_health := 3
+## Seconds of invulnerability after ordinary damage (blinking).
+@export var invulnerability_time := 1.0
 
 
 ## Peak jump height in pixels, derived from the jump values.

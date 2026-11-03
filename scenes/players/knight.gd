@@ -5,12 +5,14 @@ extends CharacterBody2D
 ## The node origin is at the knight's feet (bottom centre of the collision box).
 
 signal state_changed(previous: State, current: State)
-## The attack input was pressed. Phase 1 only resolves the direction; combat arrives in Phase 3.
+## The attack input was pressed (whether or not the cooldown allows a new attack to start).
 signal attack_requested(direction: AttackDirection.Direction)
+## Health reached zero. Emitted exactly once until revive().
+signal died
 signal jumped
 signal landed
 
-enum State { GROUNDED, AIRBORNE, CROUCHING, CLIMBING, DISABLED }
+enum State { GROUNDED, AIRBORNE, CROUCHING, CLIMBING, DISABLED, DEAD }
 enum FloorKind { NONE, SOLID, ONE_WAY, KNIGHT }
 
 const GROUP := &"knights"
@@ -23,6 +25,9 @@ const FEET_PROBE := 4.0
 ## Pixels climbed between flips of the placeholder climb pose.
 const CLIMB_FLIP_STEP := 6.0
 const HURT_ANIMATION_TIME := 0.4
+## Invulnerability blink: the sprite alternates between full and this opacity.
+const BLINK_ALPHA := 0.35
+const BLINK_PERIOD := 0.08
 
 @export var profile: KnightProfile
 @export var config: KnightConfig
@@ -59,6 +64,8 @@ var _point_query := PhysicsPointQueryParameters2D.new()
 @onready var sprite: AnimatedSprite2D = $Sprite
 @onready var body_shape: CollisionShape2D = $Body
 @onready var health: HealthComponent = $Health
+@onready var combat: CombatComponent = $Combat
+@onready var hurtbox: HurtboxComponent = $Hurtbox
 @onready var debug_tag: Label = $Tag
 
 
@@ -76,9 +83,14 @@ func _ready() -> void:
 	body_shape.shape = body_shape.shape.duplicate()
 	sprite.material = sprite.material.duplicate()
 	_apply_palette()
+	hurtbox.entity = self
+	hurtbox.hit_received.connect(_on_hit_received)
 	_set_body_size(config.standing_size)
+	health.invulnerability_time = config.invulnerability_time
 	health.initialize(config.base_max_health)
 	health.damaged.connect(_on_damaged)
+	health.depleted.connect(_on_depleted)
+	combat.setup(self, profile.player_id, _body_height)
 	debug_tag.visible = show_debug_tag
 	debug_tag.text = "P%d" % profile.player_id
 	_point_query.collision_mask = CLIMB_BIT
@@ -89,17 +101,17 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	_read_input()
 	_tick_timers(delta)
-	if input.attack_pressed and state != State.DISABLED:
+	if input.attack_pressed and state != State.DISABLED and state != State.DEAD:
 		_request_attack()
 	match state:
-		State.DISABLED:
+		State.DISABLED, State.DEAD:
 			velocity.x = move_toward(velocity.x, 0.0, config.ground_deceleration * delta)
 			_apply_gravity(delta)
 		State.CLIMBING:
 			_process_climbing(delta)
 		_:
 			_process_platforming(delta)
-	if state != State.CLIMBING and state != State.DISABLED:
+	if state != State.CLIMBING and state != State.DISABLED and state != State.DEAD:
 		_push_other_knights(delta)
 	var start_x := global_position.x
 	move_and_slide()
@@ -124,6 +136,20 @@ func is_climbing() -> bool:
 	return state == State.CLIMBING
 
 
+func is_dead() -> bool:
+	return state == State.DEAD
+
+
+## Explicitly brings a dead knight back (development reset; later the campaign reset).
+## Restores full health and normal control.
+func revive() -> void:
+	health.revive()
+	combat.enabled = true
+	if state == State.DEAD:
+		_set_state(State.AIRBORNE)
+	sprite.self_modulate.a = 1.0
+
+
 ## Moves the knight instantly (spawns, respawns). Collision with the other knight is
 ## suspended until they no longer overlap, so a spawn on top of them cannot fling anyone.
 func teleport_to(target: Vector2) -> void:
@@ -135,12 +161,16 @@ func teleport_to(target: Vector2) -> void:
 	_jump_buffer_timer = 0.0
 	_coyote_timer = 0.0
 	_suppress_players_collision()
-	_set_state(State.AIRBORNE)
+	if state != State.DEAD:
+		_set_state(State.AIRBORNE)
 	reset_physics_interpolation()
 
 
 func set_disabled(disabled: bool) -> void:
+	if state == State.DEAD:
+		return
 	if disabled:
+		combat.cancel()
 		if state == State.CLIMBING:
 			_leave_climb()
 		_set_state(State.DISABLED)
@@ -183,6 +213,8 @@ func _request_attack() -> void:
 	last_attack_direction = AttackDirection.resolve(input.up_held, input.down_held, facing)
 	attack_count += 1
 	attack_requested.emit(last_attack_direction)
+	var grounded := is_on_floor() and (state == State.GROUNDED or state == State.CROUCHING)
+	combat.request_attack(last_attack_direction, grounded)
 
 
 func _tick_timers(delta: float) -> void:
@@ -383,7 +415,7 @@ func _carry_riders(dx: float) -> void:
 
 ## Called when the knight underneath jumps: this knight is lifted with it (D-3).
 func _lift(vertical_velocity: float) -> void:
-	if state == State.CLIMBING or state == State.DISABLED:
+	if state == State.CLIMBING or state == State.DISABLED or state == State.DEAD:
 		return
 	if state == State.CROUCHING and not _can_stand():
 		return
@@ -484,6 +516,11 @@ func _set_body_size(size: Vector2) -> void:
 	var rect := body_shape.shape as RectangleShape2D
 	rect.size = size
 	body_shape.position = Vector2(0.0, -size.y * 0.5)
+	hurtbox.set_box(size, body_shape.position)
+
+
+func _body_height() -> float:
+	return (body_shape.shape as RectangleShape2D).size.y
 
 
 func _body_centre() -> Vector2:
@@ -525,14 +562,43 @@ func _apply_palette() -> void:
 	debug_tag.add_theme_color_override(&"font_color", profile.tunic_color.lightened(0.35))
 
 
+func _on_hit_received(event: DamageEvent) -> void:
+	health.take_damage(event)
+
+
 func _on_damaged(_amount: int) -> void:
+	if state == State.DEAD or not health.is_alive():
+		return
 	_hurt_timer = HURT_ANIMATION_TIME
 	sprite.play(&"hurt")
 	sprite.frame = 0
 
 
+## Health reached zero: stop moving and attacking, play the death animation.
+## Campaign-wide consequences belong to Phase 8.
+func _on_depleted() -> void:
+	if state == State.DEAD:
+		return
+	if state == State.CLIMBING:
+		_leave_climb()
+	combat.cancel()
+	combat.enabled = false
+	_jump_buffer_timer = 0.0
+	_hurt_timer = 0.0
+	velocity.x = 0.0
+	_set_state(State.DEAD)
+	sprite.self_modulate.a = 1.0
+	sprite.play(&"death")
+	died.emit()
+
+
 func _update_animation(delta: float) -> void:
 	sprite.flip_h = facing < 0
+	if state == State.DEAD:
+		_play(&"death")
+		return
+	var blink_off := health.is_invulnerable() and int(health.invulnerability_left() / BLINK_PERIOD) % 2 == 0
+	sprite.self_modulate.a = BLINK_ALPHA if blink_off else 1.0
 	if _hurt_timer > 0.0:
 		_play(&"hurt")
 		return

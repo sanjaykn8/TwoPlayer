@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene load_steps=15 format=3]
 
 [ext_resource type="Script" path="res://scenes/players/knight.gd" id="1_knight"]
 [ext_resource type="Resource" path="res://resources/config/knight_config.tres" id="2_config"]
@@ -6,11 +6,19 @@
 [ext_resource type="Shader" path="res://resources/shaders/knight_palette.gdshader" id="4_palette"]
 [ext_resource type="Script" path="res://components/health/health_component.gd" id="5_health"]
 [ext_resource type="Resource" path="res://resources/players/p1_profile.tres" id="6_profile"]
+[ext_resource type="Script" path="res://components/combat/combat_component.gd" id="7_combat"]
+[ext_resource type="Resource" path="res://resources/config/combat_config.tres" id="8_combat_config"]
+[ext_resource type="Script" path="res://components/combat/hitbox_component.gd" id="9_hitbox"]
+[ext_resource type="Texture2D" path="res://assets/created/knife_slash.png" id="10_slash"]
+[ext_resource type="Script" path="res://components/combat/hurtbox_component.gd" id="11_hurtbox"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_palette"]
 shader = ExtResource("4_palette")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
+size = Vector2(10, 18)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hurtbox"]
 size = Vector2(10, 18)
 
 [node name="Knight" type="CharacterBody2D"]
@@ -35,6 +43,30 @@ shape = SubResource("RectangleShape2D_body")
 
 [node name="Health" type="Node" parent="."]
 script = ExtResource("5_health")
+
+[node name="Hurtbox" type="Area2D" parent="."]
+collision_layer = 16
+collision_mask = 0
+monitoring = false
+script = ExtResource("11_hurtbox")
+
+[node name="Shape" type="CollisionShape2D" parent="Hurtbox"]
+position = Vector2(0, -9)
+shape = SubResource("RectangleShape2D_hurtbox")
+
+[node name="Combat" type="Node2D" parent="."]
+script = ExtResource("7_combat")
+config = ExtResource("8_combat_config")
+
+[node name="Hitbox" type="Node2D" parent="Combat"]
+script = ExtResource("9_hitbox")
+
+[node name="Weapon" type="Sprite2D" parent="Combat"]
+visible = false
+z_index = 1
+position = Vector2(0, -9)
+texture = ExtResource("10_slash")
+hframes = 4
 
 [node name="Tag" type="Label" parent="."]
 visible = false
