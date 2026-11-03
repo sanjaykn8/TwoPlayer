@@ -67,6 +67,7 @@ var _point_query := PhysicsPointQueryParameters2D.new()
 @onready var combat: CombatComponent = $Combat
 @onready var hurtbox: HurtboxComponent = $Hurtbox
 @onready var progress: PlayerProgress = $Progress
+@onready var safe_spot: SafeSpotTracker = $SafeSpot
 @onready var debug_tag: Label = $Tag
 
 
@@ -94,6 +95,7 @@ func _ready() -> void:
 	combat.setup(self, profile.player_id, _body_height)
 	# Health, combat stats and timed effects come from this player's run record.
 	progress.bind(self)
+	safe_spot.setup(self)
 	debug_tag.visible = show_debug_tag
 	debug_tag.text = "P%d" % profile.player_id
 	_point_query.collision_mask = CLIMB_BIT

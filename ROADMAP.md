@@ -444,8 +444,9 @@ Always prioritize a stable playable game over rapidly generated content.
 | Phase 3: Combat and Health | Implemented and auto-tested (110/110 including Phase 1–2 regression); **manual combat tests pending** | `docs/PHASE_3_SUMMARY.md`, `docs/TEST_REPORT.md`, `docs/MANUAL_COMBAT_TEST.md` |
 | Phase 4: Slime Enemies and Enemy AI | Implemented and auto-tested (144/144 including Phase 1–3 regression); **manual enemy tests pending** | `docs/PHASE_4_SUMMARY.md`, `docs/TEST_REPORT.md`, `docs/MANUAL_ENEMY_TEST.md` |
 | Phase 5: Collectibles and Progression | Implemented and auto-tested (178/178 including Phase 1–4 regression); **manual collectible tests pending** | `docs/PHASE_5_SUMMARY.md`, `docs/TEST_REPORT.md`, `docs/MANUAL_COLLECTIBLE_TEST.md` |
-| Phase 6: Hazards and Platforming Mechanics | Not started | Waiting for authorisation |
-| Phases 7–12 | Not started | — |
+| Phase 6: Hazards and Platforming Mechanics | Implemented and auto-tested (229/229 including Phase 1–5 regression); **manual hazard tests pending** | `docs/PHASE_6_SUMMARY.md`, `docs/TEST_REPORT.md`, `docs/MANUAL_HAZARD_TEST.md` |
+| Phase 7: Cooperative Puzzle Systems | Not started | Waiting for authorisation |
+| Phases 8–12 | Not started | — |
 
 Phase 1 task tracking:
 
@@ -539,3 +540,20 @@ Phase 5 task tracking:
 | Collection persistence (run ids, scene changes) | Tested; disk saving is Phase 8 |
 | Effect timers | Tested (pause, freeze between levels, exact expiry) |
 | Player-specific effects | Tested |
+
+Phase 6 task tracking:
+
+| Task | Status |
+|---|---|
+| Spikes | Tested |
+| Hot ground | Tested |
+| Lava | Tested (per-knight death; campaign restart is Phase 8) |
+| Falling boundaries (FallBoundary + fall line) | Tested |
+| Safe respawn positions | Tested |
+| Moving platforms (horizontal, vertical, one-way/solid) | Tested |
+| Timed platforms | Tested (switch triggering is Phase 7) |
+| Disappearing platforms | Tested |
+| Collapsing platforms | Tested |
+| Narrow passages | Existing Phase 1 crouch tunnel and corridor; level use is Phase 10 |
+| Climbing areas | Existing Phase 1 ladders and passages; hazards detect climbing knights (hurtbox layer) |
+| Precision jumps | Hazard room gaps and platform rows; tuning is manual-test / Phase 10 work |

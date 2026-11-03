@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3]
+[gd_scene load_steps=17 format=3]
 
 [ext_resource type="Script" path="res://scenes/players/knight.gd" id="1_knight"]
 [ext_resource type="Resource" path="res://resources/config/knight_config.tres" id="2_config"]
@@ -12,6 +12,7 @@
 [ext_resource type="Texture2D" path="res://assets/created/knife_slash.png" id="10_slash"]
 [ext_resource type="Script" path="res://components/combat/hurtbox_component.gd" id="11_hurtbox"]
 [ext_resource type="Script" path="res://components/progression/player_progress.gd" id="12_progress"]
+[ext_resource type="Script" path="res://components/safety/safe_spot_tracker.gd" id="13_safe"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_palette"]
 shader = ExtResource("4_palette")
@@ -71,6 +72,9 @@ hframes = 4
 
 [node name="Progress" type="Node2D" parent="."]
 script = ExtResource("12_progress")
+
+[node name="SafeSpot" type="Node2D" parent="."]
+script = ExtResource("13_safe")
 
 [node name="Tag" type="Label" parent="."]
 visible = false

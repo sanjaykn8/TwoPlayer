@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scenes/platforms/collapsing_platform.gd" id="1_collapse"]
+
+[node name="CollapsingPlatform" type="AnimatableBody2D"]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_collapse")
+width_tiles = 2
+material_row = 2

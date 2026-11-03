@@ -1,0 +1,15 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/dev/hazard_test_room.gd" id="1_adk81"]
+[ext_resource type="PackedScene" path="res://scenes/dev/hazard_test_level.tscn" id="2_xfn7s"]
+[ext_resource type="PackedScene" path="res://scenes/camera/split_screen_rig.tscn" id="3_jsr0t"]
+[ext_resource type="PackedScene" path="res://scenes/dev/hazard_debug_hud.tscn" id="4_xqiad"]
+
+[node name="HazardTestRoom" type="Node" unique_id=1645832281]
+script = ExtResource("1_adk81")
+
+[node name="Level" parent="." unique_id=495465049 instance=ExtResource("2_xfn7s")]
+
+[node name="SplitScreenRig" parent="." unique_id=903038374 instance=ExtResource("3_jsr0t")]
+
+[node name="HazardDebugHud" parent="." unique_id=583974930 instance=ExtResource("4_xqiad")]

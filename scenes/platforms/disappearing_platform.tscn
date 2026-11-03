@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scenes/platforms/timed_platform.gd" id="1_timed"]
+
+[node name="DisappearingPlatform" type="AnimatableBody2D"]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_timed")
+width_tiles = 2
+material_row = 0
+mode = 0
+active_time = 2.0
+warning_time = 1.0
+disabled_time = 2.0

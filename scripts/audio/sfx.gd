@@ -7,6 +7,8 @@ extends RefCounted
 const COIN := preload("res://assets/sounds/coin.wav")
 const POWER_UP := preload("res://assets/sounds/power_up.wav")
 const TAP := preload("res://assets/sounds/tap.wav")
+const HURT := preload("res://assets/sounds/hurt.wav")
+const EXPLOSION := preload("res://assets/sounds/explosion.wav")
 const MAX_VOICES := 4
 
 static var _playing := 0

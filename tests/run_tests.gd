@@ -58,6 +58,12 @@ func _run() -> void:
 	for f in failures:
 		print("FAILED: ", f)
 	RunState.clear()  # nothing left in a static at exit
+	# With --fixed-fps, frames run faster than real time but the audio thread does not: give
+	# it 0.5 s of wall-clock time to release sounds started by the last test, or they are
+	# reported as leaked at exit.
+	var until := Time.get_ticks_msec() + 500
+	while Time.get_ticks_msec() < until:
+		await process_frame
 	quit(failed)
 
 

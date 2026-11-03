@@ -1,0 +1,195 @@
+[gd_scene format=4]
+
+[ext_resource type="TileSet" path="res://resources/tilesets/dev_world_tileset.tres" id="1_ck0je"]
+[ext_resource type="Script" path="res://components/camera/camera_bounds.gd" id="2_03wp0"]
+[ext_resource type="PackedScene" path="res://scenes/hazards/spikes.tscn" id="3_ypeby"]
+[ext_resource type="PackedScene" path="res://scenes/hazards/hot_ground.tscn" id="4_oudd4"]
+[ext_resource type="PackedScene" path="res://scenes/hazards/lava.tscn" id="5_udp34"]
+[ext_resource type="PackedScene" path="res://scenes/hazards/fall_boundary.tscn" id="6_4r1ho"]
+[ext_resource type="PackedScene" path="res://scenes/platforms/moving_platform.tscn" id="7_htd11"]
+[ext_resource type="PackedScene" path="res://scenes/platforms/timed_platform.tscn" id="8_2gqp8"]
+[ext_resource type="PackedScene" path="res://scenes/platforms/disappearing_platform.tscn" id="9_1gamc"]
+[ext_resource type="PackedScene" path="res://scenes/platforms/collapsing_platform.tscn" id="10_c6xpr"]
+[ext_resource type="PackedScene" path="res://scenes/players/knight.tscn" id="11_dxwxy"]
+[ext_resource type="Resource" path="res://resources/players/p2_profile.tres" id="12_6n0qg"]
+
+[node name="HazardTestLevel" type="Node2D" unique_id=495465049]
+
+[node name="Sky" type="ColorRect" parent="." unique_id=1156992517]
+offset_right = 1792.0
+offset_bottom = 544.0
+mouse_filter = 2
+color = Color(0.42, 0.72, 0.92, 1)
+
+[node name="Terrain" type="TileMapLayer" parent="." unique_id=874812367]
+tile_map_data = PackedByteArray("AAAAAAAAAAAIAAEAAAAAAAEAAAAIAAEAAAAAAAIAAAAIAAEAAAAAAAMAAAAIAAEAAAAAAAQAAAAIAAEAAAAAAAUAAAAIAAEAAAAAAAYAAAAIAAEAAAAAAAcAAAAIAAEAAAAAAAgAAAAIAAEAAAAAAAkAAAAIAAEAAAAAAAoAAAAIAAEAAAAAAAsAAAAIAAEAAAAAAAwAAAAIAAEAAAAAAA0AAAAIAAEAAAAAAA4AAAAIAAEAAAAAAA8AAAAIAAEAAAAAABAAAAAIAAEAAAAAABEAAAAIAAEAAAAAABIAAAAIAAEAAAAAABMAAAAIAAEAAAAAABQAAAAIAAEAAAAAABUAAAAIAAEAAAAAABYAAAAIAAEAAAAAABcAAAAIAAEAAAAAABgAAAAIAAEAAAAAABkAAAAIAAEAAAAAABoAAAAIAAEAAAAAABsAAAAIAAEAAAAAABwAAAAIAAEAAAAAAB0AAAAIAAEAAAAAAB4AAAAIAAEAAAAAAB8AAAAIAAEAAAAAACAAAAAIAAEAAAAAACEAAAAIAAEAAABvAAAAAAAIAAEAAABvAAEAAAAIAAEAAABvAAIAAAAIAAEAAABvAAMAAAAIAAEAAABvAAQAAAAIAAEAAABvAAUAAAAIAAEAAABvAAYAAAAIAAEAAABvAAcAAAAIAAEAAABvAAgAAAAIAAEAAABvAAkAAAAIAAEAAABvAAoAAAAIAAEAAABvAAsAAAAIAAEAAABvAAwAAAAIAAEAAABvAA0AAAAIAAEAAABvAA4AAAAIAAEAAABvAA8AAAAIAAEAAABvABAAAAAIAAEAAABvABEAAAAIAAEAAABvABIAAAAIAAEAAABvABMAAAAIAAEAAABvABQAAAAIAAEAAABvABUAAAAIAAEAAABvABYAAAAIAAEAAABvABcAAAAIAAEAAABvABgAAAAIAAEAAABvABkAAAAIAAEAAABvABoAAAAIAAEAAABvABsAAAAIAAEAAABvABwAAAAIAAEAAABvAB0AAAAIAAEAAABvAB4AAAAIAAEAAABvAB8AAAAIAAEAAABvACAAAAAIAAEAAABvACEAAAAIAAEAAAABAAAAAAAAAAAAAAACAAAAAAAAAAAAAAADAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAFAAAAAAAAAAAAAAAGAAAAAAAAAAAAAAAHAAAAAAAAAAAA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AABdACAAAAAAAAAAAABeACAAAAAAAAAAAABfACAAAAAAAAAAAABgACAAAAAAAAAAAABhACAAAAAAAAAAAABiACAAAAAAAAAAAABjACAAAAAAAAAAAABkACAAAAAAAAAAAABlACAAAAAAAAAAAABmACAAAAAAAAAAAABnACAAAAAAAAAAAABoACAAAAAAAAAAAABpACAAAAAAAAAAAABqACAAAAAAAAAAAABrACAAAAAAAAAAAABsACAAAAAAAAAAAABtACAAAAAAAAAAAABuACAAAAAAAAAAAAABACEAAAAAAAEAAAACACEAAAAAAAEAAAADACEAAAAAAAEAAAAEACEAAAAAAAEAAAAFACEAAAAAAAEAAAAGACEAAAAAAAEAAAAHACEAAAAAAAEAAAAIACEAAAAAAAEAAAAJACEAAAAAAAEAAAAKACEAAAAAAAEAAAALACEAAAAAAAEAAAAMACEAAAAAAAEAAAANACEAAAAAAAEAAAAOACEAAAAAAAEAAAAPACEAAAAAAAEAAAAUACEAAAAAAAEAAAAVACEAAAAAAAEAAAAWACEAAAAAAAAAAAAXACEAAAAAAAAAAAAYACEAAAAAAAAAAAAZACEAAAAAAAAAAAAaACEAAAAAAAEAAAAbACEAAAAAAAEAAAAfACEAAAAAAAEAAAAgACEAAAAAAAEAAAAhACEAAAAAAAEAAAAiACEAAAAAAAEAAAAtACEAAAAAAAEAAAAuACEAAAAAAAEAAAAvACEAAAAAAAEAAAAwACEAAAAAAAEAAAAxACEAAAAAAAEAAAAyACEAAAAAAAEAAAAzACEAAAAAAAEAAAA0ACEAAAAAAAEAAAA1ACEAAAAAAAEAAAA2ACEAAAAAAAEAAAA3ACEAAAAAAAEAAABAACEAAAAAAAEAAABJACEAAAAAAAEAAABSACEAAAAAAAEAAABTACEAAAAAAAEAAABUACEAAAAAAAEAAABVACEAAAAAAAEAAABWACEAAAAAAAEAAABXACEAAAAAAAEAAABYACEAAAAAAAEAAABZACEAAAAAAAEAAABaACEAAAAAAAEAAABbACEAAAAAAAEAAABcACEAAAAAAAEAAABdACEAAAAAAAEAAABeACEAAAAAAAEAAABfACEAAAAAAAEAAABgACEAAAAAAAEAAABhACEAAAAAAAEAAABiACEAAAAAAAEAAABjACEAAAAAAAEAAABkACEAAAAAAAEAAABlACEAAAAAAAEAAABmACEAAAAAAAEAAABnACEAAAAAAAEAAABoACEAAAAAAAEAAABpACEAAAAAAAEAAABqACEAAAAAAAEAAABrACEAAAAAAAEAAABsACEAAAAAAAEAAABtACEAAAAAAAEAAABuACEAAAAAAAEAAAAwABUAAAAAAAAAAAAxABUAAAAAAAAAAAAyABUAAAAAAAAAAAAzABUAAAAAAAAAAAA0ABUAAAAAAAAAAAA1ABUAAAAAAAAAAAA2ABUAAAAAAAAAAAA=")
+tile_set = ExtResource("1_ck0je")
+
+[node name="CameraBounds" type="Node2D" parent="." unique_id=1915478422]
+script = ExtResource("2_03wp0")
+size = Vector2(1792, 544)
+
+[node name="Hazards" type="Node2D" parent="." unique_id=338563873]
+
+[node name="Spikes" parent="Hazards" unique_id=2131376209 instance=ExtResource("3_ypeby")]
+position = Vector2(160, 496)
+
+[node name="HotGround" parent="Hazards" unique_id=612947606 instance=ExtResource("4_oudd4")]
+position = Vector2(256, 512)
+
+[node name="Lava" parent="Hazards" unique_id=2104966174 instance=ExtResource("5_udp34")]
+position = Vector2(352, 512)
+
+[node name="FallBoundary" parent="Hazards" unique_id=1592947033 instance=ExtResource("6_4r1ho")]
+position = Vector2(0, 576)
+size = Vector2(1792, 64)
+
+[node name="Platforms" type="Node2D" parent="." unique_id=977966936]
+
+[node name="MovingH" parent="Platforms" unique_id=1523745542 instance=ExtResource("7_htd11")]
+position = Vector2(576, 480)
+travel = Vector2(80, 0)
+
+[node name="MovingV" parent="Platforms" unique_id=1635804984 instance=ExtResource("7_htd11")]
+position = Vector2(736, 496)
+travel = Vector2(0, -160)
+width_tiles = 2
+one_way = false
+
+[node name="TimedA" parent="Platforms" unique_id=1801856680 instance=ExtResource("8_2gqp8")]
+position = Vector2(912, 480)
+
+[node name="TimedB" parent="Platforms" unique_id=1383255487 instance=ExtResource("8_2gqp8")]
+position = Vector2(976, 480)
+start_offset = 2.0
+
+[node name="BlinkA" parent="Platforms" unique_id=6569561 instance=ExtResource("9_1gamc")]
+position = Vector2(1056, 480)
+
+[node name="BlinkB" parent="Platforms" unique_id=1837442344 instance=ExtResource("9_1gamc")]
+position = Vector2(1120, 480)
+start_offset = 1.5
+
+[node name="CrumbleA" parent="Platforms" unique_id=1554277687 instance=ExtResource("10_c6xpr")]
+position = Vector2(1200, 480)
+
+[node name="CrumbleB" parent="Platforms" unique_id=1812388381 instance=ExtResource("10_c6xpr")]
+position = Vector2(1264, 480)
+
+[node name="Labels" type="Node2D" parent="." unique_id=1722882193]
+
+[node name="SPIKESLabel" type="Label" parent="Labels" unique_id=641123871]
+offset_left = 164.0
+offset_top = 470.0
+offset_right = 164.0
+offset_bottom = 470.0
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.1, 0.12, 0.2, 0.85)
+text = "SPIKES"
+
+[node name="HOTGROUNDLabel" type="Label" parent="Labels" unique_id=768331187]
+offset_left = 254.0
+offset_top = 480.0
+offset_right = 254.0
+offset_bottom = 480.0
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.1, 0.12, 0.2, 0.85)
+text = "HOT GROUND"
+
+[node name="LAVALabel" type="Label" parent="Labels" unique_id=269344236]
+offset_left = 368.0
+offset_top = 480.0
+offset_right = 368.0
+offset_bottom = 480.0
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.1, 0.12, 0.2, 0.85)
+text = "LAVA"
+
+[node name="PITLabel" type="Label" parent="Labels" unique_id=1237545439]
+offset_left = 458.0
+offset_top = 480.0
+offset_right = 458.0
+offset_bottom = 480.0
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.1, 0.12, 0.2, 0.85)
+text = "PIT"
+
+[node name="HMOVELabel" type="Label" parent="Labels" unique_id=693891318]
+offset_left = 612.0
+offset_top = 440.0
+offset_right = 612.0
+offset_bottom = 440.0
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.1, 0.12, 0.2, 0.85)
+text = "H-MOVE"
+
+[node name="VMOVELabel" type="Label" parent="Labels" unique_id=1402688119]
+offset_left = 726.0
+offset_top = 300.0
+offset_right = 726.0
+offset_bottom = 300.0
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.1, 0.12, 0.2, 0.85)
+text = "V-MOVE"
+
+[node name="LEDGELabel" type="Label" parent="Labels" unique_id=2011570984]
+offset_left = 800.0
+offset_top = 312.0
+offset_right = 800.0
+offset_bottom = 312.0
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.1, 0.12, 0.2, 0.85)
+text = "LEDGE"
+
+[node name="TIMEDLabel" type="Label" parent="Labels" unique_id=449966539]
+offset_left = 944.0
+offset_top = 440.0
+offset_right = 944.0
+offset_bottom = 440.0
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.1, 0.12, 0.2, 0.85)
+text = "TIMED"
+
+[node name="BLINKLabel" type="Label" parent="Labels" unique_id=738294151]
+offset_left = 1090.0
+offset_top = 440.0
+offset_right = 1090.0
+offset_bottom = 440.0
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.1, 0.12, 0.2, 0.85)
+text = "BLINK"
+
+[node name="CRUMBLELabel" type="Label" parent="Labels" unique_id=1506769256]
+offset_left = 1226.0
+offset_top = 440.0
+offset_right = 1226.0
+offset_bottom = 440.0
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.1, 0.12, 0.2, 0.85)
+text = "CRUMBLE"
+
+[node name="LANDINGLabel" type="Label" parent="Labels" unique_id=1373837372]
+offset_left = 1400.0
+offset_top = 480.0
+offset_right = 1400.0
+offset_bottom = 480.0
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.1, 0.12, 0.2, 0.85)
+text = "LANDING"
+
+[node name="SpawnP1" type="Marker2D" parent="." unique_id=1359564263]
+position = Vector2(40, 512)
+
+[node name="SpawnP2" type="Marker2D" parent="." unique_id=35683052]
+position = Vector2(72, 512)
+
+[node name="Knights" type="Node2D" parent="." unique_id=679767679]
+
+[node name="Knight1" parent="Knights" unique_id=1076276191 instance=ExtResource("11_dxwxy")]
+position = Vector2(40, 512)
+show_debug_tag = true
+
+[node name="Knight2" parent="Knights" unique_id=133398109 instance=ExtResource("11_dxwxy")]
+position = Vector2(72, 512)
+profile = ExtResource("12_6n0qg")
+show_debug_tag = true

@@ -1,6 +1,6 @@
 # Known Issues
 
-Updated 2026-11-03 (end of Phase 5).
+Updated 2026-11-03 (end of Phase 6).
 
 ## Open
 
@@ -11,6 +11,15 @@ Updated 2026-11-03 (end of Phase 5).
 | KI-25 | Verification gap | Phase 3 manual combat tests (`docs/MANUAL_COMBAT_TEST.md`) not yet performed | User |
 | KI-32 | Verification gap | Phase 4 manual enemy tests (`docs/MANUAL_ENEMY_TEST.md`) not yet performed | User |
 | KI-38 | Verification gap | Phase 5 manual collectible tests (`docs/MANUAL_COLLECTIBLE_TEST.md`) not yet performed | User |
+| KI-46 | Verification gap | Phase 6 manual hazard tests (`docs/MANUAL_HAZARD_TEST.md`) not yet performed | User |
+| KI-47 | Major (Phase 8) | Lava and fatal falls kill only that knight. The campaign-wide team wipe and restart from level 1 (GDD §9, §12) are not implemented; dead knights stay dead (dev rooms revive with F3) | Phase 8 |
+| KI-48 | Info | Hazard and platform states and safe positions are not saved. Platforms restart their cycles when a level loads | Decide in Phase 8 |
+| KI-49 | Minor | Spike art (`assets/created/spikes.png`) is generated placeholder art; the bundle has no spikes. Hot ground reuses the red-earth tile with a drawn glow | Art polish |
+| KI-50 | Minor | `platforms.png` has no repeatable middle piece, so platforms wider than two tiles show a seam every two tiles (and a short end piece for odd widths) | Draw a middle piece during art polish |
+| KI-51 | Minor | Under the test-room lava pit the next tile row is drawn as grass-topped ground (auto-tiling sees open space above it) | Cosmetic; production lava pits in Phase 10 |
+| KI-52 | Info | Older dev rooms (camera, combat, enemy, collectible) now apply 1 FALL damage when a knight falls out, through the new tracker, before their old no-damage teleport | Expected Phase 6 behaviour |
+| KI-53 | Info | Timed platforms cycle on their own (auto-reactivation) until Phase 7 switches call `activate()` | Phase 7 |
+| KI-54 | Info | Hazard sounds reuse `hurt.wav` and `explosion.wav`; no fall-specific sound | Phase 9 |
 | KI-39 | Minor | The bundle has no red bottle: the red jar is the magenta bottle tinted red (plus a faint glint) | Draw a red jar during art polish |
 | KI-40 | Minor | Effect feedback is pips above the knight and short pop-up text; there is no proper HUD yet (Phase 9). Effect icons are coloured squares, not sprites | Phase 9 HUD |
 | KI-41 | Minor | The red-jar route in the test room is tight by design (each step 48 of 57 px jump height; last gap needs ~33 of ~44 px horizontal). Not yet tried by a human | Tune in manual test 9 |

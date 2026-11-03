@@ -944,3 +944,64 @@ every earlier test now runs with knights bound to a fresh `RunState`.
 | Collectible tests 1–14 (`docs/MANUAL_COLLECTIBLE_TEST.md`) | **Pending user test** |
 | Phase 2, 3 and 4 manual tests | **Still pending** |
 | Visual inspection of captured frames | Done by Claude from captures, **not** interactive play |
+
+## Phase 6: 2026-11-03
+
+### A. Validation
+
+| Check | Result |
+|---|---|
+| Import / compile of every new and changed script | All compile (also covered by `test_all_scripts_parse`) |
+| Hazard room launches standalone (`--quit-after 600`) | Exit 0, no errors |
+| Rendered run (windowed, captures) | Spikes, hot ground (glow, embers), lava, pits; knights riding the horizontal and vertical platforms; timed/blink/crumble platforms in different states (ghosted, active, collapsed); a knight respawned on the safe floor with "-1 FALL"; split screen after a far respawn; overlay with HP, states, safe positions, fall counts, platform states and the event log |
+
+### B. Automated tests
+
+Command: `godot --headless --path . --fixed-fps 60 --script res://tests/run_tests.gd`
+
+Result: **229 passed, 0 failed**, exit code 0, **no `ERROR`/`WARNING` lines**, identical in two
+consecutive runs. That is 178 Phase 1–5 tests and 51 Phase 6 tests.
+
+| Requirement | Tests |
+|---|---|
+| Spikes: 1 HP, SPIKE category, one event per entry, no repeat while inside, re-entry hurts, invulnerability blocks, fruit shield blocks, walking through hurts once | `test_spikes_deal_one_spike_damage_per_entry`, `test_spikes_respect_invulnerability`, `test_spikes_are_blocked_by_fruit_shield`, `test_walking_into_spikes_hurts_once`, `test_spike_and_hot_ground_go_through_protection` |
+| Hot ground: solid, 1 HP, HOT_GROUND, one event per entry, tile shield blocks, never a safe position | `test_hot_ground_is_solid_and_hurts_once_per_entry`, `test_hot_ground_blocked_by_tile_shield`, `test_hazard_position_is_never_safe`, `test_walking_onto_hot_ground_never_records_it`, `test_hot_ground_is_solid_and_unsafe` |
+| Lava: death through invulnerability, fruit shield, jar and tile shield; shields not spent; death once; other knight untouched; dead knight not hit again | `test_lava_kills_through_every_protection_once`, `test_dead_knight_in_lava_is_not_hit_again`, `test_lava_is_lethal_through_everything` |
+| Falling: 1 FALL damage, respawn at the last safe position, other knight not moved, unblockable, respawn protection, velocity reset, progression kept, 0 HP → DEAD once, spawn fallback, fall line without a boundary, both knights independently, camera shows the respawned knight | `test_fall_costs_one_hp_and_respawns_at_last_safe_position`, `test_fall_damage_ignores_shields_and_invulnerability`, `test_respawn_protection_and_reset_motion`, `test_fall_preserves_progression`, `test_fall_at_one_hp_kills_once`, `test_fall_without_safe_position_uses_spawn`, `test_fall_line_works_without_fall_boundary`, `test_both_knights_fall_independently`, `test_camera_shows_the_knight_after_a_far_respawn`, `test_fall_bypasses_protection_and_invulnerability` |
+| Safe positions: needs stable ground, not on a knight, not while dead, not on moving or collapsing platforms | `test_safe_position_needs_stable_ground`, `test_standing_on_the_other_knight_is_not_safe`, `test_dead_knight_never_records`, `test_moving_platforms_are_not_safe_ground`, `test_collapsing_platform_is_never_a_respawn_point`, `test_fall_from_room_collapsing_platform_respawns_on_safe_ground` |
+| Moving platforms: ping-pong with pause, one-shot, carry both knights, vertical lift to the ledge, lowering without dropping, one-way jump-through and drop, solid underside, slime riding | `test_moving_platform_ping_pong_with_pause`, `test_moving_platform_one_shot_stops_at_end`, `test_moving_platform_carries_both_knights`, `test_vertical_platform_lifts_knight_to_the_ledge`, `test_vertical_platform_lowers_knight_without_dropping_it`, `test_one_way_moving_platform_can_be_jumped_through_and_dropped_from`, `test_solid_platform_blocks_from_below`, `test_slime_rides_a_moving_platform` |
+| Timed / disappearing platforms: full state order, warning before disable (still solid), knight falls when disabled, no reappearance inside a knight, schedule and offset, pause | `test_triggered_timed_platform_full_cycle`, `test_knight_falls_when_timed_platform_disables`, `test_timed_platform_never_reappears_inside_a_knight`, `test_disappearing_platform_schedule_and_offset`, `test_timed_platform_pauses_with_the_game`, `test_timed_platform_scenes_modes` |
+| Collapsing platforms: landing → shake → collapse → recovery, not triggered from below or by jumping up through, waits for clear space, permanent | `test_collapsing_platform_cycle`, `test_collapsing_platform_ignores_knights_below_and_beside`, `test_collapsing_platform_waits_for_clear_space`, `test_permanent_collapse_stays_gone` |
+| Config and scene setup | `test_hazard_config_values`, `test_hazard_scenes_have_kind_layers_and_matching_area`, `test_spike_damage_area_is_only_the_spike_art`, `test_platform_scenes_collision_setup` |
+
+### C. Regression
+
+All 178 Phase 1–5 tests pass. Knights now carry a `SafeSpot` tracker; in the older dev rooms
+their CameraBounds give a fall line, so a fall there now costs 1 HP (Phase 6 behaviour) before
+the rooms' old no-damage teleport would apply. No earlier test depended on falling.
+
+### Defects found and fixed during Phase 6
+
+1. **Hazard edge recorded as a safe position.** Hazard overlap signals arrive one frame after
+   the knight moves, so the frame a knight stepped onto hot ground could be committed as safe
+   (`test_hazard_position_is_never_safe` failed: safe x 288 instead of 100). Positions are now
+   committed only after 6 further safe frames, and hot ground's solid body is `unsafe_ground`.
+2. **Overlay logged falls as "FALL blocked"** (the fall boundary reports 0 applied damage). The
+   room now logs falls only through `fell`.
+3. **Exit-time leak report in the test runner** (`hurt.wav` playback, "1 resources still in use").
+   Reproduced with a standalone script for every sound: headless `--fixed-fps` frames run ahead
+   of the real-time audio thread. The runner waits 0.5 s of real time before quitting; 4/4
+   repeated runs were then clean.
+4. **Dev-room handler signature** (`applied` declared `bool`, the signal sends `int`) and wrong
+   health API names in the new room script, found before the first run.
+5. **Test-only issues:** a protection check made after the 1 s protection had expired, a
+   one-tap (short) jump used where a full jump was needed, and a schedule check exactly on a
+   state boundary.
+
+### D. Manual tests
+
+| Test | Status |
+|---|---|
+| Hazard tests 1–17 (`docs/MANUAL_HAZARD_TEST.md`) | **Pending user test** |
+| Phase 2, 3, 4 and 5 manual tests | **Still pending** |
+| Visual inspection of captured frames | Done by Claude from captures, **not** interactive play |

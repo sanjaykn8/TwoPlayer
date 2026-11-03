@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="HazardConfig" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/hazards/hazard_config.gd" id="1_hc"]
+
+[resource]
+script = ExtResource("1_hc")
+spike_damage = 1
+hot_ground_damage = 1
+fall_damage = 1
+respawn_protection = 1.0
+safe_ground_frames = 6
+fall_margin = 48.0

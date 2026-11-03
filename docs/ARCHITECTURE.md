@@ -889,3 +889,84 @@ JSON-compatible and covering current health, all bonuses, poison and timed effec
 - bound knights resynchronise through the `restored` signal.
 
 There is no disk I/O here; the four-slot SaveManager is Phase 8.
+
+## 17. Hazards and advanced platforms (implemented in Phase 6)
+
+### Hazards (`scenes/hazards/hazard.gd`, class `Hazard`)
+
+One `@tool` Area2D script with `kind` = SPIKES, HOT_GROUND, LAVA or FALL and a `size`. The
+origin is the top-left corner; the drawing and the damaging rectangle both come from `size`,
+so they cannot drift apart. Ready-made scenes: `spikes.tscn`, `hot_ground.tscn`, `lava.tscn`,
+`fall_boundary.tscn`.
+
+- **Layers.** The hazard sits on layer 9 (hazards) and detects layer 5 (player hurtboxes), so a
+  climbing knight (whose body layers are suppressed) is still detected.
+- **One event per entry.** A per-knight `_inside` set: entering sends one `DamageEvent`,
+  continuous overlap sends nothing, and leaving then re-entering sends another.
+- **Damage.** SPIKE / HOT_GROUND events go to `knight.health.take_damage()`, so invulnerability
+  and `PlayerEffects.resolve_protection()` apply as for any other hit. LAVA is a lethal event.
+  FALL hazards call `knight.safe_spot.resolve_fall()`. Hazards never check shields themselves.
+- **Damaging area.** Spikes: the bottom 8 px (the drawn spikes). Hot ground: a 3 px layer on
+  top of an internal `StaticBody2D` (world layer, "unsafe_ground" group). Lava: everything
+  below the 3 px wavy surface. Fall boundary: the whole rectangle (drawn only in the editor).
+- `triggered(knight, applied)` is emitted after each event (used by the dev room's log).
+
+### Safe positions and falling (`components/safety/safe_spot_tracker.gd`)
+
+Every knight has a `SafeSpot` child (`SafeSpotTracker`), set up at the end of `Knight._ready()`.
+
+- **Safe now** = alive, GROUNDED or CROUCHING, on the floor, not standing on a knight, inside
+  no hazard (`hazard_contacts == 0`, maintained by hazards), above the fall line, and the floor
+  collider is not in the `unsafe_ground` group (all `PlatformBody` platforms and hot ground).
+- **Delayed commit.** Positions from consecutive safe frames are queued; a position becomes
+  `last_safe_position` only after `safe_ground_frames` (6) more safe frames. Hazard overlap
+  signals arrive a frame late, so this stops a spot at a hazard's edge from being committed.
+- **Fall line.** The bottom of the level's `CameraBounds` + `fall_margin` (48 px); `INF` when
+  the level has none. It backs up `FallBoundary` hazards.
+- **`resolve_fall(source)`** is the only fall consequence and is guarded against re-entry: FALL
+  damage (`fall_damage`, ignores invulnerability and protection) if alive, teleport to the last
+  safe position (or `spawn_position`), clear the queue, and if still alive start
+  `respawn_protection` (1 s) invulnerability with a "-1 FALL" pop-up. Emits `fell(knight,
+  survived)`. A knight already dead is only moved back (no damage, no second death).
+- Teleporting resets velocity, coyote/jump buffers and the state (except DEAD), and suspends
+  knight-knight collision until they no longer overlap. Progression lives in `RunState`, so a
+  respawn keeps upgrades, coins and timed effects.
+- The camera rig needs no call: it cuts when a target jumps more than `snap_distance` and splits
+  if a knight leaves the shared view.
+
+### Platforms (`scenes/platforms/`)
+
+`PlatformBody` (`@tool` AnimatableBody2D) is the shared base:
+- origin top-left, `width_tiles` × 16 px, drawn from `platforms.png` (pairs of the two-cell long
+  piece, a short piece for odd widths; `material_row` 0 grass, 1 sand, 2 orange, 3 ice);
+- `one_way = true`: layer 2 (one_way), 6 px one-way shape; `false`: layer 1 (world), 9 px solid
+  shape; mask 0;
+- always in `unsafe_ground`;
+- `set_collision_enabled()` (deferred shape toggle) is the only way collision changes;
+- `is_occupied()`: a shape query over the platform's space for knight bodies (layer 3), enemies
+  (layer 4) and knight hurtboxes (layer 5);
+- `visual_alpha` / `visual_offset` / `visual_tint` change only the drawing, never collision.
+
+| Script | Behaviour |
+|---|---|
+| `MovingPlatform` | `position = start + travel × progress`, advanced at `speed` px/s in `_physics_process`; `pause_time` at each end; `ping_pong` or one-shot; `start_delay`. `sync_to_physics = true`, so knights and slimes standing on it are carried by Godot's moving-platform handling (no teleporting) |
+| `TimedPlatform` | INACTIVE → (activate) → REACTIVATING → ACTIVE → WARNING → DISABLED → INACTIVE (TRIGGERED) or REACTIVATING (SCHEDULE / `auto_reactivate`). Collision only in ACTIVE and WARNING. REACTIVATING lasts at least `reactivate_time` and until `is_occupied()` is false. `start_offset` staggers rows. `activate()` is the Phase 7 hook for switches |
+| `CollapsingPlatform` | STABLE → SHAKING (`collapse_delay`) → COLLAPSED (`recovery_time`, or forever if `permanent`) → REAPPEARING (≥ `reappear_time`, until unoccupied) → STABLE. A thin sensor above the top (hurtbox layer) tracks knights; it starts only for a knight on the floor, not rising, with its feet within 2 px of the top surface. Slimes never trigger it |
+
+`timed_platform.tscn` is TRIGGERED with auto-reactivation (it cycles until Phase 7 switches
+drive it); `disappearing_platform.tscn` is SCHEDULE.
+
+All timers count `delta` in `_physics_process`, so everything stops while the tree is paused.
+
+### Configuration
+
+`resources/config/hazard_config.tres` (`HazardConfig`): spike, hot-ground and fall damage,
+respawn protection, safe-ground frames, fall margin. Platform timings are per-instance exports.
+
+### Development-only content
+
+- `scenes/dev/hazard_test_room.tscn` (+ `hazard_test_level.tscn`, `hazard_debug_hud.tscn`):
+  every hazard and platform in one corridor; F1–F9 dev keys (see `docs/MANUAL_HAZARD_TEST.md`);
+  `SafeSpotTracker.debug_visible` draws safe-position markers.
+- `tools/build_phase6_content.gd`: `-- art` writes `assets/created/spikes.png`; `-- content`
+  regenerates the room.

@@ -627,3 +627,21 @@ Where a decision refines an earlier section, this section is authoritative.
   ignore every protection.
 - **Timers.** Timed effects pause with the game, keep their remaining time across levels, and
   will be saved as remaining time in Phase 8.
+
+**Hazards and advanced platforms (Phase 6, 2026-11-03)** (refines section 9):
+- **Spikes and hot ground** remove 1 health once per contact. Staying in them does not hurt
+  again; stepping out and back in does. Invulnerability, shields and the yellow jar can block
+  them. Hot ground is solid floor.
+- **Lava** kills the knight immediately, through invulnerability and every protection. Until
+  Phase 8 this affects only that knight; the full campaign restart arrives with the save and
+  death system.
+- **Falling** out of the level removes exactly 1 health (never blocked) and returns the knight
+  to the last place it stood safely, with about 1 s of protection. Upgrades, coins and effects
+  are kept. A knight with 1 health dies instead (campaign reset in Phase 8).
+- **Safe places** are plain, stable ground: never a hazard, the other knight, or any moving,
+  timed, disappearing or collapsing platform.
+- **Moving platforms** carry both knights and enemies; most are one-way (jump up through, drop
+  down), some are solid.
+- **Timed platforms** blink red before vanishing and fade back in; **disappearing platforms**
+  do this on a fixed schedule; **collapsing platforms** shake after a knight lands, fall away,
+  and return about 3 s later. A platform never reappears inside a knight or an enemy.
