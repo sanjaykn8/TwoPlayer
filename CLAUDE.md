@@ -571,3 +571,16 @@ First:
 Then wait for the next development instruction.
 
 The goal is a complete and reliable game, not a collection of generated files.
+---
+
+## PROJECT-SPECIFIC CONVENTIONS (added in Phase 1)
+
+- Godot executable: `C:/Users/Reaper/Downloads/Godot/Godot_v4.7.2-stable_win64_console.exe` (4.7.2.stable). Use the `_console` build for headless commands.
+- Run all tests: `--headless --path . --fixed-fps 60 --script res://tests/run_tests.gd`. Exit code = number of failures. Add `-- <substring>` to filter test files.
+- Tests extend `GameTestCase` (`tests/framework/game_test_case.gd`). Put unit tests in `tests/unit/test_*.gd` and gameplay tests in `tests/gameplay/test_*.gd`.
+- Generated content (`knight_frames.tres`, `dev_world_tileset.tres`, `ladder.png`, the Phase 1 test room) comes from `tools/build_phase1_content.gd`. Edit the generator, not the generated files, then re-run it.
+- Save data lives only in `user://saves/` = `%APPDATA%\TwoKnightCoop\saves\` (`SavePaths`). Never change `custom_user_dir_name`.
+- Approved design decisions are in `GDD.md` §18. The implemented architecture is in `docs/ARCHITECTURE.md` §13.
+- Both knights use `scenes/players/knight.tscn`. Identity comes only from a `KnightProfile`, and all movement values from `resources/config/knight_config.tres`.
+- Ladder tops must be one-way tiles.
+- Keyboard-dependent results (ghosting, Alt behaviour) are recorded only from the user's manual tests (`docs/MANUAL_KEYBOARD_TEST.md`).

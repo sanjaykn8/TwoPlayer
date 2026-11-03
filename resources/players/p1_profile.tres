@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="KnightProfile" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/players/knight_profile.gd" id="1_prof"]
+
+[resource]
+script = ExtResource("1_prof")
+player_id = 1
+display_name = "Knight 1"
+action_left = &"p1_move_left"
+action_right = &"p1_move_right"
+action_up = &"p1_move_up"
+action_down = &"p1_move_down"
+action_attack = &"p1_attack"
+tunic_color = Color(0.0392157, 0.439216, 0.188235, 1)
+plume_color = Color(0.823529, 0.12549, 0.172549, 1)

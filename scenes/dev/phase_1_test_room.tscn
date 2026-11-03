@@ -1,0 +1,125 @@
+[gd_scene format=4]
+
+[ext_resource type="Script" path="res://scenes/dev/phase_1_test_room.gd" id="1_osalq"]
+[ext_resource type="TileSet" path="res://resources/tilesets/dev_world_tileset.tres" id="2_7e7aw"]
+[ext_resource type="PackedScene" path="res://scenes/objects/ladder.tscn" id="3_26cxr"]
+[ext_resource type="PackedScene" path="res://scenes/objects/climb_passage.tscn" id="4_oyb31"]
+[ext_resource type="PackedScene" path="res://scenes/players/knight.tscn" id="5_p6gqh"]
+[ext_resource type="Resource" path="res://resources/players/p2_profile.tres" id="6_tbmqo"]
+[ext_resource type="PackedScene" path="res://scenes/dev/input_debug_hud.tscn" id="7_261st"]
+
+[node name="Phase1TestRoom" type="Node2D" unique_id=1478304321]
+script = ExtResource("1_osalq")
+
+[node name="Sky" type="ColorRect" parent="." unique_id=1108963916]
+offset_right = 640.0
+offset_bottom = 360.0
+mouse_filter = 2
+color = Color(0.42, 0.72, 0.92, 1)
+
+[node name="Terrain" type="TileMapLayer" parent="." unique_id=1774395961]
+tile_map_data = PackedByteArray("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")
+tile_set = ExtResource("2_7e7aw")
+
+[node name="Climbables" type="Node2D" parent="." unique_id=394745078]
+
+[node name="Ladder" parent="Climbables" unique_id=1706953990 instance=ExtResource("3_26cxr")]
+position = Vector2(488, 176)
+size = Vector2(16, 144)
+
+[node name="Passage" parent="Climbables" unique_id=457285737 instance=ExtResource("4_oyb31")]
+position = Vector2(568, 64)
+size = Vector2(48, 112)
+
+[node name="Labels" type="Node2D" parent="." unique_id=911777899]
+
+[node name="ONEWAYLabel" type="Label" parent="Labels" unique_id=1391581885]
+offset_left = 44.0
+offset_top = 150.0
+offset_right = 44.0
+offset_bottom = 150.0
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.1, 0.12, 0.2, 0.85)
+text = "ONE-WAY"
+
+[node name="STEPLabel" type="Label" parent="Labels" unique_id=564142362]
+offset_left = 156.0
+offset_top = 292.0
+offset_right = 156.0
+offset_bottom = 292.0
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.1, 0.12, 0.2, 0.85)
+text = "STEP"
+
+[node name="CROUCHLabel" type="Label" parent="Labels" unique_id=853182564]
+offset_left = 222.0
+offset_top = 262.0
+offset_right = 222.0
+offset_bottom = 262.0
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.1, 0.12, 0.2, 0.85)
+text = "CROUCH"
+
+[node name="CORRIDORLabel" type="Label" parent="Labels" unique_id=1047875340]
+offset_left = 352.0
+offset_top = 262.0
+offset_right = 352.0
+offset_bottom = 262.0
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.1, 0.12, 0.2, 0.85)
+text = "CORRIDOR"
+
+[node name="LADDERLabel" type="Label" parent="Labels" unique_id=999837010]
+offset_left = 436.0
+offset_top = 290.0
+offset_right = 436.0
+offset_bottom = 290.0
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.1, 0.12, 0.2, 0.85)
+text = "LADDER"
+
+[node name="EDGELabel" type="Label" parent="Labels" unique_id=489165692]
+offset_left = 474.0
+offset_top = 164.0
+offset_right = 474.0
+offset_bottom = 164.0
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.1, 0.12, 0.2, 0.85)
+text = "EDGE"
+
+[node name="LANDINGLabel" type="Label" parent="Labels" unique_id=1753179964]
+offset_left = 552.0
+offset_top = 290.0
+offset_right = 552.0
+offset_bottom = 290.0
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.1, 0.12, 0.2, 0.85)
+text = "LANDING"
+
+[node name="PASSAGELabel" type="Label" parent="Labels" unique_id=592786131]
+offset_left = 546.0
+offset_top = 52.0
+offset_right = 546.0
+offset_bottom = 52.0
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.1, 0.12, 0.2, 0.85)
+text = "PASSAGE"
+
+[node name="SpawnP1" type="Marker2D" parent="." unique_id=1971077306]
+position = Vector2(72, 320)
+
+[node name="SpawnP2" type="Marker2D" parent="." unique_id=1825613854]
+position = Vector2(136, 320)
+
+[node name="Knights" type="Node2D" parent="." unique_id=254891927]
+
+[node name="Knight1" parent="Knights" unique_id=2015902676 instance=ExtResource("5_p6gqh")]
+position = Vector2(72, 320)
+show_debug_tag = true
+
+[node name="Knight2" parent="Knights" unique_id=2020206831 instance=ExtResource("5_p6gqh")]
+position = Vector2(136, 320)
+profile = ExtResource("6_tbmqo")
+show_debug_tag = true
+
+[node name="InputDebugHud" parent="." unique_id=264458597 instance=ExtResource("7_261st")]

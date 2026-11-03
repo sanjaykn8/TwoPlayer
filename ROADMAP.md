@@ -432,3 +432,33 @@ Every completed task must have a corresponding validation result.
 Do not mark a whole phase complete merely because its scripts exist.
 
 Always prioritize a stable playable game over rapidly generated content.
+---
+
+# STATUS LOG
+
+| Phase | Status | Evidence |
+|---|---|---|
+| Phase 0: Existing Project Audit | Tested | `docs/AUDIT_REPORT.md` (2026-11-03) |
+| Phase 1: Core Project and Player Foundation | Implemented and auto-tested; **physical keyboard test pending** | `docs/PHASE_1_SUMMARY.md`, `docs/TEST_REPORT.md` (42/42 automated tests). Gate item "Test on the actual Windows keyboard" waits on `docs/MANUAL_KEYBOARD_TEST.md` |
+| Phase 2: Camera and Split-Screen | Not started | Waiting for authorisation |
+| Phases 3–12 | Not started | — |
+
+Phase 1 task tracking:
+
+| Task | Status |
+|---|---|
+| Configure project resolution (640×360, integer scale, 1280×720 window) | Tested |
+| Configure pixel-art rendering (Compatibility, Nearest, pixel snap) | Tested |
+| Create reusable player scene | Tested |
+| Configure Player One input | Tested (automated); physical test pending |
+| Configure Player Two input (Left/Right Alt) | Tested (automated); physical test pending |
+| Horizontal movement | Tested (automated); feel pending |
+| Jumping | Tested (automated) |
+| Variable-height jumping | Tested (automated) |
+| Crouching | Tested (automated) |
+| One-way platform dropping | Tested (automated) |
+| Ladder climbing (and vertical passages) | Tested (automated) |
+| Player collisions | Tested (automated) |
+| Controlled pushing between players | Tested (automated) |
+| Initial health | Tested (automated) |
+| Basic animation state management | Implemented; jump/fall/crouch/climb use placeholder frames |

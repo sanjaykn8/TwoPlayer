@@ -41,10 +41,10 @@ Health, effects, enemies and puzzles then write their state to one place from da
 Phase 8 only adds serialisation. Retrofitting persistence into 10+ components later is
 the most likely source of save bugs.
 
-## 2. Decisions needed before or during Phase 1
+## 2. Design decisions (approved 2026-11-03)
 
-These are points where the GDD is silent or ambiguous. Each has a recommended default.
-I will use the default unless you say otherwise.
+All 14 defaults below were **approved** by the project owner and are recorded in `GDD.md` §18.
+D-11 (Git) was completed with baseline commit `b5c605b`. D-12 uses the identifier `TwoKnightCoop`.
 
 | ID | Question | Recommended default | Why |
 |---|---|---|---|
@@ -78,9 +78,11 @@ I will use the default unless you say otherwise.
 | Architecture | Implemented | `docs/ARCHITECTURE.md` |
 | Project structure proposal | Implemented | ARCHITECTURE §2 |
 | Task checklist | Implemented | this file |
-| Initialise version control | Not started (deferred by user, D-11) | — |
+| Initialise version control | Tested | Baseline commit `b5c605b` before Phase 1 |
 
 ### Phase 1: core project and player foundation
+
+Status: implemented and auto-tested (42/42). Task 1.4 (manual keyboard test) is **pending the user**. See `docs/PHASE_1_SUMMARY.md`.
 
 | # | Task | Depends on |
 |---|---|---|

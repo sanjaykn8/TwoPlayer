@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="KnightConfig" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/players/knight_config.gd" id="1_cfg"]
+
+[resource]
+script = ExtResource("1_cfg")
+run_speed = 110.0
+ground_acceleration = 900.0
+ground_deceleration = 1200.0
+air_acceleration = 700.0
+air_deceleration = 350.0
+crouch_speed = 40.0
+jump_velocity = 320.0
+rise_gravity = 900.0
+fall_gravity = 1250.0
+max_fall_speed = 380.0
+jump_cut_multiplier = 0.45
+coyote_time = 0.08
+jump_buffer_time = 0.1
+climb_speed = 70.0
+ladder_release_speed = 60.0
+regrab_delay = 0.25
+drop_clear_distance = 8.0
+drop_max_time = 0.35
+standing_size = Vector2(10, 18)
+crouch_size = Vector2(10, 11)
+push_speed = 45.0
+base_max_health = 3

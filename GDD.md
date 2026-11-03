@@ -499,3 +499,51 @@ The game is complete only when:
 14. Automated and manual gameplay tests pass.
 
 A feature must never be described as completed without implementation and validation.
+## 18. Approved Design Decisions
+
+Approved by the project owner on 2026-11-03 (Phase 0 recommendations D-1 to D-14).
+Where a decision refines an earlier section, this section is authoritative.
+
+**D-1 Attack direction.**
+- Up or Down held *when the attack begins* selects an upward or downward attack.
+- Otherwise the knight attacks in the direction it last faced.
+- Only horizontal movement input updates the last-facing direction. Pressing Up or Down to jump, climb, crouch or drop never changes it.
+- If Up and Down are both held, the attack uses the last-facing direction.
+
+**D-2 Down attack on the ground.** On the ground, holding Down means crouching, and an attack started there is a low forward slash. A true downward slash happens only in the air or on a ladder.
+
+**D-3 Standing on the other knight.** Allowed, as a cooperative boost.
+- The lower knight can always walk out from underneath.
+- When the lower knight jumps, the upper knight is lifted with it.
+- A low ceiling pushes the upper knight off.
+
+**D-4 Falling damage** (respawn at the last safe position, −1 health) cannot be blocked by shields, yellow fruit, the yellow jar or power-tile protection.
+
+**D-5 Staggered slimes** do not cause contact damage.
+
+**D-6 No fast-fall.** Down in mid-air has no effect except grabbing a ladder.
+
+**D-7 Rendering.** Logical resolution 640 × 360 (16:9). Nearest-neighbour filtering. Integer scaling with letterboxing; pixels are never stretched. Default window 1280 × 720.
+
+**D-8 Camera.** The camera does not zoom. Separation is handled by split-screen.
+
+**D-9 Resume position.** Continuing a save places each knight at its last safe grounded position in the saved level.
+
+**D-10 Renderer.** Godot Compatibility renderer (OpenGL).
+
+**D-11 Version control.** Git, starting with the baseline commit made before Phase 1.
+
+**D-12 Save location.** The permanent identifier is `TwoKnightCoop` (`application/config/custom_user_dir_name`). It is independent of the displayed title. Saves live in `user://saves/`, which is `%APPDATA%\TwoKnightCoop\saves\` on Windows.
+
+**D-13 Pressure plates.** Only knights press pressure plates. Slimes do not.
+
+**D-14 Controls.** Controls are fixed as listed in section 3. There is no key remapping in v1; it will be revisited only if physical keyboard testing shows unavoidable ghosting.
+
+**Ordinary damage.** Contact damage is applied once per contact event. The invulnerability window stops it repeating during one continuous collision. Spikes and hot ground remove 1 health. Lava kills instantly.
+
+**Vertical input priority** (refines section 3):
+1. On a ladder or in a passage, Up and Down climb.
+2. Overlapping a ladder, Up grabs it. Down grabs it only if the ladder continues below the knight's feet.
+3. Standing on a one-way platform, Down drops through it. There is no crouching on one-way platforms.
+4. Standing on solid ground, Up jumps and Down crouches.
+5. In the air, Up has no effect beyond the short jump buffer, and Down grabs a ladder only.

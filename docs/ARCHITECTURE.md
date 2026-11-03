@@ -1,7 +1,7 @@
 # Architecture
 
-Status: **proposed** (Phase 0). Nothing below is implemented yet. Sections will be
-updated to "implemented / tested" as milestones land.
+Status: Phase 0 proposal, with **Phase 1 implemented**. Section 13 describes what
+exists now. Sections 3–12 remain the target design; where Phase 1 deviates, section 13 says so.
 
 ## 1. Existing project (as audited 2026-11-03)
 
@@ -296,8 +296,11 @@ player's health.
 
 - Files: `user://saves/slot_{1..4}.json`, plus `.tmp` during writes.
   `user://settings.cfg` for audio/video settings (not per-slot).
-- **Pin the user-data folder** with `application/config/use_custom_user_dir=true` and a
-  fixed `custom_user_dir_name`. Otherwise renaming the project ("2p") moves every save.
+- **User-data folder is pinned (Phase 1):** `application/config/use_custom_user_dir=true`,
+  `application/config/custom_user_dir_name="TwoKnightCoop"`. `user://` is
+  `%APPDATA%\TwoKnightCoop\` and saves go in `user://saves/`
+  (`%APPDATA%\TwoKnightCoop\saves\`, created by `SavePaths.ensure_save_dir()`). The project
+  title (`config/name`) can change freely. Nothing is ever saved inside the project or repository.
 - Format: JSON `{ "version": N, "run_id": "...", "saved_at": "...", "meta": {...},
   "campaign": {...} }`. Human-readable, so failures are diagnosable.
 - Write: serialise → write `slot_N.tmp` → close → validate by re-reading → replace
@@ -338,11 +341,15 @@ Ten actions, using **physical keycodes** so the keys stay in place on non-QWERTY
 
 | Action | Key | Action | Key |
 |---|---|---|---|
-| `p1_left` | A | `p2_left` | Left |
-| `p1_right` | D | `p2_right` | Right |
-| `p1_up` | W | `p2_up` | Up |
-| `p1_down` | S | `p2_down` | Down |
-| `p1_attack` | V | `p2_attack` | Alt (location unspecified → Left **and** Right Alt) |
+| `p1_move_left` | A | `p2_move_left` | Left Arrow |
+| `p1_move_right` | D | `p2_move_right` | Right Arrow |
+| `p1_move_up` | W | `p2_move_up` | Up Arrow |
+| `p1_move_down` | S | `p2_move_down` | Down Arrow |
+| `p1_attack` | V | `p2_attack` | Left Alt (location LEFT), Right Alt (location RIGHT), Alt (location unspecified, fallback) |
+
+All events use `device = -1` (all devices) and physical keycodes. In Godot 4.7.2, an action
+event with a specific location matches only that side, so both sides are bound explicitly.
+The unspecified-location fallback catches drivers or remote sessions that report no side.
 
 Gameplay never reads `ui_*` actions. Menus use `ui_*` (arrows + Enter/Space/Esc).
 Pause = Esc (not a gameplay button). Input is polled in `_physics_process` with
@@ -380,3 +387,112 @@ Instead:
   `http://`/`https://` in game code (offline guard).
 - Manual test checklists in `docs/TEST_REPORT.md` for things automation cannot prove:
   real keyboard ghosting, Alt behaviour, feel, readability.
+
+## 13. Implemented in Phase 1
+
+### Project configuration (`project.godot`)
+
+| Setting | Value |
+|---|---|
+| Renderer | `gl_compatibility` (desktop and mobile). Verified at runtime: OpenGL 3.3, NVIDIA RTX 4050 Laptop GPU |
+| Logical resolution | 640 × 360 (`display/window/size/viewport_*`) |
+| Window | 1280 × 720 (`window_*_override`) |
+| Stretch | mode `viewport`, aspect `keep` (letterbox), scale mode `integer` |
+| Texture filter | Nearest (`rendering/textures/canvas_textures/default_texture_filter=0`) |
+| Pixel snap | `rendering/2d/snap/snap_2d_transforms_to_pixel=true` |
+| Physics | 60 ticks/s (default), `physics/common/physics_interpolation=true` |
+| GUI font | `res://assets/fonts/PixelOperator8.ttf`, antialiasing off |
+| Main scene | `res://scenes/dev/phase_1_test_room.tscn` (temporary, until the main menu exists) |
+| User data | `TwoKnightCoop` custom user dir (see §8) |
+| Physics layer names | As §11 (1 world … 11 triggers) |
+
+The unused `rendering_device/driver.windows="d3d12"` line was left untouched. It only
+applies if the project is switched back to a RenderingDevice renderer.
+
+### Knight scene (`scenes/players/knight.tscn`)
+
+```
+Knight (CharacterBody2D, knight.gd)    layer 3 players; mask 1 world + 2 one_way + 3 players
+│                                       floor_snap_length 4, platform_floor_layers = world + one_way
+├─ Sprite (AnimatedSprite2D)           knight_frames.tres, palette ShaderMaterial, offset y -12
+├─ Body (CollisionShape2D)             Rectangle 10×18 standing / 10×11 crouching, origin at feet
+├─ Health (HealthComponent)
+└─ Tag (Label)                         "P1"/"P2", development rooms only
+```
+
+- `profile: KnightProfile` (identity, actions, palette) and `config: KnightConfig` (all movement
+  values) are the only differences between instances. `knight.tscn` defaults to the P1 profile.
+- The shape and material are duplicated per instance in `_ready()` (a test confirms this).
+- The proposed `Hurtbox`, `CombatComponent`, `EffectsComponent` and `SafeSpotTracker` children
+  are **not** created yet. They belong to Phases 3, 5 and 6.
+- **Deviation from §5:** ladders are found with physics point queries on the `climb` layer
+  instead of a `LadderProbe` Area2D, which removes enter/exit signal bookkeeping.
+
+**States:** `GROUNDED`, `AIRBORNE`, `CROUCHING`, `CLIMBING`, `DISABLED`. A drop-through is an
+`AIRBORNE` knight with its one-way mask bit temporarily cleared. `state_changed`, `jumped`,
+`landed` and `attack_requested(direction)` are emitted for later systems (HUD, audio, combat).
+
+**Per tick (`_physics_process`):** read input → timers → attack request → state logic
+(platforming or climbing) → push → `move_and_slide` → classify floor (solid, one-way or knight)
+→ carry riders → post-move state → restore suspended collisions → animation.
+
+**Vertical input** goes through `VerticalIntent.resolve()` (GDD §18 priority table, unit-tested).
+
+**Collision suspension and restore:**
+- *Drop-through:* clears mask bit 2 for this knight only. The bit is restored once the feet are
+  8 px below the surface (or after 0.35 s) **and** the body no longer overlaps any one-way
+  platform. The knight therefore passes exactly one platform and never falls through the level.
+- *Climbing:* clears one-way mask bit 2 and the players layer/mask bit 3 while on the climbable,
+  so ladder tops and the other knight never block a climb. Both are restored when no longer overlapping.
+- *Teleport/spawn:* suspends players bit 3 until the knights no longer overlap. A spawn on top of
+  the other knight therefore cannot fling either of them.
+
+**Knight-to-knight interaction (D-3):**
+- *Push:* a test move detects the other knight directly ahead. That knight is moved by
+  `push_speed × delta` with `move_and_collide` (walls stop it). The pusher's speed is capped to
+  `push_speed`. No velocity is transferred, so there are no impulses.
+- *Riders:* a knight whose floor is the other knight is carried horizontally with it. It is lifted
+  with the same upward velocity when the lower knight jumps.
+- Low ceilings block the rider's carry move, so it slides off.
+
+### Climbable component (`components/climb/climbable.gd`)
+
+Area2D on layer 10 (`climb`). Its origin is at the top-centre and must sit on the exit surface
+(a one-way tile for ladders). `kind = LADDER` snaps the knight to the centre, and sideways input
+lets go. `kind = PASSAGE` allows free movement inside. The collision shape is created at runtime
+from `size` (internal child, never saved). `@tool` draws the ladder texture or passage tint in
+the editor.
+
+**Level-design rule:** the tile at a ladder's top must be **one-way**, not solid. Otherwise
+knights cannot climb out of the top or climb down from it.
+
+### Health (`components/health/health_component.gd`)
+
+`max_health` (≥ 1) and `current_health` (clamped to 0..max).
+- `initialize(max)` fills to full.
+- `set_max_health(value, fill_added)` supports the green jar.
+- `apply_damage(n)` and `heal(n)` return the amount actually applied.
+- Signals: `health_changed`, `damaged`, `healed`, and `depleted` (emitted once).
+- A depleted entity is not healed.
+
+Invulnerability, shields and damage kinds are Phase 3.
+
+### Development-only content
+
+- `scenes/dev/phase_1_test_room.tscn`: a 40×22-tile room containing flat ground, a step,
+  one-way stack, crouch tunnel, corridor, floating platform, ladder, ledge edge, passage and
+  landing area. F1–F4 hurt/heal, F6 reset, F7 HUD toggle.
+- `scenes/dev/input_debug_hud.tscn`: live action states, attack direction, and a raw key log
+  with Alt location counters.
+- `tools/build_phase1_content.gd`: regenerates `knight_frames.tres`, `dev_world_tileset.tres`,
+  `ladder.png` and the test room from code. Instances are created with `GEN_EDIT_STATE_INSTANCE`
+  so only real overrides are saved.
+
+### Commands
+
+| Purpose | Command (from the project folder) |
+|---|---|
+| Run all tests | `Godot_v4.7.2-stable_win64_console.exe --headless --path . --fixed-fps 60 --script res://tests/run_tests.gd` |
+| Run one test file | same, plus `-- test_logic` (substring filter) |
+| Regenerate Phase 1 content | `... --headless --path . --script res://tools/build_phase1_content.gd -- content` |
+| Play the test room in its own window | `Godot_v4.7.2-stable_win64.exe --path .` |
