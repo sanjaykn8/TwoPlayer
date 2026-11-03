@@ -16,6 +16,8 @@ enum Category {
 	LAVA,
 }
 
+## Unique id, assigned on creation. HealthComponent rejects an event it has already processed.
+var event_id := 0
 var amount := 1
 var category := Category.CONTACT
 ## The node that caused the damage (attacker, hazard). May be null.
@@ -26,6 +28,15 @@ var attack_id := 0
 var direction := Vector2i.ZERO
 ## Player id of the attacking knight, or 0.
 var attacker_player_id := 0
+## Seconds of poison a melee hit applies to an enemy (purple fruit). 0 = none.
+var poison_seconds := 0.0
+
+static var _next_event_id := 1
+
+
+func _init() -> void:
+	event_id = _next_event_id
+	_next_event_id += 1
 
 
 static func create(damage: int, kind: DamageEvent.Category, from: Node = null) -> DamageEvent:

@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="ProgressionConfig" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/progression/progression_config.gd" id="1_pc"]
+
+[resource]
+script = ExtResource("1_pc")
+coin_heal_chance_percent = 10
+coin_heal_amount = 1
+coin_pickup_delay = 0.35
+green_fruit_heal = Array[int]([1, 2, 3])
+yellow_fruit_charges = Array[int]([1, 2, 3])
+yellow_fruit_seconds = Array[float]([5.0, 10.0, 20.0])
+red_fruit_range_bonus = Array[float]([0.1, 0.2, 0.3])
+purple_fruit_poison_seconds = Array[float]([1.0, 2.0, 3.0])
+green_jar_max_health = 1
+red_jar_attack_power = 1
+blue_jar_speed_bonus = 0.05
+yellow_jar_chance_percent = 50
+yellow_jar_seconds = 60.0
+tile_effect_seconds = 5.0
+tile_speed_bonus = 0.25
+tile_cooldown_reduction = 0.25
+tile_shield_charges = 1
+block_invulnerability = 1.0

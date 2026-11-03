@@ -66,6 +66,7 @@ var _point_query := PhysicsPointQueryParameters2D.new()
 @onready var health: HealthComponent = $Health
 @onready var combat: CombatComponent = $Combat
 @onready var hurtbox: HurtboxComponent = $Hurtbox
+@onready var progress: PlayerProgress = $Progress
 @onready var debug_tag: Label = $Tag
 
 
@@ -91,6 +92,8 @@ func _ready() -> void:
 	health.damaged.connect(_on_damaged)
 	health.depleted.connect(_on_depleted)
 	combat.setup(self, profile.player_id, _body_height)
+	# Health, combat stats and timed effects come from this player's run record.
+	progress.bind(self)
 	debug_tag.visible = show_debug_tag
 	debug_tag.text = "P%d" % profile.player_id
 	_point_query.collision_mask = CLIMB_BIT
@@ -267,7 +270,7 @@ func _process_platforming(delta: float) -> void:
 		if not wants_crouch and _can_stand():
 			_set_state(State.GROUNDED if on_floor else State.AIRBORNE)
 
-	var top_speed := config.crouch_speed if state == State.CROUCHING else config.run_speed
+	var top_speed := (config.crouch_speed if state == State.CROUCHING else config.run_speed) * progress.speed_multiplier()
 	var target_speed := input.move_x * top_speed
 	var rate: float
 	if on_floor:
@@ -616,6 +619,8 @@ func _update_animation(delta: float) -> void:
 			_play(&"jump" if velocity.y < 0.0 else &"fall")
 		_:
 			_play(&"run" if absf(velocity.x) > 8.0 else &"idle")
+	# Run cycle keeps pace with speed upgrades and boosts.
+	sprite.speed_scale = progress.speed_multiplier() if sprite.animation == &"run" else 1.0
 
 
 func _play(animation: StringName) -> void:

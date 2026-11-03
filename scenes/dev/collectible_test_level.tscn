@@ -1,0 +1,332 @@
+[gd_scene format=4]
+
+[ext_resource type="TileSet" path="res://resources/tilesets/dev_world_tileset.tres" id="1_x85np"]
+[ext_resource type="Script" path="res://components/camera/camera_bounds.gd" id="2_o61eg"]
+[ext_resource type="PackedScene" path="res://scenes/collectibles/fruit.tscn" id="3_cvvw7"]
+[ext_resource type="PackedScene" path="res://scenes/collectibles/jar.tscn" id="4_phfmq"]
+[ext_resource type="PackedScene" path="res://scenes/collectibles/power_tile.tscn" id="5_s7ta1"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/green_slime.tscn" id="6_5dig8"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/purple_slime.tscn" id="7_iud1n"]
+[ext_resource type="PackedScene" path="res://scenes/players/knight.tscn" id="8_xp4lm"]
+[ext_resource type="Resource" path="res://resources/players/p2_profile.tres" id="9_3n77p"]
+
+[node name="CollectibleTestLevel" type="Node2D" unique_id=478847955]
+
+[node name="Sky" type="ColorRect" parent="." unique_id=486074400]
+offset_right = 1280.0
+offset_bottom = 480.0
+mouse_filter = 2
+color = Color(0.42, 0.72, 0.92, 1)
+
+[node name="Terrain" type="TileMapLayer" parent="." unique_id=1827789533]
+tile_map_data = PackedByteArray("AAAAAAAAAAAIAAEAAAAAAAEAAAAIAAEAAAAAAAIAAAAIAAEAAAAAAAMAAAAIAAEAAAAAAAQAAAAIAAEAAAAAAAUAAAAIAAEAAAAAAAYAAAAIAAEAAAAAAAcAAAAIAAEAAAAAAAgAAAAIAAEAAAAAAAkAAAAIAAEAAAAAAAoAAAAIAAEAAAAAAAsAAAAIAAEAAAAAAAwAAAAIAAEAAAAAAA0AAAAIAAEAAAAAAA4AAAAIAAEAAAAAAA8AAAAIAAEAAAAAABAAAAAIAAEAAAAAABEAAAAIAAEAAAAAABIAAAAIAAEAAAAAABMAAAAIAAEAAAAAABQAAAAIAAEAAAAAABUAAAAIAAEAAAAAABYAAAAIAAEAAAAAABcAAAAIAAEAAAAAABgAAAAIAAEAAAAAABkAAAAIAAEAAAAAABoAAAAIAAEAAAAAABsAAAAIAAEAAAAAABwAAAAIAAEAAAAAAB0AAAAIAAEAAABPAAAAAAAIAAEAAABPAAEAAAAIAAEAAABPAAIAAAAIAAEAAABPAAMAAAAIAAEAAABPAAQAAAAIAAEAAABPAAUAAAAIAAEAAABPAAYAAAAIAAEAAABPAAcAAAAIAAEAAABPAAgAAAAIAAEAAABPAAkAAAAIAAEAAABPAAoAAAAIAAEAAABPAAsAAAAIAAEAAABPAAwAAAAIAAEAAABPAA0AAAAIAAEAAABPAA4AAAAIAAEAAABPAA8AAAAIAAEAAABPABAAAAAIAAEAAABPABEAAAAIAAEAAABPABIAAAAIAAEAAABPABMAAAAIAAEAAABPABQAAAAIAAEAAABPABUAAAAIAAEAAABPABYAAAAIAAEAAABPABcAAAAIAAEAAABPABgAAAAIAAEAAABPABkAAAAIAAEAAABPABoAAAAIAAEAAABPABsAAAAIAAEAAABPABwAAAAIAAEAAABPAB0AAAAIAAEAAAABAAAAAAAAAAAAAAACAAAAAAAAAAAAAAADAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAFAAAAAAAAAAAAAAAGAAAAAAAAAAAAAAAHAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAJAAAAAAAAAAAAAAAKAAAAAAAAAAAAAAALAAAAAAAAAAAAAAAMAAAAAAAAAAAAAAANAAAAAAAAAAAAAAAOAAAAAAAAAAAAAAAPAAAAAAAAAAAA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")
+tile_set = ExtResource("1_x85np")
+
+[node name="CameraBounds" type="Node2D" parent="." unique_id=803546510]
+script = ExtResource("2_o61eg")
+size = Vector2(1280, 480)
+
+[node name="Items" type="Node2D" parent="." unique_id=740482706]
+
+[node name="FruitGreenT1" parent="Items" unique_id=1877285688 instance=ExtResource("3_cvvw7")]
+position = Vector2(136, 448)
+collectible_id = "dev_fruit_green_t1"
+
+[node name="FruitGreenT2" parent="Items" unique_id=1873911737 instance=ExtResource("3_cvvw7")]
+position = Vector2(136, 426)
+tier = 2
+collectible_id = "dev_fruit_green_t2"
+
+[node name="FruitGreenT3" parent="Items" unique_id=1226272049 instance=ExtResource("3_cvvw7")]
+position = Vector2(136, 404)
+tier = 3
+collectible_id = "dev_fruit_green_t3"
+
+[node name="FruitYellowT1" parent="Items" unique_id=1015956380 instance=ExtResource("3_cvvw7")]
+position = Vector2(184, 448)
+fruit_type = 1
+collectible_id = "dev_fruit_yellow_t1"
+
+[node name="FruitYellowT2" parent="Items" unique_id=230216888 instance=ExtResource("3_cvvw7")]
+position = Vector2(184, 426)
+fruit_type = 1
+tier = 2
+collectible_id = "dev_fruit_yellow_t2"
+
+[node name="FruitYellowT3" parent="Items" unique_id=1418693599 instance=ExtResource("3_cvvw7")]
+position = Vector2(184, 404)
+fruit_type = 1
+tier = 3
+collectible_id = "dev_fruit_yellow_t3"
+
+[node name="FruitRedT1" parent="Items" unique_id=1673507739 instance=ExtResource("3_cvvw7")]
+position = Vector2(232, 448)
+fruit_type = 2
+collectible_id = "dev_fruit_red_t1"
+
+[node name="FruitRedT2" parent="Items" unique_id=715002478 instance=ExtResource("3_cvvw7")]
+position = Vector2(232, 426)
+fruit_type = 2
+tier = 2
+collectible_id = "dev_fruit_red_t2"
+
+[node name="FruitRedT3" parent="Items" unique_id=69992957 instance=ExtResource("3_cvvw7")]
+position = Vector2(232, 404)
+fruit_type = 2
+tier = 3
+collectible_id = "dev_fruit_red_t3"
+
+[node name="FruitPurpleT1" parent="Items" unique_id=1242481950 instance=ExtResource("3_cvvw7")]
+position = Vector2(280, 448)
+fruit_type = 3
+collectible_id = "dev_fruit_purple_t1"
+
+[node name="FruitPurpleT2" parent="Items" unique_id=618182900 instance=ExtResource("3_cvvw7")]
+position = Vector2(280, 426)
+fruit_type = 3
+tier = 2
+collectible_id = "dev_fruit_purple_t2"
+
+[node name="FruitPurpleT3" parent="Items" unique_id=2142878746 instance=ExtResource("3_cvvw7")]
+position = Vector2(280, 404)
+fruit_type = 3
+tier = 3
+collectible_id = "dev_fruit_purple_t3"
+
+[node name="JarGreen" parent="Items" unique_id=1498160854 instance=ExtResource("4_phfmq")]
+position = Vector2(336, 448)
+collectible_id = "dev_jar_green"
+
+[node name="JarYellow" parent="Items" unique_id=310740832 instance=ExtResource("4_phfmq")]
+position = Vector2(368, 448)
+jar_type = 2
+collectible_id = "dev_jar_yellow"
+
+[node name="JarBlue" parent="Items" unique_id=1622548600 instance=ExtResource("4_phfmq")]
+position = Vector2(400, 448)
+jar_type = 3
+collectible_id = "dev_jar_blue"
+
+[node name="JarRed" parent="Items" unique_id=1817272478 instance=ExtResource("4_phfmq")]
+position = Vector2(496, 256)
+jar_type = 1
+collectible_id = "dev_jar_red"
+
+[node name="PowerTiles" type="Node2D" parent="." unique_id=1559358210]
+
+[node name="PowerTile1" parent="PowerTiles" unique_id=914970943 instance=ExtResource("5_s7ta1")]
+position = Vector2(560, 440)
+
+[node name="PowerTile2" parent="PowerTiles" unique_id=42784036 instance=ExtResource("5_s7ta1")]
+position = Vector2(600, 440)
+
+[node name="PowerTile3" parent="PowerTiles" unique_id=1097954043 instance=ExtResource("5_s7ta1")]
+position = Vector2(640, 440)
+
+[node name="Enemies" type="Node2D" parent="." unique_id=1523202344]
+
+[node name="ShieldPenGreen" parent="Enemies" unique_id=430099235 instance=ExtResource("6_5dig8")]
+position = Vector2(976, 448)
+patrol_left = -32.0
+patrol_right = 32.0
+detection_radius_override = 64.0
+
+[node name="PoisonPenPurple" parent="Enemies" unique_id=994215646 instance=ExtResource("7_iud1n")]
+position = Vector2(1120, 448)
+patrol_left = -32.0
+patrol_right = 32.0
+detection_radius_override = 64.0
+
+[node name="CoinSlimeA" parent="Enemies" unique_id=40300344 instance=ExtResource("6_5dig8")]
+position = Vector2(1216, 448)
+patrol_left = -8.0
+patrol_right = 8.0
+detection_radius_override = 64.0
+
+[node name="CoinSlimeB" parent="Enemies" unique_id=447702241 instance=ExtResource("6_5dig8")]
+position = Vector2(1250, 448)
+patrol_left = -8.0
+patrol_right = 8.0
+detection_radius_override = 64.0
+
+[node name="Labels" type="Node2D" parent="." unique_id=1820995879]
+
+[node name="HEALLabel" type="Label" parent="Labels" unique_id=467619840]
+offset_left = 122.0
+offset_top = 380.0
+offset_right = 122.0
+offset_bottom = 380.0
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.1, 0.12, 0.2, 0.85)
+text = "HEAL"
+
+[node name="SHIELDLabel" type="Label" parent="Labels" unique_id=1834708413]
+offset_left = 166.0
+offset_top = 380.0
+offset_right = 166.0
+offset_bottom = 380.0
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.1, 0.12, 0.2, 0.85)
+text = "SHIELD"
+
+[node name="RANGELabel" type="Label" parent="Labels" unique_id=60671404]
+offset_left = 218.0
+offset_top = 380.0
+offset_right = 218.0
+offset_bottom = 380.0
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.1, 0.12, 0.2, 0.85)
+text = "RANGE"
+
+[node name="POISONLabel" type="Label" parent="Labels" unique_id=764135015]
+offset_left = 262.0
+offset_top = 380.0
+offset_right = 262.0
+offset_bottom = 380.0
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.1, 0.12, 0.2, 0.85)
+text = "POISON"
+
+[node name="JARSLabel" type="Label" parent="Labels" unique_id=1084799898]
+offset_left = 352.0
+offset_top = 404.0
+offset_right = 352.0
+offset_bottom = 404.0
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.1, 0.12, 0.2, 0.85)
+text = "JARS"
+
+[node name="REDJARLabel" type="Label" parent="Labels" unique_id=273876185]
+offset_left = 476.0
+offset_top = 226.0
+offset_right = 476.0
+offset_bottom = 226.0
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.1, 0.12, 0.2, 0.85)
+text = "RED JAR"
+
+[node name="?TILESLabel" type="Label" parent="Labels" unique_id=2115288228]
+offset_left = 574.0
+offset_top = 404.0
+offset_right = 574.0
+offset_bottom = 404.0
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.1, 0.12, 0.2, 0.85)
+text = "? TILES"
+
+[node name="SPEEDLANELabel" type="Label" parent="Labels" unique_id=404922521]
+offset_left = 760.0
+offset_top = 404.0
+offset_right = 760.0
+offset_bottom = 404.0
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.1, 0.12, 0.2, 0.85)
+text = "SPEED LANE"
+
+[node name="SHIELDTESTLabel" type="Label" parent="Labels" unique_id=1856601203]
+offset_left = 944.0
+offset_top = 380.0
+offset_right = 944.0
+offset_bottom = 380.0
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.1, 0.12, 0.2, 0.85)
+text = "SHIELD TEST"
+
+[node name="POISONTESTLabel" type="Label" parent="Labels" unique_id=1062724488]
+offset_left = 1088.0
+offset_top = 380.0
+offset_right = 1088.0
+offset_bottom = 380.0
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.1, 0.12, 0.2, 0.85)
+text = "POISON TEST"
+
+[node name="COINDROPSLabel" type="Label" parent="Labels" unique_id=616118017]
+offset_left = 1204.0
+offset_top = 404.0
+offset_right = 1204.0
+offset_bottom = 404.0
+theme_override_font_sizes/font_size = 8
+theme_override_colors/font_color = Color(0.1, 0.12, 0.2, 0.85)
+text = "COIN DROPS"
+
+[node name="SpeedTick0" type="ColorRect" parent="Labels" unique_id=162983318]
+offset_left = 700.0
+offset_top = 442.0
+offset_right = 702.0
+offset_bottom = 448.0
+mouse_filter = 2
+color = Color(0.2, 0.25, 0.6, 1)
+
+[node name="SpeedTick1" type="ColorRect" parent="Labels" unique_id=2081480736]
+offset_left = 732.0
+offset_top = 442.0
+offset_right = 734.0
+offset_bottom = 448.0
+mouse_filter = 2
+color = Color(0.2, 0.25, 0.6, 1)
+
+[node name="SpeedTick2" type="ColorRect" parent="Labels" unique_id=1747264172]
+offset_left = 764.0
+offset_top = 442.0
+offset_right = 766.0
+offset_bottom = 448.0
+mouse_filter = 2
+color = Color(0.2, 0.25, 0.6, 1)
+
+[node name="SpeedTick3" type="ColorRect" parent="Labels" unique_id=103134088]
+offset_left = 796.0
+offset_top = 442.0
+offset_right = 798.0
+offset_bottom = 448.0
+mouse_filter = 2
+color = Color(0.2, 0.25, 0.6, 1)
+
+[node name="SpeedTick4" type="ColorRect" parent="Labels" unique_id=574512277]
+offset_left = 828.0
+offset_top = 442.0
+offset_right = 830.0
+offset_bottom = 448.0
+mouse_filter = 2
+color = Color(0.2, 0.25, 0.6, 1)
+
+[node name="SpeedTick5" type="ColorRect" parent="Labels" unique_id=1956726801]
+offset_left = 860.0
+offset_top = 442.0
+offset_right = 862.0
+offset_bottom = 448.0
+mouse_filter = 2
+color = Color(0.2, 0.25, 0.6, 1)
+
+[node name="SpeedTick6" type="ColorRect" parent="Labels" unique_id=1184825995]
+offset_left = 892.0
+offset_top = 442.0
+offset_right = 894.0
+offset_bottom = 448.0
+mouse_filter = 2
+color = Color(0.2, 0.25, 0.6, 1)
+
+[node name="SpeedTick7" type="ColorRect" parent="Labels" unique_id=766939318]
+offset_left = 924.0
+offset_top = 442.0
+offset_right = 926.0
+offset_bottom = 448.0
+mouse_filter = 2
+color = Color(0.2, 0.25, 0.6, 1)
+
+[node name="SpawnP1" type="Marker2D" parent="." unique_id=213176053]
+position = Vector2(40, 448)
+
+[node name="SpawnP2" type="Marker2D" parent="." unique_id=1098689741]
+position = Vector2(72, 448)
+
+[node name="Knights" type="Node2D" parent="." unique_id=1016333404]
+
+[node name="Knight1" parent="Knights" unique_id=2108371169 instance=ExtResource("8_xp4lm")]
+position = Vector2(40, 448)
+show_debug_tag = true
+
+[node name="Knight2" parent="Knights" unique_id=477936040 instance=ExtResource("8_xp4lm")]
+position = Vector2(72, 448)
+profile = ExtResource("9_3n77p")
+show_debug_tag = true

@@ -1,0 +1,15 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/dev/collectible_test_room.gd" id="1_687sm"]
+[ext_resource type="PackedScene" path="res://scenes/dev/collectible_test_level.tscn" id="2_75bna"]
+[ext_resource type="PackedScene" path="res://scenes/camera/split_screen_rig.tscn" id="3_1a5sb"]
+[ext_resource type="PackedScene" path="res://scenes/dev/collectible_debug_hud.tscn" id="4_o2jhr"]
+
+[node name="CollectibleTestRoom" type="Node" unique_id=1442402666]
+script = ExtResource("1_687sm")
+
+[node name="Level" parent="." unique_id=478847955 instance=ExtResource("2_75bna")]
+
+[node name="SplitScreenRig" parent="." unique_id=1777859 instance=ExtResource("3_1a5sb")]
+
+[node name="CollectibleDebugHud" parent="." unique_id=499144007 instance=ExtResource("4_o2jhr")]

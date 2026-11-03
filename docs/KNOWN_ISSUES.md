@@ -1,6 +1,6 @@
 # Known Issues
 
-Updated 2026-11-03 (end of Phase 4).
+Updated 2026-11-03 (end of Phase 5).
 
 ## Open
 
@@ -10,9 +10,16 @@ Updated 2026-11-03 (end of Phase 4).
 | KI-18 | Verification gap | Phase 2 manual camera tests (`docs/MANUAL_CAMERA_TEST.md`) not yet performed | User |
 | KI-25 | Verification gap | Phase 3 manual combat tests (`docs/MANUAL_COMBAT_TEST.md`) not yet performed | User |
 | KI-32 | Verification gap | Phase 4 manual enemy tests (`docs/MANUAL_ENEMY_TEST.md`) not yet performed | User |
+| KI-38 | Verification gap | Phase 5 manual collectible tests (`docs/MANUAL_COLLECTIBLE_TEST.md`) not yet performed | User |
+| KI-39 | Minor | The bundle has no red bottle: the red jar is the magenta bottle tinted red (plus a faint glint) | Draw a red jar during art polish |
+| KI-40 | Minor | Effect feedback is pips above the knight and short pop-up text; there is no proper HUD yet (Phase 9). Effect icons are coloured squares, not sprites | Phase 9 HUD |
+| KI-41 | Minor | The red-jar route in the test room is tight by design (each step 48 of 57 px jump height; last gap needs ~33 of ~44 px horizontal). Not yet tried by a human | Tune in manual test 9 |
+| KI-42 | Info | Sounds reuse `coin.wav` and `power_up.wav` (pitch-varied), capped at 4 at once; no mixer buses or volume settings yet | Phase 9 |
+| KI-43 | Info | Dropped coins are not part of the run snapshot (coins on the ground at save time are not restored). Collected totals are | Decide in Phase 8 |
+| KI-44 | Info | Climbing speed is not affected by speed upgrades (only running and crawling) | By design; revisit if wanted |
+| KI-45 | Info | `RunState` is a static holder rather than the `Campaign` autoload planned in Phase 0, so the run works identically in the editor, the game and the headless test runner | By design (ARCHITECTURE §16) |
 | KI-33 | Minor | The slime sheets have no death or attack animation. Death is a placeholder: hit-flash frame, then a 0.5 s squash and fade made by scaling (briefly non-integer scale). Contact damage has no attack animation | Create death frames during art polish |
 | KI-34 | Minor | Slimes cannot jump or path-find; a knight on another level makes them wait, then give up after 3 s | By design for Phase 4 (GDD §18); an enemy-jump capability can be added later |
-| KI-35 | Minor | Dropped coins cannot be collected and stay in the level; nothing totals them except the dev room's preview counter | Phase 5 (collection, shared total, 10 % heal) |
 | KI-36 | Info | When both knights' distinct attacks land in the same tick, one can stagger a slime and the other kill it immediately. This follows the rule (the staggering attack never kills; any other attack does) | By design; revisit after manual testing |
 | KI-37 | Info | Defeated slimes are freed. Saving which enemies are defeated (persistent ids) is Phase 8 | Phase 8 |
 | KI-26 | Minor | No knight attack body animation exists in the asset pack. The generated knife slash (`assets/created/knife_slash.png`, placeholder art) overlays the knight's normal idle/run frames | Create attack pose frames during art polish |
@@ -42,6 +49,7 @@ Updated 2026-11-03 (end of Phase 4).
 
 | ID | Issue | Resolution |
 |---|---|---|
+| KI-35 | Dropped coins could not be collected | Phase 5: CoinPickup, shared RunState total, 10 % heal |
 | KI-11 | No camera system | Phase 2 `SplitScreenRig` (camera test room) |
 | KI-1 | Linear (blurry) texture filtering | Nearest filter (Phase 1); SubViewports set Nearest explicitly (Phase 2) |
 | KI-2 | Pixel font imported with antialiasing | Fixed (Phase 1) |

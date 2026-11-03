@@ -26,6 +26,12 @@ signal invulnerability_changed(active: bool)
 		current_health = current_health  # re-clamp to the new maximum
 ## Seconds of invulnerability after damage that respects invulnerability. 0 disables it.
 @export var invulnerability_time := 0.0
+## Seconds of invulnerability after a protection filter blocks a hit, so continuous contact
+## cannot drain several shield charges in a row. 0 disables it.
+@export var block_invulnerability_time := 0.0
+
+## How many recent event ids are remembered to reject duplicate deliveries.
+const RECENT_EVENTS := 16
 
 var current_health := 3:
 	set(value):
@@ -33,6 +39,7 @@ var current_health := 3:
 
 var _invulnerable_left := 0.0
 var _protection_filters: Array[Callable] = []
+var _recent_event_ids: Array[int] = []
 
 
 func _ready() -> void:
@@ -68,7 +75,17 @@ func invulnerability_left() -> float:
 # --- Rule-based damage ---------------------------------------------------------------
 
 ## Applies a gameplay damage event. Returns the health actually removed.
+## Order: invalid/duplicate -> dead -> LAVA -> invulnerability -> protection filters -> damage.
 func take_damage(event: DamageEvent) -> int:
+	if event == null or (event.amount <= 0 and not event.is_lethal()):
+		damage_blocked.emit(event, &"invalid")
+		return 0
+	if _recent_event_ids.has(event.event_id):
+		damage_blocked.emit(event, &"duplicate")
+		return 0
+	_recent_event_ids.append(event.event_id)
+	if _recent_event_ids.size() > RECENT_EVENTS:
+		_recent_event_ids.remove_at(0)
 	if not is_alive():
 		damage_blocked.emit(event, &"dead")
 		return 0
@@ -84,6 +101,8 @@ func take_damage(event: DamageEvent) -> int:
 		for filter in _protection_filters:
 			if filter.call(event):
 				damage_blocked.emit(event, &"protected")
+				if block_invulnerability_time > 0.0:
+					start_invulnerability(block_invulnerability_time)
 				return 0
 	var applied := apply_damage(event.amount)
 	if applied > 0:

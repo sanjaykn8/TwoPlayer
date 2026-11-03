@@ -38,6 +38,7 @@ func _run() -> void:
 			var test_name: String = method.name
 			if not test_name.begins_with("test_"):
 				continue
+			RunState.reset()  # every test starts a fresh run (no progression leaks between tests)
 			await suite.before_each()
 			await suite.call(test_name)
 			await suite.after_each()
@@ -56,6 +57,7 @@ func _run() -> void:
 	print("\n==== %d passed, %d failed ====" % [passed, failed])
 	for f in failures:
 		print("FAILED: ", f)
+	RunState.clear()  # nothing left in a static at exit
 	quit(failed)
 
 

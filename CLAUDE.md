@@ -594,3 +594,7 @@ The goal is a complete and reliable game, not a collection of generated files.
 - Enemies: slimes are `scenes/enemies/green_slime.tscn` / `purple_slime.tscn` (shared `slime_base.tscn` + `scenes/enemies/slime.gd`; values in `resources/enemies/*.tres`). Place them under a level node and set `patrol_left` / `patrol_right` (relative to spawn) and optionally `detection_radius_override`. Stagger rules live only in `scripts/enemies/slime_stagger.gd`.
 - Coin drops: listen with the `coin_drop_listeners` group (`on_coins_dropped(result: CoinDropResult)`). The Phase 5 coin manager must join that group rather than connect to individual enemies.
 - Development-only switch: `Slime.debug_visible`.
+- Run state: `RunState.current()` is the single authority for coins, collected item ids and each player's `PlayerStats`. Never store progression on knights or levels. Knights bind through their `Progress` child (`PlayerProgress`). Effective stats come only from `PlayerStats` (`attack_power()`, `range_multiplier()`, `speed_multiplier()`, `cooldown_multiplier()`). Tests get a fresh run before each test; dev rooms keep the run across reloads (F5 starts a new one).
+- Protection belongs only in `PlayerEffects.resolve_protection()`. Do not add shield checks to enemies or hazards; they just send `DamageEvent`s.
+- Unique collectibles (jars, placed fruit) need a run-unique `collectible_id`. Phase 8 saves `RunState.snapshot()`.
+- GDScript: a class cannot be aliased as a `const` (`const X := SomeClass` fails); enums can.

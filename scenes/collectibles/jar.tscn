@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scenes/collectibles/jar.gd" id="1_jar"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world_tileset.png" id="2_tiles"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jar"]
+size = Vector2(10, 14)
+
+[node name="Jar" type="Area2D"]
+script = ExtResource("1_jar")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+position = Vector2(0, -8)
+texture = ExtResource("2_tiles")
+region_enabled = true
+region_rect = Rect2(0, 112, 16, 16)
+
+[node name="Shape" type="CollisionShape2D" parent="."]
+position = Vector2(0, -7)
+shape = SubResource("RectangleShape2D_jar")

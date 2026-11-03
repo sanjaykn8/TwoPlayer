@@ -109,7 +109,12 @@ func is_hit_window_open() -> bool:
 
 
 func cooldown_left() -> float:
-	return 0.0 if state == State.IDLE else maxf(config.cooldown - _elapsed, 0.0)
+	return 0.0 if state == State.IDLE else maxf(effective_cooldown() - _elapsed, 0.0)
+
+
+## The configured cooldown scaled by the knight's current stats (attack-speed boost).
+func effective_cooldown() -> float:
+	return maxf(config.cooldown * stats.cooldown_multiplier, config.hit_window_end())
 
 
 func elapsed() -> float:
@@ -153,7 +158,7 @@ func _physics_process(delta: float) -> void:
 	_set_hitbox_open(open)
 	if open:
 		_apply_hits()
-	if state == State.ATTACK_RECOVERY and _elapsed >= config.cooldown - EPSILON:
+	if state == State.ATTACK_RECOVERY and _elapsed >= effective_cooldown() - EPSILON:
 		state = State.IDLE
 		weapon.visible = false
 		attack_finished.emit(attack_id)
@@ -206,6 +211,7 @@ func _apply_hits() -> void:
 		event.attack_id = attack_id
 		event.direction = AttackDirection.to_vector(direction)
 		event.attacker_player_id = _attacker_player_id
+		event.poison_seconds = stats.poison_seconds
 		targets_hit.append(hurtbox.entity)
 		hit_log.append({"attack_id": attack_id, "target": hurtbox.entity, "amount": event.amount})
 		hurtbox.receive_hit(event)

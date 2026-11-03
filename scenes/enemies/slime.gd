@@ -60,6 +60,8 @@ var target: Node2D
 ## Whether the target was in sight at the last sense check.
 var target_visible := false
 var stagger: SlimeStagger
+## Purple-fruit poison: earns stagger points over time (can stagger, never kills).
+var poison := PoisonStatus.new()
 ## Set once, on death.
 var drop_result: CoinDropResult
 ## Spawn x; patrol limits are relative to it.
@@ -130,6 +132,9 @@ func _physics_process(delta: float) -> void:
 		_think(delta)
 		if _hit_pause > 0.0:
 			velocity.x = 0.0
+		var poison_points := poison.tick(delta)
+		if poison_points > 0:
+			add_stagger_progress(poison_points, poison.source)
 	velocity.y = minf(velocity.y + stats.gravity * delta, stats.max_fall_speed)
 	move_and_slide()
 	_process_contact(delta)
@@ -177,6 +182,8 @@ func debug_text() -> String:
 	if target != null and target.has_method(&"player_id"):
 		tgt = "P%d%s" % [target.player_id(), "" if target_visible else "?"]
 	var text := "%s %s %d/%d tgt %s" % [stats.debug_tag, state_name(), stagger.progress, stagger.threshold, tgt]
+	if poison.is_active():
+		text += " psn %.1f" % poison.remaining
 	if state == State.STAGGERED:
 		text += " %.1fs" % stagger.time_left
 	return text
@@ -363,7 +370,11 @@ func _ray_clear(from: Vector2, to: Vector2, mask: int) -> bool:
 func _on_hit_received(event: DamageEvent) -> void:
 	if state == State.DEAD or event.category != DamageEvent.Category.MELEE:
 		return
-	_apply_outcome(stagger.register_melee_hit(event.amount, event.attack_id), event.source)
+	var outcome := stagger.register_melee_hit(event.amount, event.attack_id)
+	_apply_outcome(outcome, event.source)
+	# A poisoned blade poisons on hits that neither stagger nor kill.
+	if outcome == SlimeStagger.Outcome.PROGRESS and event.poison_seconds > 0.0:
+		poison.apply(event.poison_seconds, event.source)
 
 
 func _apply_outcome(outcome: SlimeStagger.Outcome, source: Node) -> void:
@@ -398,6 +409,7 @@ func _die() -> void:
 	var previous := state
 	state = State.DEAD
 	stagger.dead = true
+	poison.clear()
 	velocity = Vector2.ZERO
 	hurtbox.enabled = false
 	contact_area.set_deferred(&"monitoring", false)
@@ -461,6 +473,7 @@ func _enter(next: State, idle_duration := 0.0) -> void:
 	else:
 		_recovering = false
 	if next == State.STAGGERED:
+		poison.clear()
 		velocity.x = 0.0
 		_hit_pause = 0.0
 		_alert_left = 0.0
@@ -498,13 +511,15 @@ func _update_visuals() -> void:
 	elif state == State.STAGGERED:
 		var speed := 14.0 if stagger.time_left < RECOVER_WARNING else 5.0
 		tint = Color.WHITE.lerp(Color(1.7, 1.7, 1.9), 0.5 + 0.5 * sin(_state_time * speed))
+	elif poison.is_active():
+		tint = Color.WHITE.lerp(Color(0.75, 1.35, 0.6), 0.5 + 0.5 * sin(_state_time * 8.0))
 	sprite.modulate = tint
 	alert_label.visible = _alert_left > 0.0 and (state == State.DETECT_PLAYER or state == State.CHASE)
 	var show_debug := debug_visible and OS.is_debug_build()
 	debug_label.visible = show_debug
 	if show_debug:
 		debug_label.text = debug_text()
-	if state == State.STAGGERED or show_debug:
+	if state == State.STAGGERED or poison.is_active() or show_debug:
 		queue_redraw()
 
 
@@ -515,6 +530,11 @@ func _draw() -> void:
 			var a := _state_time * 4.0 + PI * i
 			var p := Vector2(cos(a) * 7.0, -17.0 + sin(a) * 2.0).round()
 			draw_rect(Rect2(p, Vector2(2, 2)), Color(1.0, 0.95, 0.4))
+	if poison.is_active():
+		# Small rising poison bubbles.
+		for i in 2:
+			var y := -14.0 - fmod(_state_time * 10.0 + i * 5.0, 10.0)
+			draw_rect(Rect2(Vector2(-3 + i * 5, y).round(), Vector2(2, 2)), Color(0.6, 1.0, 0.45, 0.9))
 	if not (debug_visible and OS.is_debug_build()) or state == State.DEAD:
 		return
 	draw_arc(EYE, detection_radius(), 0.0, TAU, 48, Color(1, 1, 0, 0.35), 1.0)

@@ -599,3 +599,31 @@ Where a decision refines an earlier section, this section is authoritative.
   starts again from zero.
 - **Defeat.** A defeated slime drops 4–6 coins that land on the ground. Collecting them, the
   shared coin total and the 10 % healing chance arrive in Phase 5.
+
+**Collectibles and progression (Phase 5, 2026-11-03)** (refines sections 7 and 8):
+- **Coins.** Either knight can pick up a dropped coin; the total is shared. Each coin has its
+  own exact 10 % chance to heal both living knights by 1. Coins never revive anyone or exceed
+  maximum health.
+- **Fruit.** Effects go to the collector only:
+  - green heals 1/2/3;
+  - yellow blocks 1/2/3 hits within 5/10/20 s; a second yellow fruit never stacks beyond the
+    strongest single tier;
+  - red permanently adds +10/20/30 % attack range, added up across fruits relative to the base;
+  - purple permanently gives melee hits 1/2/3 s of poison. Each second of poison adds one
+    stagger point; poison can stagger a slime but never kill it.
+- **Jars.** Each jar is unique per run, and effects go to the collector:
+  - green: +1 maximum health, filled;
+  - red: +1 attack power;
+  - blue: +5 % movement speed;
+  - yellow: 60 s in which each hit has a 50 % chance to be negated; collecting another
+    refreshes the time but never raises the chance.
+
+  Permanent upgrades last the whole run and reset only on a team wipe (Phase 8).
+- **Power tiles.** Standing on a "?" tile gives that knight one random effect for 5 s: +25 %
+  speed, −25 % attack cooldown, or a one-hit shield. It fires again only after the knight steps
+  off and back on.
+- **Protection order.** Power-tile shield, then yellow-fruit shield, then the yellow-jar chance.
+  Only one layer acts per hit, and a blocked hit grants 1 s of invulnerability. Falling and lava
+  ignore every protection.
+- **Timers.** Timed effects pause with the game, keep their remaining time across levels, and
+  will be saved as remaining time in Phase 8.

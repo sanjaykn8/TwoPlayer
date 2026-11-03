@@ -1,7 +1,9 @@
 # Architecture
 
-Status: Phase 0 proposal, with **Phases 1–4 implemented**. Section 7 (camera),
-section 13 (players), section 14 (combat and health) and section 15 (slimes) describe what exists now. The rest of sections 3–12 remain the target
+Status: Phase 0 proposal, with **Phases 1–5 implemented**. Section 7 (camera),
+section 13 (players), section 14 (combat and health), section 15 (slimes) and section 16
+(collectibles and progression) describe what exists now. The planned `Campaign` autoload of
+section 4 is realised as the static `RunState` (section 16). The rest of sections 3–12 remain the target
 design; where the implementation deviates, those sections say so.
 
 ## 1. Existing project (as audited 2026-11-03)
@@ -569,6 +571,8 @@ Invulnerability, shields and damage kinds are Phase 3.
 | Regenerate Phase 3 content | `... --script res://tools/build_phase3_content.gd -- art`, then `--import`, then `-- content` |
 | Play the enemy test room | `Godot_v4.7.2-stable_win64.exe --path . res://scenes/dev/enemy_test_room.tscn` |
 | Regenerate Phase 4 content | `... --script res://tools/build_phase4_content.gd -- frames`, then `-- content` |
+| Play the collectible test room | `Godot_v4.7.2-stable_win64.exe --path . res://scenes/dev/collectible_test_room.tscn` |
+| Regenerate Phase 5 content | `... --script res://tools/build_phase5_content.gd` |
 
 ## 14. Combat and health (implemented in Phase 3)
 
@@ -779,3 +783,109 @@ chance per coin.
 - **Overlay:** `enemy_debug_hud` lists, per slime: state, patrol/chase speed, detection radius,
   target, line of sight, stagger progress and timer, contact status and coin count.
 - **Release builds:** every drawing check also requires `OS.is_debug_build()`.
+
+## 16. Collectibles and player progression (implemented in Phase 5)
+
+### Who owns what (single source of truth)
+
+| State | Authority | Notes |
+|---|---|---|
+| Shared coins, collected unique item ids | `RunState` | One instance, held in a static variable (`RunState.current()`). Survives scene and level changes without an autoload; works in the headless test runner. `RunState.reset()` starts a fresh run |
+| Per-player permanent upgrades, poison, timed effects | `PlayerStats` (one per player, owned by `RunState`) | Bonuses stored over base values from `knight_config.tres` / `combat_config.tres` |
+| Effective power, range, cooldown multiplier, poison | `PlayerStats` calculates them; written into `PlayerStats.combat` (a `CombatStats`) by `recompute()` | The knight's `CombatComponent.stats` **is** that object, a derived cache with one writer |
+| Effective movement speed | `PlayerStats.speed_multiplier()` = 1 + blue-jar bonus + power-tile bonus | Knight: `run_speed × multiplier` |
+| Current health during a level | the knight's `HealthComponent` | `PlayerProgress` mirrors every change into `PlayerStats.current_health` |
+| Current health between levels | `PlayerStats.current_health` | The next knight is initialised from it |
+
+**Binding.** At the end of `Knight._ready()`, `PlayerProgress.bind(knight)`:
+1. fetches the player's record;
+2. initialises health from it;
+3. points `combat.stats` at the record's `CombatStats`;
+4. registers `PlayerEffects.resolve_protection` as the health protection filter;
+5. connects the mirroring.
+
+The binding lasts the knight's lifetime. It is deliberately not undone in `_exit_tree`,
+because the camera rig re-parents levels. On `NOTIFICATION_PREDELETE` the record drops its
+health reference.
+
+### Timed effects (`PlayerEffects`)
+
+`{remaining seconds, charges}` per effect id:
+- `speed_boost`, `attack_speed`, `tile_shield` (power tiles);
+- `fruit_shield` (yellow fruit);
+- `jar_luck` (yellow jar).
+
+They count down only in `PlayerProgress._physics_process`. They therefore stop when the tree
+is paused, freeze while no level is loaded, and are saved as remaining seconds, which cannot
+run while the game is closed. An effect ends on its exact tick (expiry tolerance 1e-6 s).
+
+Refresh rules:
+- **Same tile effect again:** back to the full 5 s; the strength never stacks.
+- **Yellow fruit while shielded:** charges become max(current, new) and time becomes
+  max(current, new), so it never exceeds the strongest tier.
+- **Yellow jar again:** back to 60 s, still 50 %.
+
+### Damage resolution order
+
+`HealthComponent.take_damage(event)`:
+1. invalid (amount ≤ 0, not lethal) or duplicate `event_id` → rejected;
+2. dead → blocked;
+3. LAVA → all health removed;
+4. invulnerable → blocked (FALL and LAVA ignore invulnerability);
+5. **the protection filter** `PlayerEffects.resolve_protection(event)`. FALL and LAVA always
+   pass. Otherwise, in order:
+   - the power-tile shield (consume 1);
+   - else the yellow-fruit shield (consume 1);
+   - else the yellow-jar roll (50 %).
+
+   **At most one layer acts.** A block starts `block_invulnerability_time` (1 s), so
+   continuous contact cannot drain several charges or re-roll the jar every frame.
+6. damage applied; invulnerability 1 s.
+
+### Coins
+
+`CoinDropper` (Phase 4) still rolls 4–6 per enemy death, once. The spawned `DroppedCoin`
+bodies now have a `CoinPickup` area (0.35 s pickup delay, so they scatter first).
+
+On collection:
+- `RunState.collect_coin(collector)` adds exactly 1;
+- it then rolls once: `randi_range(0, 99) < 10`, exactly 10 % of the outcomes;
+- on a hit, `PlayerStats.heal(1)` runs for **both** players, through the live
+  `HealthComponent.heal()`, which never revives;
+- `coin_collected` and `coins_changed` are emitted.
+
+### Collectibles
+
+- **`Collectible` (Area2D, layer 8; detects player hurtboxes, layer 5):** `collect()` sets
+  `claimed` and stops monitoring **before** applying the effect, so two knights touching an item
+  in the same frame cannot both collect it. With a `collectible_id`, the item is recorded in
+  `RunState.collected` and removes itself on level load if it was already collected.
+- **`Fruit`:** sprite from `fruit.png`; row = colour (green 0, yellow 1, purple 2, red 3),
+  column = tier. Calls `PlayerStats.collect_fruit(type, tier)`.
+- **`Jar`:** sprite from the bottles in `world_tileset.png`. The bundle has no red bottle, so the
+  red jar is the magenta bottle tinted red, with a faint periodic glint. Calls
+  `PlayerStats.collect_jar(type)`.
+- **`PowerTile`:** solid "?" block (`world_tileset.png` 0,2) with a top sensor.
+  - **Firing:** once per knight per visit, when that knight stands on it (inside the sensor
+    *and* on the floor). Leaving the sensor re-arms it for that knight.
+  - **Effect choice:** its own seedable RNG picks from `effect_pool`; `forced_effect` overrides it for tests.
+
+### Poison
+
+- **Applying it:** a melee hit carries `poison_seconds` (the attacker's highest purple-fruit
+  tier). If the hit only adds progress (it neither staggers nor kills), the slime's
+  `PoisonStatus` refreshes to max(remaining, seconds); there is never a second timer.
+- **Effect:** each full second of active poison calls the Phase 4
+  `add_stagger_progress(1, source)`, which can stagger but never kills.
+- **Ending:** poison is cleared when the slime becomes staggered or dies.
+
+### Snapshot / restore (for Phase 8)
+
+`RunState.snapshot()` returns `{version, coins, collected: [{id, player, kind}], players: {"1": {...}, "2": {...}}}`,
+JSON-compatible and covering current health, all bonuses, poison and timed effects.
+
+`RunState.restore(data)` validates everything first and only then applies it:
+- it rejects a newer version, missing fields, out-of-range values and unknown effect ids;
+- bound knights resynchronise through the `restored` signal.
+
+There is no disk I/O here; the four-slot SaveManager is Phase 8.

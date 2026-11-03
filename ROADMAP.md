@@ -443,8 +443,9 @@ Always prioritize a stable playable game over rapidly generated content.
 | Phase 2: Camera and Split-Screen | Implemented and auto-tested (74/74 including Phase 1 regression); **manual camera tests pending** | `docs/PHASE_2_SUMMARY.md`, `docs/TEST_REPORT.md`, `docs/MANUAL_CAMERA_TEST.md` |
 | Phase 3: Combat and Health | Implemented and auto-tested (110/110 including Phase 1–2 regression); **manual combat tests pending** | `docs/PHASE_3_SUMMARY.md`, `docs/TEST_REPORT.md`, `docs/MANUAL_COMBAT_TEST.md` |
 | Phase 4: Slime Enemies and Enemy AI | Implemented and auto-tested (144/144 including Phase 1–3 regression); **manual enemy tests pending** | `docs/PHASE_4_SUMMARY.md`, `docs/TEST_REPORT.md`, `docs/MANUAL_ENEMY_TEST.md` |
-| Phase 5: Collectibles and Progression | Not started | Waiting for authorisation |
-| Phases 6–12 | Not started | — |
+| Phase 5: Collectibles and Progression | Implemented and auto-tested (178/178 including Phase 1–4 regression); **manual collectible tests pending** | `docs/PHASE_5_SUMMARY.md`, `docs/TEST_REPORT.md`, `docs/MANUAL_COLLECTIBLE_TEST.md` |
+| Phase 6: Hazards and Platforming Mechanics | Not started | Waiting for authorisation |
+| Phases 7–12 | Not started | — |
 
 Phase 1 task tracking:
 
@@ -518,3 +519,23 @@ Phase 4 task tracking:
 | Recovery | Tested |
 | Enemy death | Tested |
 | Coin drop (4-6, event + visible coins) | Tested; collection is Phase 5 |
+
+Phase 5 task tracking:
+
+| Task | Status |
+|---|---|
+| Coin collection | Tested |
+| Shared coin counter | Tested |
+| Independent 10% healing lottery | Tested (exact 10 of 100 outcomes) |
+| Green health fruit (3 tiers) | Tested |
+| Yellow protective fruit (3 tiers) | Tested |
+| Red attack-range fruit (3 tiers) | Tested |
+| Purple poison fruit (3 tiers) | Tested |
+| Green permanent jar | Tested |
+| Red permanent jar | Tested |
+| Yellow timed jar | Tested |
+| Blue permanent jar | Tested |
+| Five-second random power tiles | Tested |
+| Collection persistence (run ids, scene changes) | Tested; disk saving is Phase 8 |
+| Effect timers | Tested (pause, freeze between levels, exact expiry) |
+| Player-specific effects | Tested |

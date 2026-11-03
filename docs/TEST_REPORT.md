@@ -688,3 +688,259 @@ scene was modified in Phase 4.
 | Enemy tests 1–14 (`docs/MANUAL_ENEMY_TEST.md`) | **Pending user test** |
 | Phase 2 camera and Phase 3 combat manual tests | **Still pending** |
 | Visual inspection of captured frames | Done by Claude from captures, **not** interactive play |
+
+## Phase 5: 2026-11-03
+
+### A. Validation
+
+| Check | Result |
+|---|---|
+| Import / compile of every new and changed script | All compile |
+| Collectible room launches standalone (`--quit-after 240`) | Exit 0, no errors |
+| Rendered run (windowed) | Fruit gallery (12 fruits, three tier heights), jars, power tiles (pressed state, "FAST ATTACK!"), red jar on the stepped pillar, effect pips, coin burst collected, overlay with per-player stats, effects and collection log |
+
+### B. Automated tests
+
+Command: `godot --headless --path . --fixed-fps 60 --script res://tests/run_tests.gd`
+
+Result: **178 passed, 0 failed**, exit code 0, **no `ERROR`/`WARNING` lines**. Identical over
+three runs. That is 42 Phase 1, 32 Phase 2, 36 Phase 3, 34 Phase 4 and 34 Phase 5 tests.
+
+```
+res://tests/gameplay/test_camera_rig.gd
+PASS test_shared_mode_at_start
+PASS test_world_is_simulated_once
+PASS test_pixel_art_settings
+PASS test_horizontal_separation_splits_side_by_side
+PASS test_vertical_separation_splits_stacked
+PASS test_assignment_is_fixed_even_when_knights_cross
+PASS test_split_triggers_at_threshold_while_walking
+PASS test_independent_tracking
+PASS test_reunification_by_walking
+PASS test_reunification_initiated_by_either_player
+PASS test_no_flicker_inside_hysteresis_band
+PASS test_jitter_at_split_threshold_switches_once
+PASS test_merge_requires_hold_time
+PASS test_orientation_hysteresis_and_hold
+PASS test_cameras_respect_level_bounds
+PASS test_tall_section_tracking
+PASS test_layout_follows_rig_size
+PASS test_camera_does_not_affect_simulation
+PASS test_camera_updates_never_move_knights
+PASS test_repeated_switching_does_not_accumulate_resources
+PASS test_phase1_mechanics_inside_the_rig
+res://tests/gameplay/test_collectibles.gd
+PASS test_slime_drop_coins_are_collected_into_the_shared_total
+PASS test_either_knight_collects_into_one_total
+PASS test_two_knights_on_one_coin_collect_it_once
+PASS test_coin_heal_roll_heals_both_living_knights
+PASS test_green_fruit_tiers_heal_only_the_collector
+PASS test_yellow_fruit_shield_blocks_slime_contact
+PASS test_shields_do_not_stop_falling_or_lava
+PASS test_red_fruit_range_reaches_further_targets
+PASS test_purple_fruit_poison_staggers_but_never_kills
+PASS test_poison_points_and_reapplication_on_purple
+PASS test_green_jar_and_unique_ids
+PASS test_red_jar_power_staggers_green_in_one_real_hit
+PASS test_yellow_jar_rolls_on_contact
+PASS test_blue_jar_speed_only_for_collector
+PASS test_power_tile_fires_once_per_visit
+PASS test_both_knights_activate_independently
+PASS test_tile_effects_values_and_duration
+PASS test_pause_stops_effect_timers
+PASS test_progress_survives_scene_change
+PASS test_snapshot_restore_updates_live_knights
+PASS test_two_knights_collect_different_items_at_once
+PASS test_speed_upgrade_during_camera_split
+res://tests/gameplay/test_combat.gd
+PASS test_player_one_attacks_independently
+PASS test_player_two_attacks_independently
+PASS test_simultaneous_attacks
+PASS test_attack_does_not_interrupt_other_player
+PASS test_knights_cannot_hit_each_other
+PASS test_four_directions_and_animation_selection
+PASS test_down_attack_from_ladder_hits_target_below
+PASS test_hit_frames_and_animation_are_synchronised
+PASS test_cooldown_and_input_buffer
+PASS test_one_hit_per_target_per_attack
+PASS test_one_swing_hits_several_targets
+PASS test_attack_power_sets_damage
+PASS test_range_edge
+PASS test_walls_block_attacks
+PASS test_low_obstacle_and_corner
+PASS test_one_way_platform_does_not_block
+PASS test_room_thin_wall_target_is_protected
+PASS test_knights_have_independent_health
+PASS test_contact_damage_with_invulnerability_on_knight
+PASS test_death_state
+PASS test_dead_knight_while_climbing
+PASS test_attack_while_running
+PASS test_attacks_during_camera_transitions
+PASS test_combat_never_changes_camera_state
+PASS test_no_nodes_created_per_attack
+res://tests/gameplay/test_knight_movement.gd
+PASS test_knights_spawn_independent
+PASS test_players_move_independently_and_simultaneously
+PASS test_left_and_right_together_cancel
+PASS test_full_jump_height_and_landing
+PASS test_variable_jump_height
+PASS test_no_double_jump_and_no_hold_bunny_hop
+PASS test_jump_buffer_before_landing
+PASS test_both_jump_in_same_frame
+PASS test_crouch_under_low_ceiling
+PASS test_down_on_solid_floor_does_not_drop
+PASS test_drop_through_one_way_and_jump_back_up
+PASS test_drop_passes_only_one_platform
+PASS test_other_knight_unaffected_by_drop
+PASS test_ladder_climb_up_hold_and_exit_top
+PASS test_ladder_climb_down_from_top
+PASS test_ladder_side_release
+PASS test_passage_allows_free_movement
+PASS test_attack_inputs_are_independent
+PASS test_attack_direction_from_input
+PASS test_push_moves_the_other_knight
+PASS test_push_against_wall_does_not_trap
+PASS test_corridor_mutual_push_never_locks
+PASS test_push_off_platform_edge
+PASS test_standing_on_knight_carry_and_lift
+PASS test_spawn_overlap_resolves_without_impulse
+PASS test_raw_key_events_drive_both_knights
+res://tests/gameplay/test_slimes.gd
+PASS test_patrol_stays_within_bounds
+PASS test_patrol_turns_at_platform_edges
+PASS test_patrol_turns_at_walls
+PASS test_patrol_and_chase_speeds
+PASS test_detects_visible_player_and_chases
+PASS test_wall_blocks_detection
+PASS test_detects_knight_on_ladder_or_platform_through_one_way
+PASS test_nearest_player_selected
+PASS test_target_selection_does_not_flicker
+PASS test_dead_target_is_abandoned
+PASS test_returns_to_patrol_after_grace_period
+PASS test_unreachable_target_gives_up
+PASS test_green_stagger_and_kill
+PASS test_green_recovers_and_can_be_staggered_again
+PASS test_purple_stagger_and_kill
+PASS test_upgraded_attack_power
+PASS test_staggered_slime_does_not_move
+PASS test_real_knight_attacks_green_then_purple
+PASS test_contact_damage_respects_invulnerability
+PASS test_staggered_and_dead_slimes_are_harmless
+PASS test_contact_stops_after_slime_is_removed
+PASS test_death_and_coin_drop_happen_once
+PASS test_every_slime_rolls_its_own_drop
+PASS test_both_knights_fight_several_slimes_simultaneously
+PASS test_recovered_slime_reacquires_visible_knight
+res://tests/unit/test_camera_math.gd
+PASS test_midpoint
+PASS test_separation_ratio_axes
+PASS test_split_and_merge_thresholds_with_hysteresis
+PASS test_orientation_selection_and_hysteresis
+PASS test_layout_rectangles
+PASS test_sub_view_center_is_seamless
+PASS test_clamp_center_to_bounds
+PASS test_deadzone
+PASS test_smoothing_is_frame_rate_independent
+PASS test_camera_config_validation
+PASS test_camera_bounds_rect_and_tilemap_fit
+res://tests/unit/test_combat_logic.gd
+PASS test_direction_rules
+PASS test_new_knight_default_facing
+PASS test_profiles
+PASS test_hitbox_rectangles
+PASS test_range_is_short_and_scales_separately_from_power
+PASS test_combat_config_valid
+PASS test_damage_category_rules
+PASS test_health_operations
+PASS test_invulnerability_blocks_then_expires
+PASS test_fall_lava_and_protection_filters
+PASS test_death_emitted_once_and_no_silent_revival
+res://tests/unit/test_enemy_logic.gd
+PASS test_green_stagger_sequence
+PASS test_purple_stagger_sequence
+PASS test_upgraded_attack_power
+PASS test_duration_minimum_and_recovery
+PASS test_hits_do_not_restart_the_timer
+PASS test_non_melee_progress_cannot_kill
+PASS test_target_selector
+PASS test_coin_roll_range_and_reproducibility
+PASS test_slime_stats
+res://tests/unit/test_logic.gd
+PASS test_attack_direction_table
+PASS test_vertical_intent_priority_table
+PASS test_input_frame_edges_and_axes
+PASS test_health_limits
+PASS test_health_max_changes
+res://tests/unit/test_progression_logic.gd
+PASS test_percent_rolls_are_exact
+PASS test_tile_effects_last_five_seconds_and_refresh
+PASS test_fruit_shield_tiers_and_policy
+PASS test_protection_order_and_bypass
+PASS test_yellow_jar_duration_chance_and_refresh
+PASS test_effects_snapshot_round_trip
+PASS test_fruit_effects
+PASS test_jar_effects_and_stat_calculation
+PASS test_player_stats_snapshot_round_trip
+PASS test_coin_collection_and_healing_without_knights
+PASS test_collected_ids_and_run_snapshot
+PASS test_poison_points_per_tier
+res://tests/unit/test_project_setup.gd
+PASS test_rendering_and_window_settings
+PASS test_save_directory_identity
+PASS test_gameplay_actions_exist_with_correct_keys
+PASS test_actions_are_exclusive_per_player
+PASS test_alt_variants_and_modifier_independence
+PASS test_profiles_reference_valid_actions
+res://tests/unit/test_resource_validation.gd
+PASS test_all_scripts_parse
+PASS test_all_resources_and_scenes_load
+PASS test_scenes_instantiate_with_valid_paths_signals_and_shapes
+PASS test_game_code_is_offline
+PASS test_knight_sprite_frames
+```
+
+Coverage of the requested Phase 5 checks:
+
+| Area | Tests |
+|---|---|
+| Coins: 4–6 objects, one increment each, either player, shared, one roll per coin, exact 10 %, heals both living, cap, no revival, no double pickup | `test_slime_drop_coins_are_collected_into_the_shared_total`, `test_either_knight_collects_into_one_total`, `test_two_knights_on_one_coin_collect_it_once`, `test_coin_heal_roll_heals_both_living_knights`, `test_percent_rolls_are_exact`, `test_coin_collection_and_healing_without_knights` |
+| Green fruit tiers, cap, collector only | `test_green_fruit_tiers_heal_only_the_collector`, `test_fruit_effects` |
+| Yellow fruit tiers, charges, expiry, FALL/LAVA bypass, no stacking | `test_fruit_shield_tiers_and_policy`, `test_yellow_fruit_shield_blocks_slime_contact`, `test_shields_do_not_stop_falling_or_lava`, `test_protection_order_and_bypass` |
+| Red fruit ×1.10/1.20/1.30, collector only, survives scene change | `test_fruit_effects`, `test_red_fruit_range_reaches_further_targets`, `test_progress_survives_scene_change` |
+| Purple fruit 1/2/3 s, 1 point per second, no duplicate ticks, staggers, cannot kill, melee still kills | `test_poison_points_per_tier`, `test_purple_fruit_poison_staggers_but_never_kills`, `test_poison_points_and_reapplication_on_purple` |
+| Green jar +1/+1, collector only, unique | `test_green_jar_and_unique_ids`, `test_jar_effects_and_stat_calculation` |
+| Red jar power, stagger compatibility | `test_red_jar_power_staggers_green_in_one_real_hit` |
+| Yellow jar 60 s, 50 %, failed rolls fall through, refresh, bypass | `test_yellow_jar_duration_chance_and_refresh`, `test_yellow_jar_rolls_on_contact`, `test_shields_do_not_stop_falling_or_lava` |
+| Blue jar +5 %, other player unchanged, additive, stable | `test_blue_jar_speed_only_for_collector`, `test_jar_effects_and_stat_calculation` |
+| Power tiles: one effect per activation, exactly 5 s, activator only, −25 % cooldown, +25 % speed, shield consumed, no repeat while standing, re-entry, both knights, pause, refresh | `test_power_tile_fires_once_per_visit`, `test_both_knights_activate_independently`, `test_tile_effects_values_and_duration`, `test_tile_effects_last_five_seconds_and_refresh`, `test_pause_stops_effect_timers` |
+| Persistence and snapshots | `test_progress_survives_scene_change`, `test_snapshot_restore_updates_live_knights`, `test_player_stats_snapshot_round_trip`, `test_collected_ids_and_run_snapshot`, `test_effects_snapshot_round_trip` |
+| Simultaneous collection; speed during camera split | `test_two_knights_collect_different_items_at_once`, `test_speed_upgrade_during_camera_split` |
+
+### C. Regression
+
+All 144 Phase 1–4 tests pass. The knight, health, combat and slime changes are additive, and
+every earlier test now runs with knights bound to a fresh `RunState`.
+
+### Defects found and fixed during Phase 5
+
+1. **Run binding lost on re-parent.** It was undone in `_exit_tree`, which also fires when the
+   camera rig re-parents a level, so knights in rig rooms silently lost their protection filter
+   and health mirroring. The test output showed it as disconnect errors. The binding now lasts
+   until the knight is deleted (`NOTIFICATION_PREDELETE`).
+2. **Timed effects ran one tick too long.** 300 × 1/60 s does not sum to exactly 5.0 in floating
+   point. Expiry now uses a 1e-6 s tolerance.
+3. **Objects leaked at exit.** The static `RunState` still held objects at shutdown (Godot
+   reported leaked instances). The runner now calls `RunState.clear()` before quitting.
+4. **Variant inference treated as an error** in a new component (fixed). The validator also
+   exposed a jar warning for standalone instancing; the warning now applies only to jars
+   placed in a level.
+5. **Test-only issues:** a 298-tick wait in place of 300, a measurement taken during the frame
+   the level was freed, and a speed test blocked by the room's pillar.
+
+### D. Manual tests
+
+| Test | Status |
+|---|---|
+| Collectible tests 1–14 (`docs/MANUAL_COLLECTIBLE_TEST.md`) | **Pending user test** |
+| Phase 2, 3 and 4 manual tests | **Still pending** |
+| Visual inspection of captured frames | Done by Claude from captures, **not** interactive play |

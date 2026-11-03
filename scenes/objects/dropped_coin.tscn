@@ -1,10 +1,14 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://scenes/objects/dropped_coin.gd" id="1_coin"]
 [ext_resource type="Texture2D" path="res://assets/sprites/coin.png" id="2_coin_png"]
+[ext_resource type="Script" path="res://components/collectibles/coin_pickup.gd" id="3_pickup"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_coin"]
 size = Vector2(8, 8)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pickup"]
+size = Vector2(10, 10)
 
 [node name="DroppedCoin" type="CharacterBody2D"]
 collision_layer = 128
@@ -20,3 +24,10 @@ hframes = 12
 [node name="Shape" type="CollisionShape2D" parent="."]
 position = Vector2(0, -4)
 shape = SubResource("RectangleShape2D_coin")
+
+[node name="Pickup" type="Area2D" parent="."]
+script = ExtResource("3_pickup")
+
+[node name="Shape" type="CollisionShape2D" parent="Pickup"]
+position = Vector2(0, -4)
+shape = SubResource("RectangleShape2D_pickup")
