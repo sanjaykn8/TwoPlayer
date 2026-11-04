@@ -131,3 +131,19 @@ func test_the_analyzer_finds_blocked_levels() -> void:
 	var r2: Node2D = b2.build(dup, Themes.THEMES.forest)
 	assert_gt(b2.errors.size(), 0, "duplicate ids reported")
 	r2.free()
+
+
+func test_no_level_can_trap_a_knight() -> void:
+	# Every place a knight can reach must still lead to the exit, or let it fall out of the
+	# level (the fall rule returns it to safe ground). A trap would leave a knight unable to
+	# help with later two-knight mechanisms (found in Phase 11: KI-97, KI-98).
+	for id in LevelCatalog.all_levels():
+		var root := _scene(id)
+		var a = Analyzer.new(root)
+		for g: Node in a.gates:
+			a.open_gates[g] = true
+		a._platform_control.clear()
+		a._rebuild_platforms({}, false)
+		var traps: Array = a.trap_cells(a.reachable_from(a.spawn))
+		assert_eq(traps.size(), 0, "%s: no trap regions (%s)" % [id, traps.slice(0, 6)])
+		root.free()

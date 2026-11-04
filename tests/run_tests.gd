@@ -3,8 +3,34 @@ extends SceneTree
 ##   godot --headless --path . --fixed-fps 60 --script res://tests/run_tests.gd
 ## Optional filter: append `-- <substring>` to run only matching test files.
 ## Exit code is the number of failed tests (0 = all passed).
+## Any engine or script error or warning logged while a test runs fails that test (it is
+## caught with a Logger), so a test can no longer pass after a SCRIPT ERROR.
 
 const TEST_DIRS := ["res://tests/unit", "res://tests/gameplay"]
+const ERROR_TYPES := ["ERROR", "WARNING", "SCRIPT ERROR", "SHADER ERROR"]
+
+
+## Collects every error and warning the engine logs (from any thread).
+class ErrorCatcher extends Logger:
+	var _lock := Mutex.new()
+	var _errors: PackedStringArray = []
+
+	func _log_error(function: String, file: String, line: int, code: String, rationale: String,
+			_editor_notify: bool, error_type: int, _script_backtraces: Array[ScriptBacktrace]) -> void:
+		_lock.lock()
+		_errors.append("%s: %s (%s:%d %s)" % [ERROR_TYPES[clampi(error_type, 0, 3)],
+			rationale if rationale != "" else code, file.get_file(), line, function])
+		_lock.unlock()
+
+	func _log_message(_message: String, _error: bool) -> void:
+		pass
+
+	func take() -> PackedStringArray:
+		_lock.lock()
+		var out := _errors
+		_errors = PackedStringArray()
+		_lock.unlock()
+		return out
 
 
 func _initialize() -> void:
@@ -18,6 +44,8 @@ func _run() -> void:
 	var passed := 0
 	var failed := 0
 	var failures: PackedStringArray = []
+	var catcher := ErrorCatcher.new()
+	OS.add_logger(catcher)
 	for path in _find_test_files():
 		if filter != "" and not path.contains(filter):
 			continue
@@ -40,10 +68,13 @@ func _run() -> void:
 				continue
 			LevelCatalog.use_production()  # tests needing the Phase 8 levels switch to development
 			RunState.reset()  # every test starts a fresh run (no progression leaks between tests)
+			catcher.take()
 			await suite.before_each()
 			await suite.call(test_name)
 			await suite.after_each()
 			var errors := suite.take_failures()
+			for logged in catcher.take():
+				errors.append("logged " + logged)
 			if errors.is_empty():
 				passed += 1
 				print("  PASS %s" % test_name)
@@ -58,6 +89,7 @@ func _run() -> void:
 	print("\n==== %d passed, %d failed ====" % [passed, failed])
 	for f in failures:
 		print("FAILED: ", f)
+	OS.remove_logger(catcher)
 	RunState.clear()  # nothing left in a static at exit
 	# With --fixed-fps, frames run faster than real time but the audio thread does not: give
 	# it 0.5 s of wall-clock time to release sounds started by the last test, or they are

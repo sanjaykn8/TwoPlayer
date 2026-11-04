@@ -1479,3 +1479,74 @@ returns in the same run.
 - **Report:** `tools/campaign_report.gd` writes `docs/CAMPAIGN_PLAN.md` and
   `docs/CAMPAIGN_PLAYTEST.md` from the registry, the scenes, the specs' design notes and the
   analyzer.
+
+## 22. Campaign validation tooling (Phase 11)
+
+Phase 11 added no gameplay systems. It added tools that check the finished campaign through
+the real game code, and fixed the level specs they found wrong (`docs/KNOWN_ISSUES.md`).
+
+### Test runner (`tests/run_tests.gd`)
+
+An `ErrorCatcher` (a Godot `Logger` registered with `OS.add_logger`) records every error and
+warning the engine or a script logs. Whatever was logged during a test is added to that
+test's failures, so a test that hits a `SCRIPT ERROR` can no longer pass (KI-83). The expected
+fault-injection reports (`[CampaignGame] SAVE FAILED ...`) use `printerr`, which is a message,
+not a logged error, so they do not fail their tests.
+
+### Level analyzer additions (`tools/level_analyzer.gd`)
+
+- **Jump arc:** a jump is accepted only if the knight's body fits along the lowest playable
+  arc (one tile above the straight line going up, three quarters of a tile going down), not
+  just at take-off and landing (KI-100).
+- **Falling out:** `_land` returns `FELL_OUT` when a fall leaves the level; `can_fall_out(c)`.
+- **Traps:** `trap_cells(area)` searches backwards from the exit (and from fall-out cells,
+  which respawn the knight). A reachable cell that cannot reach either is a trap
+  (`test_no_level_can_trap_a_knight`).
+- **Fixed point:** `analyze()` repeats platform rebuilding and reachability until the area
+  stops growing.
+
+### LevelProbe (`tests/framework/level_probe.gd`)
+
+Runs the 20 checks of `docs/LEVEL_VALIDATION_MATRIX.md` on one level loaded in a real
+`CampaignGame` with its own save folder. Knights act only through real input and physics; the
+probe teleports them to the start of each check. Rules that keep the probe honest:
+
+- It never kills a knight on purpose; if a team wipe happens, that check fails with the cause
+  (`last_damage`), and the remaining checks are BLOCKED.
+- Slimes are frozen outside the enemy check, and knights get 5 s of invulnerability while the
+  patrols are watched, so waiting cannot wear them down.
+- One-way drops are only tried where the analyzer finds safe ground below.
+- Puzzles are solved the way players would: plates by standing, switches and targets by real
+  attacks (`_strike`, `_strike_together` for SYNC), sequences in order.
+
+`test_level_validation` runs it on every level (one test per world) and writes
+`user://level_validation_results.json`.
+
+### RouteValidator (`tests/framework/route_validator.gd`)
+
+Proves that the analyzer's main route is physically possible with base stats. Slimes, bosses,
+gates, lava and fall hazards are removed; the knight is invulnerable. The cheapest route
+(walk 1, jump 2 + 0.5 × (dx² + rise²)) is walked edge by edge with real input. Each jump tries
+techniques in turn (run-up, standing, short hop, up first, walk off) with air steering toward
+the target. A jump the knight cannot make is banned and the route is planned again (up to 40
+times). Moving-platform rides are skipped (their phase is covered by the platform tests);
+timed platforms are waited on until fresh. `test_campaign_routes` asserts `route_ok` on every
+level.
+
+### Platform timing (`tests/gameplay/test_platform_timing.gd`)
+
+Runs each level's schedule-driven `TimedPlatform`s for 30 s and records when each is solid.
+Platforms within seven tiles form a chain, ordered by BFS depth from the spawn. A search over
+the recorded timelines checks that a knight can cross each chain from safe ground with 0.55 s
+hops, a 0.3 s landing margin and at least 0.25 s on each stone, and reports the shortest stay
+("slack"). Important: `start_offset` advances the phase, so offsets must **decrease** in the
+direction of travel.
+
+### Reports
+
+- `tools/difficulty_report.gd` counts, per level, what the main route asks: jumps, jumps at
+  the movement limit, jumps with lava or spikes below, platform hops, lava-crossing stones,
+  slimes near the route, two-knight locks, gates without a nearby clue. It writes
+  `user://difficulty_report.md`; the table is quoted in `docs/RELEASE_READINESS_REPORT.md`.
+- `tools/campaign_report.gd` now marks user-reported levels (`USER_REPORTS`) in
+  `docs/CAMPAIGN_PLAYTEST.md`; only the user's own reports belong there.

@@ -1310,3 +1310,75 @@ development campaign; the test runner selects production before every test.
 | Campaign duration | **Not measured** (design estimate 124 min; movement floor 9.5 min) |
 | Phase 2–9 manual tests | Still pending |
 | Visual inspection | Claude, from rendered overviews and captures only |
+
+## Phase 11: 2026-11-04
+
+Labels: **Auto-tested** (automated test run here), **Measured** (real run on this PC),
+**User-reported**, **Pending**. No manual result was produced by Claude.
+
+### A. Validation and tooling
+
+| Check | Result |
+|---|---|
+| Runner fails tests on logged errors (`ErrorCatcher`) | In place for every run below. Errors in the new test tools during development (for example a freed game read in `_save_resume`, freed nodes in the route validator) surfaced as test failures instead of silent passes |
+| Level scenes rebuilt from the corrected specs (`build_phase10_content.gd`) | 24 scenes, no errors |
+| Campaign docs regenerated (`campaign_report.gd`) | `CAMPAIGN_PLAN.md`, `CAMPAIGN_PLAYTEST.md` (levels 1–4 marked user-reported) |
+| Difficulty evidence (`difficulty_report.gd`) | Table in `RELEASE_READINESS_REPORT.md` §6 |
+| Import (`--import`) | No errors or warnings |
+
+### B. Automated tests
+
+Command: `godot --headless --path . --fixed-fps 60 --script res://tests/run_tests.gd`
+
+Result: **461 passed, 0 failed**, exit code 0, in two consecutive runs after the last code
+change (101 s and 112 s), with identical per-test results and no `ERROR`, `WARNING`,
+`SCRIPT ERROR` or leak lines. The only other output is the five expected `[CampaignGame]`
+fault-injection reports. 440 Phase 1–10 tests plus 21 Phase 11 tests; all Phase 1–10 tests
+still pass (regression).
+
+New Phase 11 tests (21):
+
+| File | Tests | What it proves |
+|---|---|---|
+| `test_level_validation.gd` | 6 (one per world) | The 20 matrix checks on each of the 24 levels in a real `CampaignGame`: all PASS or N/A |
+| `test_campaign_routes.gd` | 6 | Every level's main route walked by the real knight with real input, base stats, no bosses: 24/24, 0 banned jumps |
+| `test_platform_timing.gd` | 1 | Every blinking chain crossable (0.55 s hops, 0.3 s landing margin, ≥ 0.25 s per stone): l06 3.2 s, l14 1.92 s, l16 2.05 s, l21 3.22 s, l22 3.4 s, l24 1.65 s |
+| `test_release_saves.gd` | 5 | Four slots in four worlds restore exactly; a wipe in one slot leaves the others byte-identical and never returns; death during a transition with a pending save and simultaneous/lava deaths wipe once; nine corrupted save cases refused; backup recovery |
+| `test_phase11_regressions.gd` | 2 | KI-99 (teleport clears the regrab delay), KI-100 (no jump through solid) |
+| `test_campaign_levels.gd` (+1) | 1 | `test_no_level_can_trap_a_knight` |
+
+### C. Defects found and fixed
+
+| ID | Sev. | Found by | Fix verified by |
+|---|---|---|---|
+| KI-101 | P1 | `test_platform_timing` (l14, l16, l22: slack −1, impossible) | Same test: PASS |
+| KI-97 | P1 | Trap search (l20 vault) | `test_no_level_can_trap_a_knight` |
+| KI-98 | P1 | Trap search (l22 spire floor) | `test_no_level_can_trap_a_knight` |
+| KI-102 | P2 | `test_platform_timing` (l06 slack 0.5 s) | Same test: 3.2 s |
+| KI-99 | P2 | LevelProbe climb check (l18) | `test_teleport_clears_the_ladder_regrab_delay` |
+| KI-100 | P2 | RouteValidator (l04 jump through a slab) | `test_analyzer_never_jumps_through_solid` |
+| KI-83 | P2 | Phase 10 note | New runner |
+| KI-104 | P3 | Leak lines after the first Phase 11 full run | `test_campaign_routes` alone and the final runs: no leak lines |
+
+Test-tool problems fixed on the way (not game defects): the probe dropped a knight into l13 lava
+through a one-way tile (drops now only onto safe ground); slimes wore knights down during long
+probe waits (frozen outside their check); the route planner preferred long flat hops and
+overshot (cost function and air steering); a `PackedByteArray` stored in a `Dictionary` is a
+copy, so timelines stayed empty (plain `Array`); chains were ordered by x instead of route
+order, which hid the l22 problem (BFS depth).
+
+### D. Performance (Measured, real window, not headless)
+
+Windows 11, i5-13450HX, RTX 4050 Laptop GPU, 1280×720, vsync on. Main menu and all 24
+levels: 60.0 fps average; p99 17.1–18.1 ms; worst frame 32.3 ms once in l03, otherwise
+≤ 23.2 ms; 192–324 nodes; 0 orphans; one audio player; after 24 levels the menu has 39 nodes
+and 0 orphans, static memory 83 MB. Headroom above 60 fps not measured (vsync).
+
+### E. Manual tests
+
+| Test | Status |
+|---|---|
+| Keyboard | User-reported working (before Phase 11); no fresh check |
+| Levels 1–4 | User-reported: reached and passed on the first attempt |
+| Levels 5–24, two-player session, final manual plan | **Pending** |
+| Campaign duration | **Not measured** |

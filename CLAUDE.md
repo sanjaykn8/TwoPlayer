@@ -618,10 +618,16 @@ The goal is a complete and reliable game, not a collection of generated files.
 - Settings live in `user://settings.cfg` (`SettingsManager`), never in a save slot. Tests use `user://test_settings_ui.cfg` and `user://test_saves_ui/` (`UiTestUtil`), with `touch_window = false` and a `quit_handler`.
 - Every quit goes through `GameApp.shutdown()` or `CampaignGame.quit_handler`. These stop audio before exiting.
 - Phase 9 harness: `scenes/dev/ui_test_room.tscn` (its own save folder and settings file; dev keys in its script).
-- Test runner caveat: a test that hits a `SCRIPT ERROR` is still counted as passed, so check full-run logs for `SCRIPT ERROR`.
+- Test runner: any error or warning logged during a test (engine or `SCRIPT ERROR`, `push_error`, `push_warning`) fails that test (`ErrorCatcher` in `run_tests.gd`). Expected fault reports use `printerr`. Still check full-run logs for leak lines after the summary.
 - Campaign: `LevelCatalog` is the registry (production campaign by default; `use_development()` gives the two Phase 8 test levels for older tests). Never hard-code level ids or scene paths elsewhere; use `first_level()`, `next_level()`, `level()`, `world_ids()`.
 - Levels are generated. Edit the specs in `tools/campaign/world_*.gd` (op format in `tools/campaign/campaign_builder.gd`), then run `--script res://tools/build_phase10_content.gd` and `--script res://tools/campaign_report.gd`. Never edit `scenes/worlds/**` or `resources/campaign/*.tres` by hand.
 - Level design limits (checked by `tools/level_analyzer.gd` and calibrated in `test_campaign_physics.gd`): jump up 3 tiles within 2 columns, up 2 within 3, up 1 or level within 4; gaps of 3 tiles at most. Clear a cell before putting a ladder top in solid terrain. Lifts start flush in a cleared floor cell. Every lava crossing needs a route within those limits; every pit a knight can fall into needs a way out.
 - Optional bosses: `scenes/enemies/boss/boss_slime.tscn` with `BossStats`, plus a `BossSeal` that opens the reward gate (LATCH). A boss must never be needed for the exit.
 - Placed coins use `scenes/collectibles/coin_stash.tscn` with a `collectible_id`, never dropped coins.
-
+- Campaign validation (Phase 11): `test_level_validation` (LevelProbe, 20 checks per level), `test_campaign_routes` (RouteValidator, physical main route with base stats and no bosses), `test_platform_timing` (blinking chains) and `test_no_level_can_trap_a_knight` must pass after every level change. They are slow (the full suite takes about two minutes). Results go to `user://*_results.json`; `docs/LEVEL_VALIDATION_MATRIX.md` is written from them.
+- Blinking stones: `TimedPlatform.start_offset` advances the phase (higher = vanishes sooner), so offsets must decrease in the direction of travel. A chain must leave at least 0.25 s on every stone with 0.55 s hops.
+- Every reachable place must lead back to the exit: vaults and pits need a ladder or steps; spike beds wider than a jump need a safe tile (`trap_cells`).
+- Test tools that instance a level copy outside the tree (analyzer copies) must free it.
+- Severity: P0 critical, P1 major (blocks progress), P2 moderate, P3 cosmetic; every defect in `docs/KNOWN_ISSUES.md` lists reproduction, expected, actual, root cause, fix and regression result.
+- Manual results come only from the user. Levels the user has reported go in `USER_REPORTS` in `tools/campaign_report.gd` and in `docs/PLAYTEST_FEEDBACK.md`; never mark other levels as manually tested.
+- `tools/difficulty_report.gd` gives the per-level difficulty evidence (`user://difficulty_report.md`). Balance changes need evidence (impossible, trap, luck-based), never just "it feels hard".

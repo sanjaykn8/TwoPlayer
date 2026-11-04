@@ -449,7 +449,8 @@ Always prioritize a stable playable game over rapidly generated content.
 | Phase 8: Death, Campaign Reset and Save System | Implemented and auto-tested (345/345 including Phase 1–7 regression); **manual save tests pending** | `docs/PHASE_8_SUMMARY.md`, `docs/TEST_REPORT.md`, `docs/MANUAL_SAVE_TEST.md` |
 | Phase 9: Game Interface and Audio | Implemented and auto-tested (412/412 including Phase 1–8 regression); **manual UI tests pending** | `docs/PHASE_9_SUMMARY.md`, `docs/TEST_REPORT.md`, `docs/MANUAL_UI_TEST.md` |
 | Phase 10: World and Level Production | Implemented and auto-tested (24 levels; full suite in `docs/TEST_REPORT.md`); **manual campaign playtest pending (no level played by people yet); campaign length unmeasured** | `docs/PHASE_10_SUMMARY.md`, `docs/CAMPAIGN_PLAN.md`, `docs/CAMPAIGN_PLAYTEST.md`, `docs/TEST_REPORT.md` |
-| Phases 11–12 | Not started | — |
+| Phase 11: Playtesting, Balancing and Bug Elimination | Automated campaign validation complete: 24 levels × 20 runtime checks, physical routes, timed-chain fairness, trap search, save and wipe stress tests, real-window performance. Five P1 level defects and four P2/P3 defects found and fixed; no known open P0/P1 game defect. **Not a validated release candidate yet:** levels 5–24 not played by people, two-player session pending, playtime unmeasured, export templates missing (KI-5) | `docs/RELEASE_READINESS_REPORT.md`, `docs/LEVEL_VALIDATION_MATRIX.md`, `docs/PLAYTEST_FEEDBACK.md`, `docs/TWO_PLAYER_PLAYTEST.md`, `docs/FINAL_MANUAL_TEST_PLAN.md`, `docs/TEST_REPORT.md` |
+| Phase 12 | Not started | — |
 
 Phase 1 task tracking:
 
@@ -643,3 +644,22 @@ Phase 10 task tracking:
 | Measured campaign length (target 90–120 min) | **Not measured** |
 | Initial tutorial screen (GDD §14) | Not implemented (KI-82) |
 
+Phase 11 task tracking:
+
+| Task | Status |
+|---|---|
+| Record the user's feedback verbatim (`docs/PLAYTEST_FEEDBACK.md`) | Done (levels 1–4 user-reported; 5–24 pending) |
+| Git and release-readiness audit | Done (`docs/RELEASE_READINESS_REPORT.md`) |
+| P0–P3 severity scheme; issues with reproduction, cause, fix, regression result | Done (`docs/KNOWN_ISSUES.md`) |
+| Test runner fails tests on any logged error or warning | Tested |
+| 20 runtime checks on all 24 levels (`LevelProbe`) | Tested (24 PASS) |
+| Physical main route with base stats, no bosses (`RouteValidator`) | Tested (24 PASS) |
+| Timed-chain fairness (`test_platform_timing`) | Tested (PASS after KI-101/102 fixes) |
+| Trap search: every reachable place can reach the exit | Tested (PASS after KI-97/98 fixes) |
+| Evidence-based difficulty review (`tools/difficulty_report.gd`) | Done; changes only where impossible, unfair or a trap |
+| Save stress: four slots in four worlds, wipes, corruption cases | Tested |
+| Camera and performance in a real window | Measured (60 fps average on all levels; one 32 ms frame, KI-103) |
+| Two-player playtest (`docs/TWO_PLAYER_PLAYTEST.md`) | **Pending** (keyboard user-reported working) |
+| Manual campaign playtest levels 5–24 (`docs/FINAL_MANUAL_TEST_PLAN.md`) | **Pending** |
+| Measured campaign length | **Not measured** (KI-89) |
+| Offline export build | **Blocked** (KI-5, Phase 12) |

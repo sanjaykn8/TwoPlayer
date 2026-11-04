@@ -160,6 +160,9 @@ func revive() -> void:
 func teleport_to(target: Vector2) -> void:
 	if state == State.CLIMBING:
 		_leave_climb()
+	# A teleport is a fresh placement: the anti-regrab delay of leaving a ladder must not
+	# carry over to wherever the knight now stands (it made Up jump instead of grab).
+	_regrab_timer = 0.0
 	_end_drop()
 	global_position = target
 	velocity = Vector2.ZERO

@@ -42,7 +42,7 @@ and the shared coins; optional content (collectibles, bosses) is never needed fo
 | World / theme | forest / forest |
 | Difficulty | 2 / 10 |
 | Estimated first play | 4.0 min (estimate) |
-| Minimum movement | 22 s (analyzer lower bound) |
+| Minimum movement | 23 s (analyzer lower bound) |
 | Size | 160 x 36 tiles |
 | Spawns | P1 (56.0, 224.0), P2 (88.0, 224.0) (px) |
 | Main route and puzzles | Rootway Hollows: down ladders from a cliff, the first moving platform over a pit, the first two-knight lock (two plates, latched gate), slimes and spikes in the hollow, a ladder back up to the high road. Optional: a ledge above the pit's far side (coins), yellow fruit. |
@@ -424,7 +424,7 @@ and the shared coins; optional content (collectibles, bosses) is never needed fo
 | World / theme | fortress / fortress |
 | Difficulty | 8 / 10 |
 | Estimated first play | 5.5 min (estimate) |
-| Minimum movement | 25 s (analyzer lower bound) |
+| Minimum movement | 26 s (analyzer lower bound) |
 | Size | 160 x 50 tiles |
 | Spawns | P1 (56.0, 704.0), P2 (88.0, 704.0) (px) |
 | Main route and puzzles | Broken Towers: four ruined towers above a spiked courtyard. Ladders inside the towers, crumbling bridges and a moving platform between them, slimes on the tower tops. A switch on the last tower latches the courtyard gate. Ladders let a knight who falls into the spiked courtyard climb back to the tower it fell from. Optional: a precise climb above the last tower to a blue jar. |
@@ -449,10 +449,10 @@ and the shared coins; optional content (collectibles, bosses) is never needed fo
 | Minimum movement | 28 s (analyzer lower bound) |
 | Size | 200 x 48 tiles |
 | Spawns | P1 (56.0, 672.0), P2 (88.0, 672.0) (px) |
-| Main route and puzzles | The Black Bastion: the World 5 finale. A guarded plate pit and a timed gate open the outer wall; on the ramparts, two knights split at a tower: one rides a lift held by the other's plate, the rider latches it; a crumbling rampart over spikes; the inner seal needs twin targets and a two-plate step struck together. Optional: a coin vault and purple fruit. |
+| Main route and puzzles | The Black Bastion: the World 5 finale. A guarded plate pit and a timed gate open the outer wall; on the ramparts, two knights split at a tower: one rides a lift held by the other's plate, the rider latches it; a crumbling rampart over spikes; the inner seal needs twin targets and a two-plate step struck together. Optional: a coin vault under a cracked floor tile (a ladder leads back out) and purple fruit. |
 | Enemies | 2 green at x [31, 180]; 4 purple at x [24, 60, 110, 170] |
 | Hazards | spikes 15 tiles, lava 0 tiles, hot ground 0 tiles |
-| Platforms | 2 MovingPlatform, 4 CollapsingPlatform; 2 ladders |
+| Platforms | 2 MovingPlatform, 4 CollapsingPlatform; 3 ladders |
 | Cooperative mechanisms | 4 plate, 4 switch/target, 2 ANY, 1 SYNC, 2 ALL; 2 gates |
 | Collectibles and secrets | 4 coins at x 82; purple fruit (tier 3) at x 81; 6 coins at x 143; green fruit (tier 2) at x 137 |
 | Clues | "The bastion never sleeps." / "Strike as one. Step as one." |
@@ -497,7 +497,7 @@ and the shared coins; optional content (collectibles, bosses) is never needed fo
 | Spawns | P1 (72.0, 1056.0), P2 (104.0, 1056.0) (px) |
 | Main route and puzzles | Spire of Silence: a tall climb. Crumbling stones from a power tile; a lift run by a plate on the first landing (latched at the second); a blinking staircase; at the top a door that only opens when one knight strikes the summit target and the other the target far below, together. Falls land on the spire floor (partly spiked) to climb again. Optional: a side climb to a green jar. |
 | Enemies | 1 green at x [52]; 2 purple at x [68, 46] |
-| Hazards | spikes 9 tiles, lava 0 tiles, hot ground 0 tiles |
+| Hazards | spikes 6 tiles, lava 0 tiles, hot ground 0 tiles |
 | Platforms | 3 CollapsingPlatform, 1 MovingPlatform, 4 TimedPlatform; 1 ladders |
 | Cooperative mechanisms | 1 plate, 3 switch/target, 1 ANY, 1 SYNC; 1 gates |
 | Collectibles and secrets | power tile at x 28; green jar at x 85; 4 coins at x 79 |

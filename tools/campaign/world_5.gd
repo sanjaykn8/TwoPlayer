@@ -136,7 +136,8 @@ static func l19() -> Dictionary:
 ## The Black Bastion: the World 5 finale. A guarded plate pit and a timed gate open the outer
 ## wall; on the ramparts, two knights split at a tower: one rides a lift held by the other's
 ## plate, the rider latches it; a crumbling rampart over spikes; the inner seal needs twin
-## targets and a two-plate step struck together. Optional: a coin vault and purple fruit.
+## targets and a two-plate step struck together. Optional: a coin vault under a cracked
+## floor tile (a ladder leads back out) and purple fruit.
 static func l20() -> Dictionary:
 	return {"id": "l20", "title": "The Black Bastion", "world": "fortress", "width": 200, "height": 48,
 		"difficulty": 9, "minutes": 6.5, "spawn": [3, 42], "ops": [
@@ -148,6 +149,7 @@ static func l20() -> Dictionary:
 		["clear", 124, 42, 126, 42], ["ladder", 121, 26, 42],
 		["fill", 160, 1, 160, 36],
 		["ledge", 80, 83, 23], ["clear", 135, 43, 145, 46], ["clear", 140, 42, 141, 42], ["ledge", 140, 141, 42],
+		["clear", 135, 42, 135, 42], ["ladder", 135, 42, 47],
 		["clue", 6, 42, "The bastion\nnever sleeps."],
 		["plate", "PitPlate", 27, 45],
 		["slime", "p", 24, 45, -3, 8], ["slime", "g", 31, 45, -6, 2],

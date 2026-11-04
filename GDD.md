@@ -737,3 +737,19 @@ Where a decision refines an earlier section, this section is authoritative.
   that a careful pair can make.
 - **Placed coins** are found in hidden places. Like jars, each one is collected once per run.
 
+
+Phase 11 decisions (balancing, 2026-11-04):
+
+- **Difficulty stays.** The user found the game difficult but manageable and passed levels 1–4
+  on the first attempt. That is the intended feel, so nothing was made easier in general.
+  Enemy, damage and permadeath rules are unchanged. Levels change only when the evidence shows
+  a section is impossible, a trap, or depends on luck.
+- **Blinking stones vanish behind the knights.** Along a chain of blinking stones, each stone
+  starts its cycle a little later than the one before it in the direction of travel, so the
+  wave follows the knights. A chain must leave at least 0.25 s on every stone with 0.55 s
+  hops. Levels 6, 14, 16 and 22 were corrected.
+- **Every place has a way out.** Any place a knight can reach must still lead to the exit:
+  vaults and pits get a ladder or steps, and spike beds wider than a jump get a safe tile
+  (level 20's coin vault has a ladder; level 22's spike bed is two beds with an island).
+- **Mandatory routes use base stats.** Every main route is made by a knight with no upgrades
+  and no boss reward, and never needs a lucky coin heal.

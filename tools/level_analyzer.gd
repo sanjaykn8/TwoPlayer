@@ -18,6 +18,7 @@ extends RefCounted
 ## as activatable only in the `with_bosses` pass (optional content must never be required).
 
 const T := 16.0
+const FELL_OUT := Vector2i(-2, -2)
 const MAX_DX := {3: 2, 2: 3, 1: 4, 0: 4}
 
 var level: Node
@@ -185,7 +186,50 @@ func _land(x: int, r: int) -> Vector2i:
 			return c
 		if _support(c) and standable(c):
 			return c
-	return Vector2i(-1, -1)  # falls out of the level
+	return FELL_OUT  # falls out of the level (a fall respawns the knight at a safe place)
+
+
+## Whether a knight standing at `c` can fall out of the level (walking off an edge or
+## dropping through a one-way tile): the fall rule then puts it back on safe ground, so a
+## place like that can never trap it.
+func can_fall_out(c: Vector2i) -> bool:
+	for dx in [-1, 1]:
+		var side := c + Vector2i(dx, 0)
+		if not standable(side) and _air(side + Vector2i(0, -1)) and _air(side + Vector2i(0, -2)) and _land(side.x, c.y) == FELL_OUT:
+			return true
+	if (one_way.has(c) or platforms.has(c)) and not solid.has(c) and _land(c.x, c.y + 1) == FELL_OUT:
+		return true
+	return false
+
+
+## Places reachable from the spawn from which the exit can never be reached again and that
+## a knight cannot leave by falling out of the level (traps). Gates count as open.
+func trap_cells(area: Dictionary) -> Array[Vector2i]:
+	var exits := {}
+	var queue: Array[Vector2i] = []
+	# Reverse search: every place from which the exit (or a fall-out escape) is reachable.
+	var good := {}
+	for c: Vector2i in area:
+		if exit_cells.has(c) or can_fall_out(c):
+			good[c] = true
+			queue.append(c)
+	var reverse := {}
+	for c: Vector2i in area:
+		for n: Vector2i in neighbours(c):
+			if not reverse.has(n):
+				reverse[n] = []
+			(reverse[n] as Array).append(c)
+	while not queue.is_empty():
+		var c: Vector2i = queue.pop_back()
+		for p: Vector2i in reverse.get(c, []):
+			if not good.has(p):
+				good[p] = true
+				queue.append(p)
+	var traps: Array[Vector2i] = []
+	for c: Vector2i in area:
+		if not good.has(c):
+			traps.append(c)
+	return traps
 
 
 func neighbours(c: Vector2i) -> Array[Vector2i]:
@@ -222,21 +266,28 @@ func neighbours(c: Vector2i) -> Array[Vector2i]:
 	return out
 
 
-## Headroom above the take-off (body plus the rise) and a free band at the arc's height over
-## every column crossed. Hazards below the arc do not matter (jumping over spikes is fine).
+## Headroom above the take-off (body plus the rise), then the whole arc: for every column
+## crossed, the knight's two body cells at the arc's height there must be free. The arc is the
+## LOWEST one a player can choose (a short hop reaching the landing): the straight line from
+## take-off to landing lifted by about one row in the middle. So a jump can never pass
+## through a solid ceiling or slab on its way down, and a low ceiling only rules out jumps
+## that really hit it. Hazards under the arc do not matter (jumping over spikes is fine).
 func _jump_clear(from: Vector2i, to: Vector2i, up: int) -> bool:
 	for k in range(1, maxi(up, 0) + 3):
 		if _blocked(from + Vector2i(0, -k)):
 			return false
-	var apex := mini(from.y, to.y) - (1 if up < 3 else 0)
+	var hump := 1.0 if up >= 0 else 0.75
+	var span := absi(to.x - from.x)
 	var step := 1 if to.x > from.x else -1
-	var x := from.x
-	while x != to.x:
-		x += step
-		if x == to.x:
-			break
-		if _blocked(Vector2i(x, apex - 1)) or _blocked(Vector2i(x, apex - 2)):
-			return false
+	for i in range(1, span):
+		var s := float(i) / float(span)
+		var feet := lerpf(float(from.y), float(to.y), s) - hump * 4.0 * s * (1.0 - s)
+		var x := from.x + i * step
+		var lowest := int(ceil(feet)) - 1
+		var highest := int(floor(feet)) - 2
+		for r in range(highest, lowest + 1):
+			if _blocked(Vector2i(x, r)):
+				return false
 	return true
 
 
