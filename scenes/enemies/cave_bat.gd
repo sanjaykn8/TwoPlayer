@@ -89,26 +89,33 @@ func _draw() -> void:
 	super()
 	if state == State.DEAD and _death_left <= 0.0:
 		return
-	var outline := Color(0.08, 0.06, 0.1)
-	var body := Color(0.32, 0.24, 0.42) * sprite.modulate
-	var wing := Color(0.45, 0.34, 0.58) * sprite.modulate
-	var alpha := sprite.modulate.a
-	body.a = alpha
-	wing.a = alpha
-	var roosting := state == State.IDLE or state == State.ALERT
-	if roosting:
-		# Hanging upside down, wings folded.
-		draw_rect(Rect2(-3, -12, 6, 8), outline)
-		draw_rect(Rect2(-2, -11, 4, 6), body)
-		draw_rect(Rect2(-1, -6, 1, 1), Color(0.95, 0.25, 0.25, alpha))
-		draw_rect(Rect2(1, -6, 1, 1), Color(0.95, 0.25, 0.25, alpha))
+	var a := sprite.modulate.a
+	var tint := Color(sprite.modulate.r, sprite.modulate.g, sprite.modulate.b)
+	var outline := Color(0.06, 0.04, 0.08, a)
+	var body := Color(0.42, 0.32, 0.55) * tint
+	var wing := Color(0.62, 0.5, 0.78) * tint
+	var eye := Color(1.0, 0.3, 0.25, a)
+	body.a = a
+	wing.a = a
+	if state == State.IDLE or state == State.ALERT:
+		# Hanging upside down from the ceiling, wings wrapped around the body; the eyes glow.
+		draw_rect(Rect2(-1, -16, 2, 3), outline)
+		draw_rect(Rect2(-5, -13, 10, 11), outline)
+		draw_rect(Rect2(-4, -12, 8, 9), wing)
+		draw_rect(Rect2(-2, -12, 4, 8), body)
+		draw_rect(Rect2(-2, -6, 1, 1), eye)
+		draw_rect(Rect2(1, -6, 1, 1), eye)
 		return
 	var up := int(_flap * 14.0) % 2 == 0
-	draw_rect(Rect2(-3, -8, 6, 6), outline)
-	draw_rect(Rect2(-2, -7, 4, 4), body)
+	var wy := -12 if up else -6
 	for side in [-1, 1]:
-		var y := -10 if up else -5
-		draw_rect(Rect2(Vector2(side * 3 + (0 if side > 0 else -5), y), Vector2(5, 3)), outline)
-		draw_rect(Rect2(Vector2(side * 3 + (0 if side > 0 else -5) + 1, y + 1), Vector2(3, 1)), wing)
-	draw_rect(Rect2(-2, -6, 1, 1), Color(0.95, 0.25, 0.25, alpha))
-	draw_rect(Rect2(1, -6, 1, 1), Color(0.95, 0.25, 0.25, alpha))
+		var wx := 3 if side > 0 else -11
+		draw_rect(Rect2(wx, wy, 8, 4), outline)
+		draw_rect(Rect2(wx + 1, wy + 1, 6, 2), wing)
+		draw_rect(Rect2(wx + (6 if side > 0 else 0), wy + (3 if up else -1), 2, 2), outline)
+	draw_rect(Rect2(-4, -10, 8, 8), outline)
+	draw_rect(Rect2(-3, -9, 6, 6), body)
+	draw_rect(Rect2(-3, -12, 2, 2), outline)
+	draw_rect(Rect2(1, -12, 2, 2), outline)
+	draw_rect(Rect2(-2, -7, 1, 1), eye)
+	draw_rect(Rect2(1, -7, 1, 1), eye)

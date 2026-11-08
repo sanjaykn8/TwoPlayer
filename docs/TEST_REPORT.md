@@ -1382,3 +1382,62 @@ and 0 orphans, static memory 83 MB. Headroom above 60 fps not measured (vsync).
 | Levels 1–4 | User-reported: reached and passed on the first attempt |
 | Levels 5–24, two-player session, final manual plan | **Pending** |
 | Campaign duration | **Not measured** |
+
+## Gameplay overhaul: 2026-11-08
+
+Labels: **Auto-tested** (an automated test run here), **Measured** (a real run on this PC),
+**Pending** (people). Nothing was played by people.
+
+### A. Validation and tooling
+
+| Check | Result |
+|---|---|
+| Art generator (`tools/build_overhaul_art.gd`, two passes) | Recolours and 6 sprite-frame resources written; import clean |
+| Sound generator (`tools/build_overhaul_audio.gd`) | 18 WAVs written, deterministic; import clean |
+| Campaign build (`build_phase10_content.gd`) | 24 scenes, no errors |
+| Renders | Line-up of every character on a real floor (feet aligned at 1× and 2×); whole-level renders of l01, l03, l05, l06, l09; real-window gameplay shots (dark cave in split view, Warchief arena with boss bar, enemy crowd, Controls screen, main menu) |
+| Campaign and difficulty reports | Regenerated with the new enemy and mechanism counts |
+
+### B. Automated tests
+
+Command: `godot --headless --path . --fixed-fps 60 --script res://tests/run_tests.gd`
+
+Result: **497 passed, 0 failed**, exit code 0, in two consecutive runs after the last code
+change (97 s each), with identical per-test results and no `ERROR`, `WARNING`, `SCRIPT ERROR`
+or leak lines. The total is 461 tests from before plus 36 new ones (a few earlier tests were
+updated for the new art and layouts).
+
+New tests:
+
+| File | Tests | What it proves |
+|---|---|---|
+| `test_combat_expansion.gd` | 8 | Charged slash (charge time, heavy power, reach, lunge, early release does nothing); co-op strike (window, same-knight exclusion); pogo bounce; the hit pause freezes only the attacker |
+| `test_enemies.gd` | 14 | Grunt telegraph and swing, dodging the wind-up, chase speed 2×, death and coins; a heavy hit interrupts a wind-up; brute shockwaves (ground hit, air safe); shieldbearer front block, back and above hits, guard break; archer arrows miss a crouching knight and hit a standing one; arrows can be cut; bat roost, swoop and return; ember fuse, blast, chain stagger of a slime; enemy save round trip and whitelist; Warchief phase 2 summons once and reports to the HUD; Captain guard flanking |
+| `test_mechanisms.gd` | 11 | Spring height, updraft lift, wind push, ice slide, saw, fire jet (warning safe, flame hurts), falling rock (telegraph, hit, regrow), cracked block (light chips, heavy breaks, stays broken), pogo lantern, arena lock (closes with both inside, reopens when cleared, saved), stack boost, darkness lights |
+| `test_overhaul_saves.gd` | 2 | New enemies, broken blocks and finished arenas survive save and load; layout versions (older layout starts fresh; old worlds still validate) |
+| `test_phase11_regressions.gd` (+1) | 3 | KI-108 landing column; KI-100 updated to the new l04 coordinates |
+| Updated | | Combat tests (soldier frames instead of the knife overlay), resource validation (new frames), movement (per-player frames), campaign-level playability (stack boost allowed for secrets) |
+
+Campaign validators on the new layouts:
+
+- `test_level_validation`: 24 × 20 checks, all PASS or N/A, arenas fought.
+- `test_campaign_routes`: 24/24 routes walked by the real knight.
+- `test_platform_timing`: every chain crossable.
+- `test_no_level_can_trap_a_knight`: PASS.
+
+### C. Performance (Measured, real window)
+
+| Item | Result |
+|---|---|
+| Machine | Windows 11, i5-13450HX, RTX 4050 Laptop, 1280×720, vsync on |
+| All 24 levels | 60.0 fps average each; p99 16.8–19.4 ms; one 37.4 ms frame (l09) |
+| Stress: 24 extra enemies of all kinds plus a warchief | 60.0 fps, worst 16.8 ms |
+| Leaks | 0 orphans; one audio player |
+| Main menu | One 527 ms frame at start-up (KI-111) |
+
+### D. Manual tests
+
+| Test | Status |
+|---|---|
+| Two-person play of the overhauled game | **Pending** (`docs/FRIEND_PLAYTEST_CHECKLIST.md`) |
+| Playtime | **Not measured** |

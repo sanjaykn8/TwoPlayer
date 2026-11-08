@@ -15,6 +15,8 @@ const NOTES := [
 	"Both players share one keyboard: Player One on the left, Player Two on the right.",
 	"Up and Down depend on where you are: climb a ladder, jump from the ground, drop through a thin platform, or crouch.",
 	"Attacks go the way you last moved. Hold Up or Down while attacking to strike up or down (down only in the air or on a ladder).",
+	"Keep attack held after a slash until you glint, then release: a heavy slash that breaks shields and cracked stone. Strike down in the air to bounce.",
+	"Hit the same enemy together for a co-op strike. Jump off your partner's head to reach higher.",
 	"There is no interact button: stand on plates and strike switches to work mechanisms.",
 	"Esc pauses the game.",
 ]

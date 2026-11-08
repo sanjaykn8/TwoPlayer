@@ -19,6 +19,18 @@ times, deaths, which parts felt difficult, camera or save observations. The user
 (`%APPDATA%\TwoKnightCoop\saves\`) held only one slot when Phase 11 began: slot 4, a fresh run
 at level 1 with 1.2 s of play time. It contains no level times, so no time is derived from it.
 
+## Friends' feedback (reported 2026-11-08, before the overhaul)
+
+| # | Feedback |
+|---|---|
+| F-5 | Friends who played the game commented that it was boring. |
+
+This is the reason for the gameplay overhaul (`docs/GAMEPLAY_AUDIT.md`,
+`docs/MASTER_DEVELOPMENT_REPORT.md`). Who played, which levels and for how long was not
+reported. **Levels 1–4 have since been rebuilt**, so F-3 (first-attempt pass) describes the old
+layouts, not the current ones. No one has played the overhauled game yet; the next session
+uses `docs/FRIEND_PLAYTEST_CHECKLIST.md`.
+
 ## Interpretation used for balancing
 
 - **Levels 1–4: reached and passed on the first attempt** (F-3). This is recorded as a

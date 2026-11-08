@@ -1,6 +1,6 @@
 # Known Issues
 
-Updated 2026-11-04 (Phase 11).
+Updated 2026-11-08 (gameplay overhaul).
 
 ## Severity scheme (Phase 11)
 
@@ -17,9 +17,46 @@ do not apply to them: **verification gaps** (something not yet tested by people)
 **design notes** (deliberate behaviour or accepted limits). An issue is never removed because
 a workaround exists; resolved issues move to the Resolved section with their fix.
 
-**Current count: P0 open 0 · P1 open 1 (KI-5, release environment, not a game defect) · P2
-open 3 · P3 open 18.** No known open P0 or P1 game defect. Manual testing is still pending
-(see Verification gaps), so this is a statement about what is known, not a guarantee.
+**Current count (after the overhaul): P0 open 0 · P1 open 1 (KI-5, export environment; not
+needed for playing in the editor) · P2 open 4 · P3 open 20.** No known open P0 or P1 game
+defect. Nobody has played the overhauled game yet (see Verification gaps), so this is a
+statement about what is known, not a guarantee.
+
+## Found and fixed in the overhaul
+
+### KI-108: a short downward jump could pass through solid ground (P2, tooling, fixed)
+
+| Field | Detail |
+|---|---|
+| Description | The level analyzer accepted a jump down from a shelf edge straight through the solid shelf into a room below it |
+| Reproduction | l05 (new layout): the route validator banned `(59,24) -> (58,32)` and similar jumps; `test_analyzer_never_falls_through_the_landing_column` before the fix |
+| Expected | Only jumps with a clear path are accepted |
+| Actual | Jumps with dx ≤ 1 had no columns between take-off and landing to check, and the final vertical fall in the landing column was never checked for any jump. Hidden rooms under shelves looked reachable |
+| Root cause | `_jump_clear` checked the arc only over the columns between take-off and landing |
+| Fix | Downward jumps also check the landing column, from the arc height over the previous column down to the landing |
+| Regression test | `test_analyzer_never_falls_through_the_landing_column`: PASS; all 24 levels' routes walked by the real knight: PASS |
+
+### KI-109: the l05 cave ceiling sealed the way down (P1, level design, fixed before commit)
+
+| Field | Detail |
+|---|---|
+| Description | The new Crystal Descent's lower-cave ceiling covered the cliff edge, so no knight could walk off the upper shelf into the lower cave |
+| Reproduction | Route validator on the first draft of l05 |
+| Expected | A drop from the shelf into the lower cave |
+| Actual | Only the impossible jumps of KI-108 connected them |
+| Root cause | Spec: ceiling fill started at the cliff column |
+| Fix | The ceiling starts three columns later, leaving a drop shaft |
+| Regression test | `test_campaign_routes` world 2: PASS |
+
+Other defects found and fixed during development (all before any commit):
+
+- l09: courtyard floor heights did not match its target, gate and grunt.
+- An arena zone missed enemies standing exactly on its bottom edge.
+- The updraft was too weak to lift a knight off the floor.
+- The level probe analysed the live level, whose lift had moved, and misjudged an arena.
+- Ember slimes were not recognised as "hit".
+- The base enemy scene had no default stats (scene validation error).
+- Slimes were placed too close to two spawns.
 
 ## Found and fixed in Phase 11
 
@@ -140,8 +177,11 @@ open 3 · P3 open 18.** No known open P0 or P1 game defect. Manual testing is st
 | KI-51 | P3 | Under the hazard test-room lava pit the next row is grass-topped | Dev room only | Lava bed | Grass top | Auto-tiling | Dev room only | — |
 | KI-39 | P3 | The red jar is the magenta bottle tinted red | Pick up red jar | Own art | Tinted | No red bottle in bundle | Art polish | — |
 | KI-33 | P3 | Slimes have no death or attack animation (squash-and-fade placeholder, briefly non-integer scale) | Kill a slime | Death frames | Placeholder | Bundle lacks frames | Art polish | — |
-| KI-26 | P3 | No knight attack body animation; the generated slash overlays idle/run frames | Attack | Attack pose | Overlay only | Bundle lacks frames | Art polish | — |
-| KI-10 | P3 | Jump, fall, crouch and climb use placeholder frames | Move | Dedicated frames | Closest existing frames | Bundle lacks frames | Art polish | — |
+| KI-10 | P3 | Jump, fall, crouch and climb are single frames reused from the soldier's walk and death rows (the pack has no jump art) | Move | Dedicated frames | Closest existing frames | Pack lacks frames | Art polish | `test_knight_sprite_frames` |
+| KI-110 | P2 (licence) | The Tiny RPG pack forbids redistributing its raw files, modified or not | Publish the repository | Assets ship only inside the game | `assets/tiny_rpg/` and the generated recolours are in the repository | Licence of the pack | Never push to a public remote without removing them | — |
+| KI-111 | P3 | A single 527 ms frame on the main menu at start-up in the real-window performance run (Phase 11's run had none); every level ran at 60 fps | Launch in a window and measure the first 3 s | No hitch | One long frame | Probably first-time loading of new resources (art, sounds) | Preload in Phase 12 if players notice | Performance run (`docs/MASTER_DEVELOPMENT_REPORT.md`) |
+| KI-112 | P3 (maintainability) | `knight.gd` has grown to about 800 lines (combat reactions, environment, presentation) | — | Smaller components | One large script | Features added in place | Split presentation into a component when it next changes (CLAUDE.md note) | Full suite |
+| KI-113 | P3 | Old saves inside a rebuilt level: run-wide records keyed by id (collected items, defeated enemies, puzzle states) can match a new object with the same id, so one new pickup may already count as collected | Load a pre-overhaul save made inside l01–l06 or l09 | Fresh level | Rare id matches | Ids are per level and position-independent | Accepted: positions are dropped (layout version), ids are not | `test_world_records_its_layout_and_old_layouts_start_fresh` |
 | KI-12 | P3 | A rider overlaps the lower knight's plume by a few pixels | Stand on partner | No overlap | Small overlap | Sprite bounds | Cosmetic | — |
 | KI-41 | P3 | The red-jar route in the collectible test room is tight | Dev room only | — | Tight | Dev room design | Dev room only | — |
 | KI-4 | P3 | Loading WAVs from source at runtime warns (odd data chunks) | Dev only | — | Warning | Bundle files | Never load WAVs from source at runtime; imported resources are fine | Full run: no warnings |
@@ -150,8 +190,9 @@ open 3 · P3 open 18.** No known open P0 or P1 game defect. Manual testing is st
 
 | ID | What is not yet verified by people | Where |
 |---|---|---|
-| KI-88 | **Campaign playtest.** Levels 1–4: user-reported first-attempt pass (no per-check results or times). Levels 5–24: not played by people. Clarity of clues and routes, fairness of jumps and timings, difficulty curve, camera in each level | `docs/CAMPAIGN_PLAYTEST.md`, `docs/FINAL_MANUAL_TEST_PLAN.md` |
-| KI-89 | **Campaign length unmeasured** (release-candidate blocker for validation, not a defect). Design estimates total 124 min; the analyzer's pure-movement floor is 9.5 min; target 90–120 min | Time the manual playtest (M-T1) |
+| KI-88 | **Campaign playtest of the overhauled game.** No level has been played by people since the overhaul (levels 1–4 were passed before it, on layouts that no longer exist). Fun, clarity of clues and routes, fairness of jumps, timings and boss patterns, difficulty curve, camera | `docs/FRIEND_PLAYTEST_CHECKLIST.md`, `docs/CAMPAIGN_PLAYTEST.md` |
+| KI-89 | **Campaign length unmeasured.** Design estimates total 127 min; pure movement 9.2 min; target 90–120 min. Arenas and boss fights add time that only play can measure | Time the playtest |
+| KI-114 | **New combat and enemies by feel:** charge time, co-op window, hit pause, knockback, wind-up lengths, boss patterns, bat swoops and arrow speed are tuned from tests and reasoning only | `docs/FRIEND_PLAYTEST_CHECKLIST.md` §4 |
 | KI-107 | **Two-player session** with the 20 tests of `docs/TWO_PLAYER_PLAYTEST.md` | User (two players) |
 | KI-9 | Physical keyboard: **user-reported pass**; model not supplied, so not tied to hardware; rollover with six keys held not separately reported | `docs/MANUAL_KEYBOARD_TEST.md`, T-04 |
 | KI-18 | Phase 2 manual camera tests | `docs/MANUAL_CAMERA_TEST.md` |
@@ -172,7 +213,8 @@ open 3 · P3 open 18.** No known open P0 or P1 game defect. Manual testing is st
 | KI-96 | Collapsing and blinking platforms over lava: a miss ends the run (lava kills; a death resets the campaign). Phase 11 verified every such crossing physically (RouteValidator) and every blinking chain's timing (`test_platform_timing`); whether they **feel** fair is a playtest question | Keep (core rule); playtest |
 | KI-91 | The level analyzer is a tile model (no timing, no enemies). Phase 11 added physical route checks with the real knight and a timing test for blinking chains; enemy pressure and moving-platform phase are still only covered by play | Playtest |
 | KI-76 | One music track in the bundle; menu, worlds and victory use it at different pitch and volume; game over is silent | Add tracks when available |
-| KI-77 | New sound cues reuse the six bundle sounds | Accepted (asset bundle) |
+| KI-77 | Older cues still reuse the six bundle sounds; the overhaul's 18 new effects (swings, clang, arrows, blasts, roar and more) are synthesised offline (`tools/build_overhaul_audio.gd`) | Accepted |
+| KI-115 | Enemy AI limits: orcs and archers walk only (no jumping or ladders) and give up on targets on other floors; archers shoot only straight ahead at about their own height; bats return to one roost | By design: readable, fair; levels place enemies accordingly |
 | KI-78 | Display options: whole-multiple windows and borderless fullscreen; no exclusive fullscreen, monitor choice or vsync option | Revisit in Phase 12 if needed |
 | KI-81 | In the stacked split, Player Two's panel stays top-right | By design |
 | KI-82 | No tutorial screen (GDD §14); the Controls screen and in-level clues cover the basics | Accepted; levels 1–4 passed first try by the user |
@@ -213,6 +255,7 @@ open 3 · P3 open 18.** No known open P0 or P1 game defect. Manual testing is st
 
 | ID | Issue | Resolution |
 |---|---|---|
+| KI-26 | No knight attack body animation; the slash was drawn over the idle or run pose | Overhaul: the soldier's own slash and chop frames, stepped by the combat timeline |
 | KI-80 | After victory the finished campaign stays in its slot | Phase 10: the slot shows CAMPAIGN COMPLETE; Continue opens the victory screen; starting over asks first |
 | KI-67 | Only two development levels existed | Phase 10: six worlds, 24 levels |
 | KI-57 | No level exits or transitions | Phase 8 (`LevelExit`, `CampaignGame.complete_level`) |

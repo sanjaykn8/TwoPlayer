@@ -6,5 +6,5 @@
 script = ExtResource("1_ui")
 game_title = "UNTITLED"
 subtitle = "A cooperative adventure for two knights"
-version_label = "development build (Phase 9)"
+version_label = "development build (overhaul)"
 fade_seconds = 0.25

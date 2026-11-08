@@ -57,11 +57,23 @@ func _design_notes() -> Dictionary:
 func _inspect(def: LevelDefinition) -> Dictionary:
 	var root := (load(def.scene_path) as PackedScene).instantiate()
 	var info := {"green": [], "purple": [], "spikes": 0, "lava": 0, "hot": 0, "platforms": {}, "puzzles": {},
-		"items": [], "ladders": 0, "saves": 0, "boss": "", "clues": [], "gates": 0}
+		"items": [], "ladders": 0, "saves": 0, "boss": "", "clues": [], "gates": 0, "enemies": {},
+		"mechanisms": {}, "arenas": 0, "fights": []}
 	for node in root.find_children("*", "", true, false):
 		var at := Vector2i((node as Node2D).position / 16.0) if node is Node2D else Vector2i.ZERO
 		if node is Slime:
 			info["green" if (node as Slime).stats.stagger_threshold <= 2 else "purple"].append(at.x)
+		elif node is BossEnemy:
+			info.fights.append((node as BossEnemy).stats.display_name)
+		elif node is Enemy:
+			var kind := (node as Enemy).stats.display_name
+			info.enemies[kind] = int(info.enemies.get(kind, 0)) + 1
+		elif node is EncounterZone:
+			info.arenas += 1
+		elif node is SpringMushroom or node is EnvironmentZone or node is SawBlade or node is FireJet \
+				or node is FallingRock or node is BreakableBlock or node is PogoLantern or node is Darkness:
+			var mech := _mechanism_name(node)
+			info.mechanisms[mech] = int(info.mechanisms.get(mech, 0)) + 1
 		elif node is BossSlime:
 			info.boss = (node as BossSlime).stats.display_name
 		elif node is Hazard:
@@ -168,8 +180,11 @@ func _plan_level(def: LevelDefinition, info: Dictionary, note: String) -> String
 		"| Size | %d x %d tiles |" % [info.size.x, info.size.y],
 		"| Spawns | P1 %s, P2 %s (px) |" % [def.spawn_p1, def.spawn_p2],
 		"| Main route and puzzles | %s |" % note,
-		"| Enemies | %d green at x %s; %d purple at x %s%s |" % [info.green.size(), info.green, info.purple.size(), info.purple,
+		"| Enemies | %d green slimes, %d purple slimes%s%s%s |" % [info.green.size(), info.purple.size(), _counts(info.enemies),
+			("; boss fight: " + ", ".join(info.fights)) if not info.fights.is_empty() else "",
 			("; optional boss: " + info.boss) if info.boss != "" else ""],
+		"| Mechanisms | %s%s |" % [_counts(info.mechanisms).trim_prefix(", ") if not info.mechanisms.is_empty() else "none",
+			("; %d arena lock(s)" % info.arenas) if info.arenas > 0 else ""],
 		"| Hazards | spikes %d tiles, lava %d tiles, hot ground %d tiles |" % [info.spikes, info.lava, info.hot],
 		"| Platforms | %s; %d ladders |" % [", ".join(platforms) if not platforms.is_empty() else "none", info.ladders],
 		"| Cooperative mechanisms | %s; %d gates |" % [", ".join(puzzles) if not puzzles.is_empty() else "none", info.gates],
@@ -177,7 +192,7 @@ func _plan_level(def: LevelDefinition, info: Dictionary, note: String) -> String
 		"| Clues | %s |" % (" / ".join(info.clues.map(func(t: String) -> String: return "\"%s\"" % t))),
 		"| Save points | %d |" % info.saves,
 		"| Exit | either living knight reaches the exit portal; next: %s |" % (LevelCatalog.next_level(def.id) if LevelCatalog.next_level(def.id) != "" else "campaign victory"),
-		"| Assets | world_tileset (%s terrain), platforms.png, knight, slimes%s, fruit, coin, created spikes / ladder / UI icons |" % [def.theme, ", boss (scaled slime)" if info.boss != "" else ""],
+		"| Assets | world_tileset (%s terrain), platforms.png, Tiny RPG soldier knights%s, slimes%s, fruit, coin, created spikes / ladder / UI icons, synthesised sounds |" % [def.theme, ", orcs and hollow soldiers" if not info.enemies.is_empty() or not info.fights.is_empty() else "", ", boss (scaled slime)" if info.boss != "" else ""],
 		"| Static validation | exit reachable: %s; everything reachable (optional bosses allowed): %s |\n" % ["yes" if info.exit_ok else "NO", "yes" if info.all_ok else "NO"],
 	])
 	return "\n".join(lines) + "\n"
@@ -204,19 +219,23 @@ and longer cooperative sections, not slower movement.
 
 ## What the user has actually reported (docs/PLAYTEST_FEEDBACK.md). Only the user's words go here;
 ## every other level stays "pending".
+## Levels 1-4 were passed by the user before the overhaul, but they have since been rebuilt
+## from scratch, so that report no longer describes them.
 const USER_REPORTS := {
-	"l01": "user-reported: reached and passed on the first attempt (Phase 11 baseline)",
-	"l02": "user-reported: reached and passed on the first attempt (Phase 11 baseline)",
-	"l03": "user-reported: reached and passed on the first attempt (Phase 11 baseline)",
-	"l04": "user-reported: reached and passed on the first attempt (Phase 11 baseline)",
+	"l01": "pending (rebuilt in the overhaul; the user's first-attempt pass was on the old layout)",
+	"l02": "pending (rebuilt in the overhaul; the user's first-attempt pass was on the old layout)",
+	"l03": "pending (rebuilt in the overhaul; the user's first-attempt pass was on the old layout)",
+	"l04": "pending (rebuilt in the overhaul; the user's first-attempt pass was on the old layout)",
 }
 
 
 func _test_header() -> String:
 	return """# Campaign Playtest Checklist
 
-Status: **levels 1–4 user-reported passed on the first attempt (no per-check results or times
-recorded); levels 5–24 pending manual playtest.** Play with two people on one keyboard.
+Status: **all 24 levels pending manual playtest since the overhaul.** Levels 1–4 were passed
+on the first attempt by the user before the overhaul, but have been rebuilt since; levels 5–24
+were never played by people. Play with two people on one keyboard; see also
+`docs/FRIEND_PLAYTEST_CHECKLIST.md`.
 Generated by `tools/campaign_report.gd`; the puzzle notes come from the level designs. The
 automated per-level results are in `docs/LEVEL_VALIDATION_MATRIX.md`; the user's own words are
 in `docs/PLAYTEST_FEEDBACK.md`.
@@ -247,7 +266,9 @@ func _test_level(def: LevelDefinition, info: Dictionary, note: String) -> String
 		"| Player One spawn (stands, can move at once) | |",
 		"| Player Two spawn | |",
 		"| Movement and jumps feel fair | |",
-		"| Enemies (%d green, %d purple%s) | |" % [info.green.size(), info.purple.size(), (", optional boss " + info.boss) if info.boss != "" else ""],
+		"| Enemies (%d green, %d purple slimes%s%s%s) | |" % [info.green.size(), info.purple.size(), _counts(info.enemies),
+			(", boss fight " + ", ".join(info.fights)) if not info.fights.is_empty() else "", (", optional boss " + info.boss) if info.boss != "" else ""],
+		"| Mechanisms readable and fair (%s) | |" % (_counts(info.mechanisms).trim_prefix(", ") if not info.mechanisms.is_empty() else "none"),
 		"| Hazards (spikes %d, lava %d, hot ground %d tiles) readable and fair | |" % [info.spikes, info.lava, info.hot],
 		"| Main route clear from the scenery and clues | |",
 		"| Optional route(s) and secrets found / reachable | |",
@@ -268,3 +289,28 @@ func _write(path: String, text: String) -> void:
 	f.store_string(text)
 	f.close()
 	print("wrote ", path)
+
+
+func _counts(d: Dictionary) -> String:
+	var parts := PackedStringArray()
+	for key: String in d:
+		parts.append("%d %s" % [d[key], key])
+	return (", " + ", ".join(parts)) if not parts.is_empty() else ""
+
+
+func _mechanism_name(node: Node) -> String:
+	if node is EnvironmentZone:
+		return ["updraft", "wind", "ice"][(node as EnvironmentZone).kind]
+	if node is SpringMushroom:
+		return "spring"
+	if node is SawBlade:
+		return "saw"
+	if node is FireJet:
+		return "fire jet"
+	if node is FallingRock:
+		return "falling rock"
+	if node is BreakableBlock:
+		return "cracked block"
+	if node is PogoLantern:
+		return "pogo lantern"
+	return "darkness"

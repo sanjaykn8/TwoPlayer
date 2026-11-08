@@ -753,3 +753,52 @@ Phase 11 decisions (balancing, 2026-11-04):
   (level 20's coin vault has a ladder; level 22's spike bed is two beds with an island).
 - **Mandatory routes use base stats.** Every main route is made by a knight with no upgrades
   and no boss reward, and never needs a lucky coin heal.
+
+Overhaul decisions (2026-11-08; reason: friends found the game boring; details in
+`docs/GAMEPLAY_AUDIT.md` and `docs/MASTER_DEVELOPMENT_PLAN.md`):
+
+- **Knights** are the Tiny RPG soldier: Player One silver and crimson, Player Two brass and
+  blue. Their attack frames follow the hit timing, so what is drawn is what hits.
+- **Charged slash:** keep attack held after a slash until the knight glints, then release.
+  It does +1 damage with 30 % more reach, breaks shields and cracked blocks, and lunges
+  forward on the ground. It has a longer recovery.
+- **Pogo:** a downward air attack that hits something bounces the knight up.
+- **Co-op strike:** the second knight's hit on the same enemy within 0.35 s of the first
+  does +1 damage, with a "CO-OP!" pop. For slimes this counts like any stronger hit; the
+  stagger rules themselves are unchanged.
+- **Stack boost:** jumping off the partner's head goes about 30 % higher. It is only needed
+  for secrets.
+- **New enemies** have health, not the stagger rule. Every attack has a visible wind-up (pose,
+  flash, "!"). A hit does not cancel a wind-up; a heavy hit does on enemies that can be pushed.
+  Coin drops: grunt 3–5, brute 5–7, shieldbearer 4–6, archer 3–4, bat and ember slime 1–2,
+  bosses 10–18. Slimes keep 4–6. Purple-fruit poison deals 1 damage per second to the new
+  enemies but never the last point.
+- **Enemy roles:**
+  - orc grunt: duelist;
+  - orc brute: slam with shockwaves, jump them;
+  - orc shieldbearer: blocks light hits from the front, so flank it, hit it from above, or
+    break the guard with a heavy slash;
+  - hollow archer: chest-height arrows, so crouch, jump or cut them;
+  - cave bat: swoops;
+  - ember slime: fuse, then a blast that hurts knights 1 and enemies 2 and breaks cracked
+    blocks.
+- **Bosses:** the Orc Warchief (l12), Hollow Captain (l20) and Crowned Hollow (l24, three
+  phases) are **mandatory** arena fights; their defeat opens the arena. The three slime bosses
+  stay optional. This changes the earlier "bosses are optional" rule for these three only.
+- **Arenas:** gates close behind both knights and reopen when the arena's enemies are
+  defeated. Finishing is saved.
+- **New hazards:**
+  - saw blades: spike damage;
+  - fire jets: hot-ground damage, with a sputter warning;
+  - falling rocks: spike damage, shake first.
+  Lava, spike, hot-ground and fall rules are unchanged.
+- **Traversal:**
+  - spring mushrooms (about 6 tiles);
+  - updrafts (you cannot fall down through one);
+  - wind;
+  - ice;
+  - cracked blocks (saved once broken);
+  - pogo lanterns;
+  - cave darkness with a light around each knight and torches.
+- **Saves:** each level has a layout version. A mid-level save from an older layout starts
+  the rebuilt level from its spawn; the run's progress is kept.

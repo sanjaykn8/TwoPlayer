@@ -9,8 +9,8 @@ const Analyzer := preload("res://tools/level_analyzer.gd")
 
 func _initialize() -> void:
 	var lines := PackedStringArray([
-		"| Level | Diff. | Route jumps | At the limit | Over lava | Over spikes | Platform hops | Lava-crossing stones | Slimes near route (g/p) | Two-knight locks | Gates without a clue nearby |",
-		"|---|---|---|---|---|---|---|---|---|---|---|"])
+		"| Level | Diff. | Route jumps | At the limit | Over lava | Over spikes | Platform hops | Lava-crossing stones | Enemies near route (green/purple/other) | Arena fights | Two-knight locks | Gates without a clue nearby |",
+		"|---|---|---|---|---|---|---|---|---|---|---|---|"])
 	for id in LevelCatalog.all_levels():
 		var root := (load(LevelCatalog.scene_for(id)) as PackedScene).instantiate()
 		var a = Analyzer.new(root)
@@ -69,6 +69,8 @@ func _initialize() -> void:
 		var stones := 0
 		var g_near := 0
 		var p_near := 0
+		var o_near := 0
+		var fights := 0
 		var two_knight := 0
 		var unclued := 0
 		var clues: Array = []
@@ -78,6 +80,15 @@ func _initialize() -> void:
 		for node in root.find_children("*", "", true, false):
 			if (node is CollapsingPlatform or node is TimedPlatform) and _over(node as PlatformBody, lava_cells):
 				stones += 1
+			elif node is EncounterZone:
+				fights += 1
+			elif node is Enemy:
+				var ec := Vector2i(int(node.position.x / 16), int(node.position.y / 16))
+				var close := false
+				for dx in range(-4, 5):
+					for dy in range(-6, 3):
+						close = close or route_cells.has(ec + Vector2i(dx, dy))
+				o_near += 1 if close else 0
 			elif node is Slime:
 				var sc := Vector2i(int(node.position.x / 16), int(node.position.y / 16))
 				var near := false
@@ -102,8 +113,8 @@ func _initialize() -> void:
 					clued = clued or cp.distance_to(gp) <= 24 * 16
 				if not clued and not (node.get_node_or_null((node as PuzzleGate).controller) is BossSeal):
 					unclued += 1
-		lines.append("| %s %s | %d | %d | %d | %d | %d | %d | %d | %d/%d | %d | %d |" % [id, LevelCatalog.level_title(id),
-			LevelCatalog.level(id).difficulty, jumps, limit, over_lava, over_spikes, platform_hops, stones, g_near, p_near, two_knight, unclued])
+		lines.append("| %s %s | %d | %d | %d | %d | %d | %d | %d | %d/%d/%d | %d | %d | %d |" % [id, LevelCatalog.level_title(id),
+			LevelCatalog.level(id).difficulty, jumps, limit, over_lava, over_spikes, platform_hops, stones, g_near, p_near, o_near, fights, two_knight, unclued])
 		root.free()
 	var f := FileAccess.open("user://difficulty_report.md", FileAccess.WRITE)
 	f.store_string("\n".join(lines))

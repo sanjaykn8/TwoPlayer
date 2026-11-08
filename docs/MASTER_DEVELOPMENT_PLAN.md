@@ -122,11 +122,11 @@ that no longer exist (run progress is kept).
 
 | Milestone | Status |
 |---|---|
-| M0 Audit, asset inspection, plan | Done (this file, GAMEPLAY_AUDIT, NEW_ASSET_CATALOG) |
-| M1 Assets and knights | In progress |
-| M2 Combat | Not started |
-| M3 Enemies and bosses | Not started |
-| M4 Hazards and co-op objects | Not started |
-| M5 Level redesign | Not started |
-| M6 Feedback and audio | Not started |
-| M7 Validation and docs | Not started |
+| M0 Audit, asset inspection, plan | Done |
+| M1 Assets and knights | Done (commit `9924969`) |
+| M2 Combat | Done (`9924969`) |
+| M3 Enemies and bosses | Done (`9924969`) |
+| M4 Hazards and co-op objects | Done (`59de68b`) |
+| M5 Level redesign | Done (`59de68b`): 7 levels rebuilt from scratch, 17 remixed |
+| M6 Feedback and audio | Done: synthesised sounds, sparks and dust, camera shake, boss bar, Controls screen explains the new moves |
+| M7 Validation and docs | Done (final commit; see `docs/MASTER_DEVELOPMENT_REPORT.md`). Manual friend playtest pending |

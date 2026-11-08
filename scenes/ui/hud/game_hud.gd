@@ -119,7 +119,7 @@ func _build() -> void:
 	boss_bar.grow_horizontal = Control.GROW_DIRECTION_BOTH
 	boss_bar.offset_left = -BossBar.WIDTH * 0.5
 	boss_bar.offset_right = BossBar.WIDTH * 0.5
-	boss_bar.offset_top = -40
+	boss_bar.offset_top = -42
 	boss_bar.offset_bottom = -22
 	_root.add_child(boss_bar)
 
