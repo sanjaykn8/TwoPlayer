@@ -16,6 +16,15 @@ extends RefCounted
 ## Puzzles: staged. Gates start closed (unless start_open); a gate opens when its controller
 ## can be activated from the reachable area; repeat until nothing changes. Boss seals count
 ## as activatable only in the `with_bosses` pass (optional content must never be required).
+##
+## Overhaul objects:
+##   spring mushroom  a jump of up to its height (tiles) within 3 columns
+##   updraft          from its foot, every standing cell beside the column up to its top
+##   cracked block    both support and passable (a knight can always break it)
+##   pogo lantern     counts as a one-tile support (a bounce point; used for optional routes)
+##   encounter zone   its gates are open (they only close while a fight is on)
+##   stack boost      in the optional pass (`with_bosses`): a jump of up to 5 rows within 2
+##                    columns off the partner's head; never needed for the main route
 
 const T := 16.0
 const FELL_OUT := Vector2i(-2, -2)
@@ -40,6 +49,12 @@ var reach := {}
 var open_gates := {}
 var problems := PackedStringArray()
 var warnings := PackedStringArray()
+var springs := {}        # cell -> launch height in rows
+var updrafts: Array[Rect2i] = []  # tile rectangles
+var breakables := {}     # cell -> true
+var lanterns := {}       # cell -> true
+## Optional pass: stack-boost jumps allowed.
+var allow_boost := false
 
 
 func _init(scene_root: Node) -> void:
@@ -104,6 +119,22 @@ func _read() -> void:
 			sources[String(g.name)] = g
 		elif node is PuzzleSource:
 			sources[String(node.name)] = node
+		elif node is SpringMushroom:
+			var sm := node as SpringMushroom
+			var tiles := sm.height_tiles if sm.height_tiles > 0.0 else SpringMushroom.CONFIG.spring_height_tiles
+			springs[_cell_of(sm.position)] = int(floor(tiles))
+		elif node is EnvironmentZone:
+			var z := node as EnvironmentZone
+			if z.kind == EnvironmentZone.Kind.UPDRAFT:
+				updrafts.append(Rect2i(_cell_of(z.position), Vector2i((z.size / T).round())))
+		elif node is BreakableBlock:
+			var b := node as BreakableBlock
+			var top := _cell_of(b.position)
+			for y in b.size_tiles.y:
+				for x in b.size_tiles.x:
+					breakables[top + Vector2i(x, y)] = true
+		elif node is PogoLantern:
+			lanterns[_cell_of((node as Node2D).position) + Vector2i(0, 1)] = true
 		elif node is LevelExit:
 			var e := node as LevelExit
 			for dx in range(int(ceil(e.size.x / T)) + 1):
@@ -156,7 +187,8 @@ func _blocked(cell: Vector2i) -> bool:
 
 
 func _support(cell: Vector2i) -> bool:
-	return solid.has(cell) or one_way.has(cell) or platforms.has(cell) or _blocked(cell)
+	return solid.has(cell) or one_way.has(cell) or platforms.has(cell) or _blocked(cell) \
+		or breakables.has(cell) or lanterns.has(cell)
 
 
 func standable(c: Vector2i) -> bool:
@@ -182,6 +214,8 @@ func _land(x: int, r: int) -> Vector2i:
 			return Vector2i(-1, -1)
 		if hazard.has(c + Vector2i(0, -1)):
 			return Vector2i(-1, -1)
+		if _in_updraft(c + Vector2i(0, -1)):
+			return Vector2i(-1, -1)  # the wind pushes up: no falling down through it
 		if ladders.has(c):
 			return c
 		if _support(c) and standable(c):
@@ -232,6 +266,13 @@ func trap_cells(area: Dictionary) -> Array[Vector2i]:
 	return traps
 
 
+func _in_updraft(c: Vector2i) -> bool:
+	for zone in updrafts:
+		if zone.has_point(c):
+			return true
+	return false
+
+
 func neighbours(c: Vector2i) -> Array[Vector2i]:
 	var out: Array[Vector2i] = []
 	for dx in [-1, 1]:
@@ -247,8 +288,8 @@ func neighbours(c: Vector2i) -> Array[Vector2i]:
 		var v := c + Vector2i(0, dy)
 		if (ladders.has(c) or ladders.has(c + Vector2i(0, -1))) and (ladders.has(v) or ladders.has(v + Vector2i(0, -1))) and standable(v):
 			out.append(v)
-	# Drop through a one-way tile (or a platform).
-	if (one_way.has(c) or platforms.has(c)) and not solid.has(c):
+	# Drop through a one-way tile (or a platform, or a cracked floor block once broken).
+	if (one_way.has(c) or platforms.has(c) or breakables.has(c)) and not solid.has(c):
 		var below := _land(c.x, c.y + 1)
 		if below.x >= 0:
 			out.append(below)
@@ -263,6 +304,30 @@ func neighbours(c: Vector2i) -> Array[Vector2i]:
 				continue
 			if _jump_clear(c, to, up):
 				out.append(to)
+	# Spring mushrooms and stack boosts: taller jumps.
+	var tall := 0
+	var tall_dx := 0
+	if springs.has(c):
+		tall = springs[c]
+		tall_dx = 3
+	elif allow_boost:
+		tall = 5
+		tall_dx = 2
+	for up in range(4, tall + 1):
+		for dx in range(-tall_dx, tall_dx + 1):
+			var to := Vector2i(c.x + dx, c.y - up)
+			if standable(to) and _jump_clear(c, to, up):
+				out.append(to)
+	# Updrafts: from the column's foot (or a jump into it from up to 3 rows below), float up
+	# and step off beside it at any height.
+	for zone in updrafts:
+		if c.x < zone.position.x or c.x >= zone.end.x or c.y < zone.position.y or c.y > zone.end.y + 3:
+			continue
+		for y in range(zone.position.y - 2, c.y + 1):
+			for x in range(zone.position.x - 3, zone.end.x + 3):
+				var to := Vector2i(x, y)
+				if to != c and standable(to):
+					out.append(to)
 	return out
 
 
@@ -287,6 +352,16 @@ func _jump_clear(from: Vector2i, to: Vector2i, up: int) -> bool:
 		var highest := int(floor(feet)) - 2
 		for r in range(highest, lowest + 1):
 			if _blocked(Vector2i(x, r)):
+				return false
+	# Going down, the last stretch is a fall straight down the landing column: from the arc's
+	# height over the previous column to the landing, the column must be open.
+	if to.y > from.y:
+		var top := from.y - 2
+		if span > 1:
+			var s := float(span - 1) / float(span)
+			top = int(floor(lerpf(float(from.y), float(to.y), s) - hump * 4.0 * s * (1.0 - s))) - 2
+		for r in range(top, to.y - 1):
+			if _blocked(Vector2i(to.x, r)):
 				return false
 	return true
 
@@ -323,6 +398,8 @@ func source_reachable(node: Node, area: Dictionary, with_bosses: bool) -> bool:
 		if results.is_empty():
 			return false
 		return results.has(true) if logic.mode == PuzzleLogic.Mode.ANY else not results.has(false)
+	if node is EncounterZone:
+		return true
 	if node is TriggerZone:
 		var z := node as TriggerZone
 		for c: Vector2i in area:
@@ -358,10 +435,13 @@ func _boss_reachable(seal: Node, area: Dictionary) -> bool:
 
 
 ## Staged analysis. Returns the final reachable area.
-func analyze(with_bosses := false) -> Dictionary:
+## `boost`: allow stack-boost jumps (co-op secrets); by default only in the optional pass.
+func analyze(with_bosses := false, boost := -1) -> Dictionary:
+	allow_boost = with_bosses if boost < 0 else boost == 1
 	open_gates.clear()
 	for g: Node in gates:
-		if (g as PuzzleGate).start_open:
+		var controller := g.get_node_or_null((g as PuzzleGate).controller)
+		if (g as PuzzleGate).start_open or controller is EncounterZone:
 			open_gates[g] = true
 	reach = {}
 	while true:
@@ -397,6 +477,8 @@ func unreachable_things(area: Dictionary) -> PackedStringArray:
 	var out := PackedStringArray()
 	for node in level.find_children("*", "", true, false):
 		var c := Vector2i(-1, -1)
+		if node.owner != level and node != level:
+			continue  # spawned at run time (dropped coins): not part of the level's design
 		if node is Collectible:
 			c = _cell_of((node as Node2D).position)
 		elif node is SavePoint:

@@ -13,10 +13,11 @@ order = 1
 scene_path = "res://scenes/worlds/world_01_ancient_forest/level_01.tscn"
 estimated_minutes = 3.5
 theme = "forest"
-spawn_p1 = Vector2(56, 416)
-spawn_p2 = Vector2(88, 416)
-camera_bounds = Rect2(0, 0, 2400, 480)
-optional_content = PackedStringArray("l01_fruit_red_1", "l01_coins_1", "l01_fruit_green_1", "l01_coins_2", "l01_coins_3")
+spawn_p1 = Vector2(56, 480)
+spawn_p2 = Vector2(88, 480)
+camera_bounds = Rect2(0, 0, 1920, 576)
+optional_content = PackedStringArray("l01_coins_1", "l01_fruit_red_1", "l01_coins_2", "l01_fruit_green_1", "l01_coins_3")
+layout_version = 2
 
 [sub_resource type="Resource" id="Resource_nbcaa"]
 script = ExtResource("3_i6uxm")
@@ -29,8 +30,9 @@ difficulty = 2
 theme = "forest"
 spawn_p1 = Vector2(56, 224)
 spawn_p2 = Vector2(88, 224)
-camera_bounds = Rect2(0, 0, 2560, 576)
-optional_content = PackedStringArray("l02_coins_1", "l02_fruit_yellow_1", "l02_fruit_green_1")
+camera_bounds = Rect2(0, 0, 2080, 704)
+optional_content = PackedStringArray("l02_coins_1", "l02_coins_2", "l02_fruit_purple_1", "l02_fruit_yellow_1")
+layout_version = 2
 
 [sub_resource type="Resource" id="Resource_h5u21"]
 script = ExtResource("3_i6uxm")
@@ -42,10 +44,11 @@ scene_path = "res://scenes/worlds/world_01_ancient_forest/level_03.tscn"
 difficulty = 2
 estimated_minutes = 4.5
 theme = "forest"
-spawn_p1 = Vector2(56, 544)
-spawn_p2 = Vector2(88, 544)
-camera_bounds = Rect2(0, 0, 2400, 640)
-optional_content = PackedStringArray("l03_fruit_green_1", "l03_coins_1", "l03_fruit_purple_1")
+spawn_p1 = Vector2(56, 800)
+spawn_p2 = Vector2(88, 800)
+camera_bounds = Rect2(0, 0, 1792, 896)
+optional_content = PackedStringArray("l03_coins_1", "l03_jar_green_1")
+layout_version = 2
 
 [sub_resource type="Resource" id="Resource_67qjw"]
 script = ExtResource("3_i6uxm")
@@ -57,10 +60,11 @@ scene_path = "res://scenes/worlds/world_01_ancient_forest/level_04.tscn"
 difficulty = 3
 estimated_minutes = 5.0
 theme = "forest"
-spawn_p1 = Vector2(56, 448)
-spawn_p2 = Vector2(88, 448)
-camera_bounds = Rect2(0, 0, 2720, 544)
-optional_content = PackedStringArray("l04_fruit_yellow_1", "l04_jar_green_1", "l04_coins_1", "l04_coins_2")
+spawn_p1 = Vector2(56, 512)
+spawn_p2 = Vector2(88, 512)
+camera_bounds = Rect2(0, 0, 2400, 640)
+optional_content = PackedStringArray("l04_fruit_yellow_1", "l04_coins_1", "l04_fruit_green_1", "l04_coins_2")
+layout_version = 2
 
 [sub_resource type="Resource" id="Resource_xe87w"]
 script = ExtResource("2_dgm12")
@@ -78,11 +82,13 @@ world_id = "caves"
 order = 5
 scene_path = "res://scenes/worlds/world_02_underground_caves/level_05.tscn"
 difficulty = 3
+estimated_minutes = 4.5
 theme = "caves"
 spawn_p1 = Vector2(56, 160)
 spawn_p2 = Vector2(88, 160)
-camera_bounds = Rect2(0, 0, 1984, 800)
-optional_content = PackedStringArray("l05_coins_1", "l05_fruit_green_1", "l05_coins_2")
+camera_bounds = Rect2(0, 0, 1760, 800)
+optional_content = PackedStringArray("l05_coins_1", "l05_fruit_purple_1", "l05_jar_yellow_1", "l05_coins_2")
+layout_version = 2
 
 [sub_resource type="Resource" id="Resource_goond"]
 script = ExtResource("3_i6uxm")
@@ -94,10 +100,11 @@ scene_path = "res://scenes/worlds/world_02_underground_caves/level_06.tscn"
 difficulty = 4
 estimated_minutes = 4.5
 theme = "caves"
-spawn_p1 = Vector2(72, 736)
-spawn_p2 = Vector2(104, 736)
-camera_bounds = Rect2(0, 0, 2400, 800)
-optional_content = PackedStringArray("l06_jar_blue_1", "l06_coins_1")
+spawn_p1 = Vector2(56, 928)
+spawn_p2 = Vector2(88, 928)
+camera_bounds = Rect2(0, 0, 1600, 1024)
+optional_content = PackedStringArray("l06_coins_1", "l06_fruit_green_1")
+layout_version = 2
 
 [sub_resource type="Resource" id="Resource_he4ji"]
 script = ExtResource("3_i6uxm")
@@ -114,6 +121,7 @@ spawn_p2 = Vector2(88, 384)
 camera_bounds = Rect2(0, 0, 2880, 704)
 optional_content = PackedStringArray("l07_boss_1", "l07_fruit_yellow_1", "l07_coins_1", "l07_jar_red_1", "l07_coins_2", "l07_fruit_green_1")
 boss_id = "l07_boss_1"
+layout_version = 2
 
 [sub_resource type="Resource" id="Resource_mw0pe"]
 script = ExtResource("3_i6uxm")
@@ -123,12 +131,13 @@ world_id = "caves"
 order = 8
 scene_path = "res://scenes/worlds/world_02_underground_caves/level_08.tscn"
 difficulty = 5
-estimated_minutes = 5.0
+estimated_minutes = 5.5
 theme = "caves"
 spawn_p1 = Vector2(56, 896)
 spawn_p2 = Vector2(88, 896)
 camera_bounds = Rect2(0, 0, 1920, 960)
 optional_content = PackedStringArray("l08_coins_1", "l08_fruit_red_1", "l08_fruit_green_1", "l08_coins_2")
+layout_version = 2
 
 [sub_resource type="Resource" id="Resource_5ffdt"]
 script = ExtResource("2_dgm12")
@@ -148,10 +157,11 @@ scene_path = "res://scenes/worlds/world_03_abandoned_ruins/level_09.tscn"
 difficulty = 5
 estimated_minutes = 4.5
 theme = "ruins"
-spawn_p1 = Vector2(56, 480)
-spawn_p2 = Vector2(88, 480)
-camera_bounds = Rect2(0, 0, 2720, 576)
-optional_content = PackedStringArray("l09_jar_yellow_1", "l09_fruit_red_1", "l09_coins_1", "l09_coins_2", "l09_fruit_green_1")
+spawn_p1 = Vector2(56, 640)
+spawn_p2 = Vector2(88, 640)
+camera_bounds = Rect2(0, 0, 1920, 768)
+optional_content = PackedStringArray("l09_coins_1", "l09_fruit_red_1", "l09_fruit_green_1")
+layout_version = 2
 
 [sub_resource type="Resource" id="Resource_q7wo8"]
 script = ExtResource("3_i6uxm")
@@ -167,6 +177,7 @@ spawn_p1 = Vector2(56, 512)
 spawn_p2 = Vector2(88, 512)
 camera_bounds = Rect2(0, 0, 2880, 640)
 optional_content = PackedStringArray("l10_coins_1", "l10_fruit_purple_1", "l10_jar_yellow_1")
+layout_version = 2
 
 [sub_resource type="Resource" id="Resource_lrkdn"]
 script = ExtResource("3_i6uxm")
@@ -182,6 +193,7 @@ spawn_p1 = Vector2(56, 576)
 spawn_p2 = Vector2(88, 576)
 camera_bounds = Rect2(0, 0, 2720, 704)
 optional_content = PackedStringArray("l11_coins_1", "l11_fruit_green_1", "l11_fruit_yellow_1")
+layout_version = 2
 
 [sub_resource type="Resource" id="Resource_twswq"]
 script = ExtResource("3_i6uxm")
@@ -191,12 +203,13 @@ world_id = "ruins"
 order = 12
 scene_path = "res://scenes/worlds/world_03_abandoned_ruins/level_12.tscn"
 difficulty = 7
-estimated_minutes = 6.0
+estimated_minutes = 7.0
 theme = "ruins"
 spawn_p1 = Vector2(56, 640)
 spawn_p2 = Vector2(88, 640)
-camera_bounds = Rect2(0, 0, 3040, 736)
+camera_bounds = Rect2(0, 0, 3680, 736)
 optional_content = PackedStringArray("l12_jar_red_1")
+layout_version = 2
 
 [sub_resource type="Resource" id="Resource_eu6go"]
 script = ExtResource("2_dgm12")
@@ -220,6 +233,7 @@ spawn_p1 = Vector2(56, 480)
 spawn_p2 = Vector2(88, 480)
 camera_bounds = Rect2(0, 0, 2720, 576)
 optional_content = PackedStringArray("l13_jar_green_1", "l13_fruit_green_1")
+layout_version = 2
 
 [sub_resource type="Resource" id="Resource_m2vrm"]
 script = ExtResource("3_i6uxm")
@@ -235,6 +249,7 @@ spawn_p1 = Vector2(56, 480)
 spawn_p2 = Vector2(88, 480)
 camera_bounds = Rect2(0, 0, 2880, 704)
 optional_content = PackedStringArray("l14_fruit_purple_1", "l14_coins_1")
+layout_version = 2
 
 [sub_resource type="Resource" id="Resource_qstb7"]
 script = ExtResource("3_i6uxm")
@@ -251,6 +266,7 @@ spawn_p2 = Vector2(88, 544)
 camera_bounds = Rect2(0, 0, 3040, 640)
 optional_content = PackedStringArray("l15_boss_1", "l15_jar_green_1", "l15_coins_1", "l15_fruit_yellow_1")
 boss_id = "l15_boss_1"
+layout_version = 2
 
 [sub_resource type="Resource" id="Resource_iinw8"]
 script = ExtResource("3_i6uxm")
@@ -265,7 +281,8 @@ theme = "lava"
 spawn_p1 = Vector2(56, 608)
 spawn_p2 = Vector2(88, 608)
 camera_bounds = Rect2(0, 0, 2720, 704)
-optional_content = PackedStringArray("l16_fruit_red_1", "l16_coins_1", "l16_fruit_yellow_1", "l16_fruit_green_1")
+optional_content = PackedStringArray("l16_fruit_red_1", "l16_coins_1", "l16_fruit_yellow_1", "l16_fruit_green_1", "l16_coins_2")
+layout_version = 2
 
 [sub_resource type="Resource" id="Resource_xs6a3"]
 script = ExtResource("2_dgm12")
@@ -289,6 +306,7 @@ spawn_p1 = Vector2(56, 544)
 spawn_p2 = Vector2(88, 544)
 camera_bounds = Rect2(0, 0, 2880, 640)
 optional_content = PackedStringArray("l17_jar_yellow_1", "l17_fruit_green_1", "l17_coins_1", "l17_jar_red_1", "l17_coins_2")
+layout_version = 2
 
 [sub_resource type="Resource" id="Resource_umks0"]
 script = ExtResource("3_i6uxm")
@@ -304,6 +322,7 @@ spawn_p1 = Vector2(56, 640)
 spawn_p2 = Vector2(88, 640)
 camera_bounds = Rect2(0, 0, 2880, 736)
 optional_content = PackedStringArray("l18_fruit_green_1")
+layout_version = 2
 
 [sub_resource type="Resource" id="Resource_8uh7d"]
 script = ExtResource("3_i6uxm")
@@ -319,6 +338,7 @@ spawn_p1 = Vector2(56, 704)
 spawn_p2 = Vector2(88, 704)
 camera_bounds = Rect2(0, 0, 2560, 800)
 optional_content = PackedStringArray("l19_jar_blue_1", "l19_coins_1", "l19_fruit_green_1")
+layout_version = 2
 
 [sub_resource type="Resource" id="Resource_kpu0d"]
 script = ExtResource("3_i6uxm")
@@ -334,6 +354,7 @@ spawn_p1 = Vector2(56, 672)
 spawn_p2 = Vector2(88, 672)
 camera_bounds = Rect2(0, 0, 3200, 768)
 optional_content = PackedStringArray("l20_coins_1", "l20_fruit_purple_1", "l20_coins_2", "l20_fruit_green_1")
+layout_version = 2
 
 [sub_resource type="Resource" id="Resource_jxvc0"]
 script = ExtResource("2_dgm12")
@@ -357,6 +378,7 @@ spawn_p1 = Vector2(56, 544)
 spawn_p2 = Vector2(88, 544)
 camera_bounds = Rect2(0, 0, 3040, 736)
 optional_content = PackedStringArray("l21_jar_yellow_1", "l21_fruit_red_1", "l21_coins_1")
+layout_version = 2
 
 [sub_resource type="Resource" id="Resource_ydxek"]
 script = ExtResource("3_i6uxm")
@@ -372,6 +394,7 @@ spawn_p1 = Vector2(72, 1056)
 spawn_p2 = Vector2(104, 1056)
 camera_bounds = Rect2(0, 0, 1920, 1120)
 optional_content = PackedStringArray("l22_jar_green_1", "l22_coins_1")
+layout_version = 2
 
 [sub_resource type="Resource" id="Resource_2birh"]
 script = ExtResource("3_i6uxm")
@@ -388,6 +411,7 @@ spawn_p2 = Vector2(88, 576)
 camera_bounds = Rect2(0, 0, 3200, 800)
 optional_content = PackedStringArray("l23_boss_1", "l23_jar_blue_1", "l23_coins_1")
 boss_id = "l23_boss_1"
+layout_version = 2
 
 [sub_resource type="Resource" id="Resource_ku5vf"]
 script = ExtResource("3_i6uxm")
@@ -397,12 +421,13 @@ world_id = "citadel"
 order = 24
 scene_path = "res://scenes/worlds/world_06_final_citadel/level_24.tscn"
 difficulty = 10
-estimated_minutes = 7.0
+estimated_minutes = 8.0
 theme = "citadel"
 spawn_p1 = Vector2(56, 704)
 spawn_p2 = Vector2(88, 704)
-camera_bounds = Rect2(0, 0, 3680, 800)
+camera_bounds = Rect2(0, 0, 4320, 800)
 optional_content = PackedStringArray("l24_fruit_green_1", "l24_coins_1")
+layout_version = 2
 
 [sub_resource type="Resource" id="Resource_ae7r3"]
 script = ExtResource("2_dgm12")

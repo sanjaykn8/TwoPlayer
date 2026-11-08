@@ -1,8 +1,9 @@
 extends RefCounted
-## World 5, Dark Fortress: earlier mechanics combined into longer, harder sequences. Locks
-## with several keys, enemy distraction, two simultaneous objectives in separate places,
-## dense guard halls with bypass routes, dangerous platform sequences, hidden permanent
-## upgrades behind precise jumps. Difficulty comes from combinations, never from tougher enemies.
+## World 5, Dark Fortress: earlier mechanics combined into longer, harder sequences. Hollow
+## archers on the walks and towers, shieldbearers holding doorways, saw blades over spike
+## trenches and along the halls, fire jets, wind over the broken towers, locks with several
+## keys and two objectives in separate places, and the Hollow Captain guarding the last door.
+## Difficulty comes from combinations and positioning, never from tougher numbers.
 
 const WORLD := {"id": "fortress", "title": "Dark Fortress", "theme": "fortress", "music": "fortress",
 	"dir": "world_05_dark_fortress"}
@@ -17,7 +18,7 @@ static func levels() -> Array:
 ## under a cracked floor tile (red jar past a spike bed); platforms over a spiked pit; twin
 ## targets before the exit.
 static func l17() -> Dictionary:
-	return {"id": "l17", "title": "Iron Gate Keep", "world": "fortress", "width": 180, "height": 40,
+	return {"id": "l17", "layout": 2, "title": "Iron Gate Keep", "world": "fortress", "width": 180, "height": 40,
 		"difficulty": 7, "minutes": 5.5, "spawn": [3, 34], "ops": [
 		["fill", 0, 0, 0, 39], ["fill", 179, 0, 179, 39], ["ground", 1, 178, 34],
 		["fill", 50, 1, 50, 29], ["ledge", 56, 104, 28], ["ladder", 54, 28, 34],
@@ -26,7 +27,7 @@ static func l17() -> Dictionary:
 		["clear", 115, 34, 145, 36], ["clear", 145, 34, 145, 34], ["ladder", 145, 34, 37],
 		["fill", 170, 1, 170, 29],
 		["clue", 6, 34, "The keep has\nthree keys."],
-		["slime", "g", 18, 34, -5, 5], ["spikes", 26, 27, 34],
+		["enemy", "guard", 18, 34, -4, 4], ["spikes", 26, 27, 34],
 		["clue", 31, 34, "Three keys.\nTwo hands."],
 		["plate", "PlateA", 34, 34],
 		["plate", "PlateB", 40, 34, {"mode": 2, "active_time": 3.0}],
@@ -35,14 +36,17 @@ static func l17() -> Dictionary:
 		["gate", "KeepGate", 50, 34, 5, "KeepLock", 1],
 		["jar", "yellow", 52, 34],
 		["clue", 57, 34, "The quiet road\nruns high."],
-		["slime", "p", 62, 34, -4, 4], ["slime", "g", 70, 34, -4, 4], ["slime", "p", 78, 34, -3, 3],
-		["slime", "p", 96, 34, -3, 3], ["slime", "g", 102, 34, -3, 3],
+		["enemy", "grunt", 62, 34, -4, 4], ["enemy", "guard", 70, 34, -4, 4], ["slime", "p", 78, 34, -3, 3],
+		["enemy", "archer", 100, 34, -2, 2], ["enemy", "archer", 98, 28, -2, 2],
+		["fire", 66, 34, 2], ["fire", 74, 34, 2, {"start_offset": 0.8}],
 		["fruit", "green", 2, 78, 28], ["coins", 3, 100, 28],
 		["spikes", 87, 89, 39], ["jar", "red", 90, 39], ["coins", 4, 83, 39],
 		["save", 110, 34],
 		["spikes", 115, 144, 37],
 		["moving", "M1", 115, 34, 3, {"travel": Vector2i(12, 0), "speed": 38.0}],
 		["moving", "M2", 131, 34, 3, {"travel": Vector2i(11, 0), "speed": 38.0, "start_delay": 1.5}],
+		["saw", 118, 30, 9, 0, {"speed": 50.0}], ["saw", 134, 30, 9, 0, {"speed": 50.0, "start_phase": 0.5}],
+		["enemy", "guard", 160, 34, -3, 3],
 		["clue", 150, 34, "Strike as one."],
 		["target", "TargetL", 154, 34], ["target", "TargetR", 166, 34],
 		["logic", "Sync", ["TargetL", "TargetR"], 2, {"window": 2.0, "latch": true, "distinct_players": true}],
@@ -56,7 +60,7 @@ static func l17() -> Dictionary:
 ## while held and a crumbling catwalk. Both machines must be finished (latched) to open the
 ## clock door. Then a pen of slimes around a plate that holds the last gate (latched past it).
 static func l18() -> Dictionary:
-	return {"id": "l18", "title": "Clockwork Halls", "world": "fortress", "width": 180, "height": 46,
+	return {"id": "l18", "layout": 2, "title": "Clockwork Halls", "world": "fortress", "width": 180, "height": 46,
 		"difficulty": 8, "minutes": 5.5, "spawn": [3, 40], "ops": [
 		["fill", 0, 0, 0, 45], ["fill", 179, 0, 179, 45], ["ground", 1, 178, 40],
 		["fill", 25, 24, 95, 26], ["ladder", 24, 24, 40],
@@ -72,12 +76,13 @@ static func l18() -> Dictionary:
 		["timed", "BridgeB", 47, 40, 3, {"mode": 1, "active_time": 4.0, "warning_time": 1.0, "start_active": false}],
 		["control", "BridgeA", "BridgeSwitch", 2], ["control", "BridgeB", "BridgeSwitch", 2],
 		["switch", "LowLatch", 58, 40, {"mode": 2}],
-		["slime", "p", 72, 40, -5, 5], ["slime", "g", 84, 40, -5, 5],
+		["enemy", "grunt", 72, 40, -5, 5], ["enemy", "archer", 88, 40, -2, 2],
+		["saw", 63, 39, 12, 0, {"speed": 55.0}],
 		["plate", "HighPlate", 30, 24],
 		["collapse", "Cat1", 60, 24, 2], ["collapse", "Cat2", 63, 24, 2], ["collapse", "Cat3", 66, 24, 2], ["collapse", "Cat4", 69, 24, 2],
 		["switch", "HighLatch", 90, 24, {"mode": 2}],
 		["logic", "HighMachine", ["HighPlate", "HighLatch"], 1, {"latch": true}],
-		["slime", "p", 80, 24, -5, 5],
+		["enemy", "guard", 80, 24, -5, 5], ["fire", 75, 24, 2, {"start_offset": 0.6}],
 		["logic", "ClockLock", ["LowLatch", "HighMachine"], 0, {"latch": true}],
 		["gate", "ClockGate", 100, 40, 6, "ClockLock", 1],
 		["fruit", "green", 3, 93, 24],
@@ -89,7 +94,7 @@ static func l18() -> Dictionary:
 		["logic", "PenLogic", ["PenPlate", "PenLatch"], 1],
 		["gate", "PenGate", 150, 40, 6, "PenLogic", 0],
 		["tile", 146, 39],
-		["slime", "p", 163, 40, -4, 4],
+		["enemy", "archer", 166, 40, -2, 2], ["enemy", "guard", 160, 40, -3, 3],
 		["exit", 172, 40],
 	]}
 
@@ -100,7 +105,7 @@ static func l18() -> Dictionary:
 ## courtyard climb back to the tower it fell from. Optional: a precise climb above the last
 ## tower to a blue jar.
 static func l19() -> Dictionary:
-	return {"id": "l19", "title": "Broken Towers", "world": "fortress", "width": 160, "height": 50,
+	return {"id": "l19", "layout": 2, "title": "Broken Towers", "world": "fortress", "width": 160, "height": 50,
 		"difficulty": 8, "minutes": 5.5, "spawn": [3, 44], "ops": [
 		["fill", 0, 0, 0, 49], ["fill", 159, 0, 159, 49], ["ground", 1, 158, 44],
 		["fill", 20, 22, 28, 43], ["clear", 22, 23, 26, 43], ["clear", 24, 22, 24, 22], ["ladder", 24, 22, 44],
@@ -112,12 +117,13 @@ static func l19() -> Dictionary:
 		["fill", 140, 1, 140, 38],
 		["ledge", 117, 120, 13], ["ledge", 112, 115, 10],
 		["clue", 6, 44, "Climb the broken\nteeth of the keep."],
-		["slime", "g", 12, 44, -6, 5],
+		["enemy", "grunt", 13, 44, -4, 4],
 		["collapse", "Br1", 30, 21, 2], ["collapse", "Br2", 34, 20, 2], ["collapse", "Br3", 38, 19, 2],
 		["collapse", "Br4", 42, 19, 2], ["collapse", "Br5", 46, 18, 2],
-		["slime", "p", 54, 18, -3, 3],
+		["enemy", "guard", 54, 18, -3, 3],
 		["moving", "Span", 59, 18, 3, {"travel": Vector2i(20, 0), "speed": 40.0}],
-		["slime", "p", 86, 20, -3, 3],
+		["enemy", "archer", 88, 20, -2, 1],
+		["wind", 60, 10, 80, 17, {"direction": -1, "strength": 30.0}],
 		["save", 84, 20],
 		["timed", "Hop1", 92, 19, 2, {"active_time": 2.2, "disabled_time": 1.3}],
 		["timed", "Hop2", 96, 18, 2, {"active_time": 2.2, "disabled_time": 1.3, "start_offset": 0.7}],
@@ -125,10 +131,10 @@ static func l19() -> Dictionary:
 		["timed", "Hop4", 104, 16, 2, {"active_time": 2.2, "disabled_time": 1.3}],
 		["timed", "Hop5", 108, 16, 2, {"active_time": 2.2, "disabled_time": 1.3, "start_offset": 0.7}],
 		["switch", "TowerSwitch", 118, 16, {"mode": 2}],
-		["slime", "g", 115, 16, -2, 3],
+		["enemy", "guard", 115, 16, -2, 3],
 		["jar", "blue", 113, 10], ["coins", 4, 118, 13],
 		["gate", "CourtGate", 140, 44, 6, "TowerSwitch", 1],
-		["fruit", "green", 2, 130, 44], ["slime", "p", 132, 44, -5, 5],
+		["fruit", "green", 2, 130, 44], ["enemy", "grunt", 133, 44, -4, 4], ["enemy", "archer", 148, 44, -2, 2],
 		["exit", 152, 44],
 	]}
 
@@ -139,7 +145,7 @@ static func l19() -> Dictionary:
 ## targets and a two-plate step struck together. Optional: a coin vault under a cracked
 ## floor tile (a ladder leads back out) and purple fruit.
 static func l20() -> Dictionary:
-	return {"id": "l20", "title": "The Black Bastion", "world": "fortress", "width": 200, "height": 48,
+	return {"id": "l20", "layout": 2, "title": "The Black Bastion", "world": "fortress", "width": 200, "height": 48,
 		"difficulty": 9, "minutes": 6.5, "spawn": [3, 42], "ops": [
 		["fill", 0, 0, 0, 47], ["fill", 199, 0, 199, 47], ["ground", 1, 198, 42],
 		["clear", 20, 42, 34, 44], ["ladder", 34, 42, 45], ["ledge", 20, 22, 42],
@@ -152,12 +158,12 @@ static func l20() -> Dictionary:
 		["clear", 135, 42, 135, 42], ["ladder", 135, 42, 47],
 		["clue", 6, 42, "The bastion\nnever sleeps."],
 		["plate", "PitPlate", 27, 45],
-		["slime", "p", 24, 45, -3, 8], ["slime", "g", 31, 45, -6, 2],
+		["slime", "p", 24, 45, -3, 8], ["enemy", "guard", 31, 45, -6, 2],
 		["switch", "OuterLatch", 54, 42, {"mode": 2}],
 		["logic", "OuterLogic", ["PitPlate", "OuterLatch"], 1],
 		["gate", "OuterGate", 50, 42, 6, "OuterLogic", 0],
 		["save", 56, 42],
-		["slime", "p", 60, 42, -3, 3],
+		["enemy", "grunt", 59, 42, -2, 2],
 		["plate", "LiftPlate", 62, 42],
 		["moving", "TowerLift", 66, 42, 3, {"travel": Vector2i(0, -16), "speed": 40.0, "auto_start": false}],
 		["switch", "LiftLatch", 77, 26, {"mode": 2}],
@@ -165,7 +171,7 @@ static func l20() -> Dictionary:
 		["control", "TowerLift", "LiftLogic", 0],
 		["coins", 4, 82, 23], ["fruit", "purple", 3, 81, 23],
 		["collapse", "R1", 91, 26, 2], ["collapse", "R2", 95, 26, 2], ["collapse", "R3", 99, 26, 2], ["collapse", "R4", 102, 26, 2],
-		["slime", "p", 110, 26, -6, 6],
+		["enemy", "archer", 114, 26, -4, 4], ["enemy", "guard", 108, 26, -4, 4],
 		["moving", "Drop", 124, 42, 3, {"travel": Vector2i(0, -16), "speed": 40.0}],
 		["save", 130, 42],
 		["coins", 6, 143, 46], ["fruit", "green", 2, 137, 46],
@@ -177,6 +183,12 @@ static func l20() -> Dictionary:
 		["logic", "Steps", ["StepA", "StepB"], 0, {"latch": true, "distinct_players": true}],
 		["logic", "InnerSeal", ["Targets", "Steps"], 0, {"latch": true}],
 		["gate", "InnerGate", 160, 42, 6, "InnerSeal", 1],
-		["slime", "p", 170, 42, -5, 5], ["slime", "g", 180, 42, -5, 5],
-		["exit", 192, 42],
+		["save", 163, 42],
+		["fill", 166, 1, 194, 33],
+		["clue", 168, 42, "The captain
+keeps the last door."],
+		["arena", "Keep", 168, 34, 192, 41],
+		["gate", "KeepIn", 165, 42, 8, "Keep", 0], ["gate", "KeepOut", 194, 42, 8, "Keep", 0],
+		["enemy", "captain", 186, 42, 0, 0],
+		["exit", 196, 42],
 	]}

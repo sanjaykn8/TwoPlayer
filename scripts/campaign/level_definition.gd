@@ -25,3 +25,6 @@ extends Resource
 @export var optional_content: PackedStringArray = []
 ## Optional boss id in this level ("" = none).
 @export var boss_id := ""
+## Version of the level's layout. Saves record it; a mid-level save made with another layout
+## version starts the level from its spawn instead (run progress is kept).
+@export var layout_version := 1

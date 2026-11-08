@@ -1,8 +1,9 @@
 extends RefCounted
-## World 6, Final Citadel: the hardest combinations of everything taught before, with no new
-## rules. Precise platforming on bridges and spires, mixed slime packs, timed gates, several
-## hazards at once, multi-stage locks, hidden rewards, the third optional boss (Citadel
-## Warden, level 23), and the campaign's end at the Dawn Gate (level 24).
+## World 6, Final Citadel: the hardest combinations of everything taught before. Ice under the
+## timed doors (stopping takes longer), mixed packs of shieldbearers, archers, brutes and
+## ember slimes, saws and fire, precise platforming on bridges and spires, multi-stage locks,
+## the third optional boss (Citadel Warden, level 23), and the campaign's end: past the Dawn
+## Gate the Crowned Hollow waits in the throne hall (level 24), a three-phase final fight.
 
 const WORLD := {"id": "citadel", "title": "Final Citadel", "theme": "citadel", "music": "citadel",
 	"dir": "world_06_final_citadel"}
@@ -17,7 +18,7 @@ static func levels() -> Array:
 ## moat, and a second chasm crossed on alternating blinking and solid stones. Optional: a high
 ## ledge above the second chasm (red fruit), a yellow jar.
 static func l21() -> Dictionary:
-	return {"id": "l21", "title": "Frost Causeway", "world": "citadel", "width": 190, "height": 46,
+	return {"id": "l21", "layout": 2, "title": "Frost Causeway", "world": "citadel", "width": 190, "height": 46,
 		"difficulty": 8, "minutes": 5.5, "spawn": [3, 34], "ops": [
 		["fill", 0, 0, 0, 45], ["fill", 189, 0, 189, 45],
 		["ground", 1, 25, 34], ["ground", 26, 60, 42], ["ground", 61, 119, 34], ["ground", 120, 160, 42], ["ground", 161, 188, 34],
@@ -29,7 +30,8 @@ static func l21() -> Dictionary:
 		["ledge", 141, 144, 31],
 		["clue", 6, 34, "Cold stone, thin road.\nWalk it together."],
 		["spikes", 28, 58, 42],
-		["slime", "p", 31, 34, -4, 4], ["slime", "g", 44, 34, -4, 4], ["slime", "p", 56, 34, -3, 3],
+		["enemy", "guard", 31, 34, -4, 4], ["slime", "g", 44, 34, -4, 4], ["enemy", "archer", 57, 34, -2, 2],
+		["ice", 61, 79, 34], ["ice", 81, 90, 34], ["ice", 161, 188, 34],
 		["save", 63, 34], ["jar", "yellow", 66, 34],
 		["clue", 68, 34, "Quick feet.\nQuicker friends."],
 		["switch", "SwA", 72, 34, {"mode": 1, "active_time": 0.4}],
@@ -46,7 +48,7 @@ static func l21() -> Dictionary:
 		["blink", "B4", 146, 34, 2, {"active_time": 2.2, "disabled_time": 1.3}],
 		["blink", "B5", 154, 34, 2, {"active_time": 2.2, "disabled_time": 1.3, "start_offset": 0.7}],
 		["fruit", "red", 3, 141, 31], ["coins", 4, 144, 31],
-		["slime", "p", 170, 34, -5, 5], ["slime", "p", 178, 34, -3, 3],
+		["enemy", "grunt", 170, 34, -5, 5], ["enemy", "archer", 180, 34, -2, 2], ["enemy", "ember", 175, 34, -3, 3],
 		["exit", 184, 34],
 	]}
 
@@ -57,7 +59,7 @@ static func l21() -> Dictionary:
 ## together. Falls land on the spire floor (partly spiked) to climb again. Optional: a side
 ## climb to a green jar.
 static func l22() -> Dictionary:
-	return {"id": "l22", "title": "Spire of Silence", "world": "citadel", "width": 120, "height": 70,
+	return {"id": "l22", "layout": 2, "title": "Spire of Silence", "world": "citadel", "width": 120, "height": 70,
 		"difficulty": 9, "minutes": 5.5, "spawn": [4, 66], "ops": [
 		["fill", 0, 0, 0, 69], ["fill", 119, 0, 119, 69], ["ground", 1, 118, 66],
 		["ledge", 30, 36, 62], ["ledge", 47, 55, 50],
@@ -66,13 +68,13 @@ static func l22() -> Dictionary:
 		["clue", 8, 66, "The silent road\nis the longer road."],
 		["tile", 28, 65], ["spikes", 38, 40, 66], ["spikes", 44, 46, 66],
 		["collapse", "C1", 38, 59, 2], ["collapse", "C2", 41, 56, 2], ["collapse", "C3", 44, 53, 2],
-		["slime", "g", 52, 50, -4, 3],
+		["enemy", "grunt", 52, 50, -4, 3],
 		["plate", "LandingPlate", 48, 50],
 		["moving", "SpireLift", 56, 50, 3, {"travel": Vector2i(0, -16), "speed": 38.0, "auto_start": false}],
 		["switch", "LiftLatch", 62, 34, {"mode": 2}],
 		["logic", "LiftLogic", ["LandingPlate", "LiftLatch"], 1],
 		["control", "SpireLift", "LiftLogic", 0],
-		["slime", "p", 68, 34, -4, 4],
+		["enemy", "archer", 70, 34, -3, 3], ["enemy", "guard", 63, 34, -3, 3],
 		["save", 60, 34],
 		["blink", "S1", 73, 31, 2, {"active_time": 2.4, "disabled_time": 1.2, "start_offset": 1.8}],
 		["blink", "S2", 70, 28, 2, {"active_time": 2.4, "disabled_time": 1.2, "start_offset": 1.2}],
@@ -83,7 +85,7 @@ static func l22() -> Dictionary:
 		["target", "TopTarget", 52, 10], ["target", "LowTarget", 72, 34],
 		["logic", "SpireSync", ["TopTarget", "LowTarget"], 2, {"window": 2.0, "latch": true, "distinct_players": true}],
 		["gate", "SummitGate", 50, 10, 3, "SpireSync", 1],
-		["slime", "p", 46, 10, -5, 2],
+		["enemy", "guard", 46, 10, -4, 2],
 		["exit", 41, 10],
 	]}
 
@@ -93,7 +95,7 @@ static func l22() -> Dictionary:
 ## over lava. Optional: the Citadel Warden in the vault below (drop through the cracked floor;
 ## its armour yields only to strikes from both knights together); its niche holds a blue jar.
 static func l23() -> Dictionary:
-	return {"id": "l23", "title": "Warden's Vault", "world": "citadel", "width": 200, "height": 50,
+	return {"id": "l23", "layout": 2, "title": "Warden's Vault", "world": "citadel", "width": 200, "height": 50,
 		"difficulty": 9, "minutes": 6.0, "spawn": [3, 36], "ops": [
 		["fill", 0, 0, 0, 49], ["fill", 199, 0, 199, 49], ["ground", 1, 198, 36],
 		["hot", 32, 34, 36], ["fill", 54, 1, 54, 30], ["fill", 100, 1, 100, 29],
@@ -102,7 +104,8 @@ static func l23() -> Dictionary:
 		["clear", 148, 36, 148, 36], ["ladder", 148, 36, 48],
 		["lava", 160, 175, 36, 2],
 		["clue", 6, 36, "The warden counts\nevery blow."],
-		["slime", "g", 18, 36, -5, 5], ["slime", "p", 26, 36, -4, 4], ["save", 40, 36],
+		["enemy", "guard", 18, 36, -5, 5], ["enemy", "ember", 26, 36, -4, 4], ["save", 40, 36],
+		["fire", 30, 36, 2], ["fire", 37, 36, 2, {"start_offset": 1.0}],
 		["plate", "DoorPlate", 46, 36],
 		["switch", "DoorLatch", 60, 36, {"mode": 2}],
 		["logic", "DoorLogic", ["DoorPlate", "DoorLatch"], 1],
@@ -113,17 +116,17 @@ static func l23() -> Dictionary:
 		["switch", "Q3", 90, 30, {"mode": 1, "active_time": 0.4}],
 		["logic", "Gallery", ["Q1", "Q3", "Q2"], 3, {"latch": true, "window": 6.0}],
 		["gate", "GalleryGate", 100, 36, 7, "Gallery", 1],
-		["slime", "p", 80, 36, -6, 6],
+		["enemy", "brute", 80, 36, -6, 6], ["enemy", "archer", 92, 30, -2, 2],
 		["save", 103, 36],
 		["clue", 108, 36, "Beneath, the warden.\nOnly two hands as one\nbreak his armour."],
 		["seal", "WardenSeal"],
 		["boss", "boss_citadel_warden", 128, 48, -18, 18, "WardenSeal"],
 		["gate", "RewardGate", 108, 48, 3, "WardenSeal", 1],
 		["jar", "blue", 106, 48], ["coins", 8, 105, 48],
-		["slime", "p", 120, 36, -6, 6], ["slime", "g", 140, 36, -5, 5],
+		["enemy", "guard", 120, 36, -6, 6], ["enemy", "grunt", 140, 36, -5, 5], ["saw", 160, 35, 10, 0, {"speed": 55.0}],
 		["save", 156, 36],
 		["collapse", "C1", 161, 35, 2], ["collapse", "C2", 165, 35, 2], ["collapse", "C3", 169, 35, 2], ["collapse", "C4", 173, 35, 2],
-		["slime", "p", 182, 36, -4, 4], ["slime", "g", 188, 36, -3, 3],
+		["enemy", "archer", 186, 36, -2, 2], ["slime", "p", 182, 36, -4, 4],
 		["exit", 194, 36],
 	]}
 
@@ -135,17 +138,17 @@ static func l23() -> Dictionary:
 ## three switches in order. Beyond it, the exit on the dais. Optional: a ledge above the
 ## battlements (green fruit, coins).
 static func l24() -> Dictionary:
-	return {"id": "l24", "title": "Crown of Dawn", "world": "citadel", "width": 230, "height": 50,
-		"difficulty": 10, "minutes": 7.0, "spawn": [3, 44], "ops": [
-		["fill", 0, 0, 0, 49], ["fill", 229, 0, 229, 49], ["ground", 1, 228, 44],
+	return {"id": "l24", "layout": 2, "title": "Crown of Dawn", "world": "citadel", "width": 270, "height": 50,
+		"difficulty": 10, "minutes": 8.0, "spawn": [3, 44], "ops": [
+		["fill", 0, 0, 0, 49], ["fill", 269, 0, 269, 49], ["ground", 1, 268, 44],
 		["hot", 26, 28, 44],
 		["lava", 46, 57, 44, 2], ["ground", 58, 59, 43], ["lava", 60, 80, 44, 2],
 		["fill", 95, 26, 165, 38], ["ladder", 94, 26, 44], ["ledge", 100, 103, 23],
 		["fill", 120, 1, 120, 21], ["fill", 150, 1, 150, 21],
 		["clear", 130, 26, 136, 27],
-		["fill", 206, 1, 206, 36], ["ground", 210, 228, 42],
+		["fill", 206, 1, 206, 36],
 		["clue", 6, 44, "Here the long road ends.\nWalk it as two."],
-		["spikes", 14, 15, 44], ["slime", "p", 20, 44, -4, 4], ["slime", "g", 34, 44, -5, 5],
+		["spikes", 14, 15, 44], ["enemy", "grunt", 20, 44, -4, 4], ["enemy", "guard", 34, 44, -5, 5],
 		["save", 40, 44],
 		["collapse", "C1", 47, 43, 2], ["collapse", "C2", 51, 43, 2], ["collapse", "C3", 55, 43, 2],
 		["plate", "RelayP", 58, 43],
@@ -160,7 +163,7 @@ static func l24() -> Dictionary:
 		["switch", "SwL1", 115, 44, {"mode": 2}],
 		["gate", "GU1", 120, 26, 4, "SwL1", 1],
 		["fruit", "green", 3, 101, 23], ["coins", 5, 103, 23],
-		["slime", "p", 112, 26, -4, 4],
+		["enemy", "archer", 113, 26, -3, 3],
 		["spikes", 130, 136, 28],
 		["blink", "U1", 131, 26, 2, {"active_time": 2.2, "disabled_time": 1.3}],
 		["blink", "U2", 134, 26, 2, {"active_time": 2.2, "disabled_time": 1.3, "start_offset": 1.0}],
@@ -169,8 +172,8 @@ static func l24() -> Dictionary:
 		["logic", "L2", ["PL2", "SwU2"], 1],
 		["gate", "GU2", 150, 26, 4, "L2", 0],
 		["gate", "GL2", 140, 44, 5, "SwU2", 1],
-		["slime", "g", 160, 26, -4, 4],
-		["slime", "p", 102, 44, -5, 5], ["slime", "p", 132, 44, -5, 5], ["spikes", 136, 137, 44], ["tile", 146, 43],
+		["enemy", "guard", 160, 26, -4, 4],
+		["enemy", "grunt", 102, 44, -5, 5], ["enemy", "archer", 133, 44, -3, 3], ["spikes", 136, 137, 44], ["tile", 146, 43],
 		["save", 168, 44],
 		["clue", 170, 44, "Strike as one. Step as one.\nThen low to high."],
 		["target", "TA", 172, 44], ["target", "TB", 186, 44],
@@ -184,6 +187,11 @@ static func l24() -> Dictionary:
 		["logic", "SeqLock", ["Q1", "Q2", "Q3"], 3, {"latch": true, "window": 5.0}],
 		["logic", "DawnSeal", ["SyncLock", "StepLock", "SeqLock"], 0, {"latch": true}],
 		["gate", "DawnGate", 206, 44, 7, "DawnSeal", 1],
-		["clue", 213, 42, "Dawn waits\nfor two."],
-		["exit", 221, 42],
+		["save", 209, 44],
+		["fill", 207, 1, 262, 33],
+		["clue", 213, 44, "Dawn waits\nfor two."],
+		["arena", "Throne", 212, 34, 258, 43],
+		["gate", "ThroneIn", 210, 44, 10, "Throne", 0], ["gate", "ThroneOut", 260, 44, 10, "Throne", 0],
+		["enemy", "crowned", 240, 44, 0, 0],
+		["exit", 264, 44],
 	]}

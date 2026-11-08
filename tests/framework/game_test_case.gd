@@ -54,6 +54,11 @@ func assert_lt(actual: float, threshold: float, message: String) -> void:
 		fail("%s (expected < %.3f, got %.3f)" % [message, threshold, actual])
 
 
+func assert_not_null(value: Variant, message: String) -> void:
+	if value == null:
+		fail("%s (got null)" % message)
+
+
 ## Waits for `count` physics ticks.
 func physics_frames(count: int) -> void:
 	for i in count:

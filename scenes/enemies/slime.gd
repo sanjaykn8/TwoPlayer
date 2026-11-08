@@ -184,6 +184,13 @@ func add_stagger_progress(points: int, source: Node = null) -> SlimeStagger.Outc
 	return outcome
 
 
+## Defeats the slime at once (scripted events and test tools). Drops and saves as usual.
+func kill() -> void:
+	if state != State.DEAD:
+		stagger.dead = true
+		_die()
+
+
 func debug_text() -> String:
 	var tgt := "-"
 	if target != null and target.has_method(&"player_id"):

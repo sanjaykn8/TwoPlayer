@@ -59,8 +59,21 @@ static func capture(level: Node, knights: Array) -> Dictionary:
 				puzzles[node.puzzle_id] = live
 		elif node is PlatformBody and node.save_id != "":
 			platforms[node.save_id] = node.capture_live()
-	return {"level_id": str(level.get_meta(&"level_id", "")), "players": players, "enemies": enemies,
+	var level_id := str(level.get_meta(&"level_id", ""))
+	var layout := LevelCatalog.level(level_id).layout_version if LevelCatalog.is_known_level(level_id) else 1
+	return {"level_id": level_id, "layout": layout, "players": players, "enemies": enemies,
 		"coins": coins, "puzzles": puzzles, "platforms": platforms}
+
+
+## The saved world if it was made with the level's current layout, else {} (the level then
+## starts from its spawn; the run's progress is unaffected). Saves from before layouts were
+## versioned count as layout 1.
+static func for_current_layout(world: Dictionary, level_id: String) -> Dictionary:
+	if world.is_empty() or not LevelCatalog.is_known_level(level_id):
+		return world
+	if int(world.get("layout", 1)) != LevelCatalog.level(level_id).layout_version:
+		return {}
+	return world
 
 
 static func _free_id(prefix: String, used: Dictionary) -> String:

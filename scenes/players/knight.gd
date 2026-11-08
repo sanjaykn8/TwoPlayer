@@ -61,6 +61,8 @@ var _restore_one_way := false
 var _restore_players := false
 ## Hit pause: while > 0 the knight holds still (a hit landed).
 var _hitstop := 0.0
+## Environment zones (updrafts, wind, ice) the knight is inside.
+var _zones: Array[EnvironmentZone] = []
 var _point_query := PhysicsPointQueryParameters2D.new()
 
 @onready var sprite: AnimatedSprite2D = $Sprite
@@ -186,6 +188,36 @@ func teleport_to(target: Vector2) -> void:
 	reset_physics_interpolation()
 
 
+## Launches the knight upward (spring mushrooms). A launch is not a jump: releasing Up
+## does not cut it short.
+func bounce(speed: float) -> void:
+	if state == State.DEAD or state == State.DISABLED:
+		return
+	if state == State.CLIMBING:
+		_leave_climb()
+	velocity.y = -speed
+	_jump_cut_available = false
+	_coyote_timer = 0.0
+	_jump_buffer_timer = 0.0
+	_set_state(State.AIRBORNE)
+
+
+func enter_zone(zone: EnvironmentZone) -> void:
+	if not _zones.has(zone):
+		_zones.append(zone)
+
+
+func leave_zone(zone: EnvironmentZone) -> void:
+	_zones.erase(zone)
+
+
+func in_zone(kind: EnvironmentZone.Kind) -> bool:
+	for zone in _zones:
+		if is_instance_valid(zone) and zone.kind == kind:
+			return true
+	return false
+
+
 func set_disabled(disabled: bool) -> void:
 	if state == State.DEAD:
 		return
@@ -289,10 +321,23 @@ func _process_platforming(delta: float) -> void:
 
 	var top_speed := (config.crouch_speed if state == State.CROUCHING else config.run_speed) * progress.speed_multiplier()
 	var target_speed := input.move_x * top_speed
+	var friction := 1.0
+	var updraft := 0.0
+	for zone in _zones:
+		if not is_instance_valid(zone):
+			continue
+		match zone.kind:
+			EnvironmentZone.Kind.WIND:
+				target_speed += zone.push()
+			EnvironmentZone.Kind.ICE:
+				friction = minf(friction, zone.friction())
+			EnvironmentZone.Kind.UPDRAFT:
+				updraft = maxf(updraft, zone.lift_speed())
 	var rate: float
 	if on_floor:
 		var reversing := input.move_x != 0 and signf(velocity.x) == -input.move_x
 		rate = config.ground_deceleration if (input.move_x == 0 or reversing) else config.ground_acceleration
+		rate *= friction
 	else:
 		rate = config.air_deceleration if input.move_x == 0 else config.air_acceleration
 	velocity.x = move_toward(velocity.x, target_speed, rate * delta)
@@ -300,7 +345,12 @@ func _process_platforming(delta: float) -> void:
 		facing = input.move_x
 
 	_apply_gravity(delta)
-	if velocity.y < 0.0:
+	if updraft > 0.0:
+		velocity.y = move_toward(velocity.y, -updraft, EnvironmentZone.CONFIG.updraft_acceleration * delta)
+		_jump_cut_available = false
+		if state != State.AIRBORNE and velocity.y < 0.0:
+			_set_state(State.AIRBORNE)
+	elif velocity.y < 0.0:
 		if _jump_cut_available and not input.up_held:
 			velocity.y *= config.jump_cut_multiplier
 			_jump_cut_available = false
@@ -315,6 +365,9 @@ func _apply_gravity(delta: float) -> void:
 
 func _jump() -> void:
 	velocity.y = -config.jump_velocity
+	# Stack boost: jumping off the partner's head goes higher (co-op traversal).
+	if floor_kind == FloorKind.KNIGHT:
+		velocity.y *= EnvironmentZone.CONFIG.stack_boost_multiplier
 	_jump_buffer_timer = 0.0
 	_coyote_timer = 0.0
 	_jump_cut_available = true

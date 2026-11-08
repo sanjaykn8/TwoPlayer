@@ -6,7 +6,8 @@ extends CanvasLayer
 ##   top-left   Player One (tag, portrait, hearts, upgrades, timed effects)
 ##   top-right  Player Two (mirrored)
 ##   top-centre the shared coin total and, under it in the same panel, world and level
-##   bottom     short notices (save failures, recoveries) and a brief "Saved" mark
+##   bottom     short notices (save failures, recoveries) and a brief "Saved" mark; the boss
+##              health bar while a mini-boss or the final boss is fighting
 ## Everything updates from signals; a new run (RunState.reset) is picked up automatically.
 
 const COIN_SHEET := preload("res://assets/sprites/coin.png")
@@ -20,6 +21,7 @@ var coin_label: Label
 var location_label: Label
 var notice_label: Label
 var saved_label: Label
+var boss_bar: BossBar
 
 var _root: Control
 var _notice_left := 0.0
@@ -32,6 +34,7 @@ func _init() -> void:
 
 
 func _ready() -> void:
+	add_to_group(BossEnemy.LISTENERS)
 	_build()
 	var game := get_parent() as CampaignGame
 	if game != null:
@@ -111,6 +114,14 @@ func _build() -> void:
 	saved_label.add_theme_color_override(&"font_color", UiTheme.TEXT_DIM)
 	saved_label.visible = false
 	_root.add_child(saved_label)
+	boss_bar = BossBar.new()
+	boss_bar.set_anchors_and_offsets_preset(Control.PRESET_CENTER_BOTTOM)
+	boss_bar.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	boss_bar.offset_left = -BossBar.WIDTH * 0.5
+	boss_bar.offset_right = BossBar.WIDTH * 0.5
+	boss_bar.offset_top = -40
+	boss_bar.offset_bottom = -22
+	_root.add_child(boss_bar)
 
 
 func bind_campaign(game: CampaignGame) -> void:
@@ -123,7 +134,22 @@ func bind_campaign(game: CampaignGame) -> void:
 
 ## Re-reads the knights of the current level (after a level load, restart or team wipe).
 func _on_level_started(_level_id: String) -> void:
+	boss_bar.visible = false
 	_bind_run()
+
+
+# --- Boss bar (BossEnemy.LISTENERS) ---------------------------------------------------
+
+func on_boss_engaged(boss: BossEnemy) -> void:
+	boss_bar.show_boss(boss.boss_name(), boss.health, boss.stats.max_health)
+
+
+func on_boss_health(_boss: BossEnemy, current: int, maximum: int) -> void:
+	boss_bar.set_health(current, maximum)
+
+
+func on_boss_defeated(_boss: BossEnemy) -> void:
+	boss_bar.defeated()
 
 
 func _bind_run() -> void:

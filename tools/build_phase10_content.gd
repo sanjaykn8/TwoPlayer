@@ -65,6 +65,7 @@ func _definition(spec: Dictionary, w: Dictionary, order: int, scene_path: String
 	def.scene_path = scene_path
 	def.difficulty = spec.difficulty
 	def.estimated_minutes = spec.minutes
+	def.layout_version = int(spec.get("layout", 1))
 	def.theme = w.theme
 	def.spawn_p1 = (root.get_node("SpawnP1") as Node2D).position
 	def.spawn_p2 = (root.get_node("SpawnP2") as Node2D).position

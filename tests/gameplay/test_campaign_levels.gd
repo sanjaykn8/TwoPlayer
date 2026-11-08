@@ -92,7 +92,8 @@ func test_every_level_is_playable() -> void:
 		var main: Dictionary = a.analyze(false)
 		assert_true(a.exit_reachable(main), "%s: the exit is reachable without optional content" % id)
 		assert_eq(a.open_gates.size(), a.gates.size() - _boss_gates(a), "%s: every non-boss gate can be opened" % id)
-		var unreachable: PackedStringArray = a.unreachable_things(main)
+		# Co-op secrets may need a stack boost (two knights); only bosses are truly optional.
+		var unreachable: PackedStringArray = a.unreachable_things(a.analyze(false, 1))
 		var optional: Dictionary = a.analyze(true)
 		var still: PackedStringArray = a.unreachable_things(optional)
 		assert_eq(still.size(), 0, "%s: everything reachable (with optional bosses): %s" % [id, still])

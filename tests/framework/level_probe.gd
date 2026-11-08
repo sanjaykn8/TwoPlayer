@@ -105,7 +105,7 @@ func run() -> Dictionary:
 
 func _freeze_enemies(frozen: bool) -> void:
 	for node in game.level.find_children("*", "", true, false):
-		if (node is Slime or node is BossSlime) and not node.is_queued_for_deletion():
+		if (node is Slime or node is BossSlime or node is Enemy) and not node.is_queued_for_deletion():
 			node.process_mode = Node.PROCESS_MODE_DISABLED if frozen else Node.PROCESS_MODE_INHERIT
 
 
@@ -273,13 +273,14 @@ func _camera() -> void:
 
 
 func _enemies_and_combat() -> void:
-	var slimes: Array = game.level.find_children("*", "", true, false).filter(func(n: Node) -> bool: return n is Slime and not n.is_queued_for_deletion())
+	var slimes: Array = game.level.find_children("*", "", true, false).filter(func(n: Node) -> bool:
+		return (n is Slime or (n is Enemy and not (n is BossEnemy))) and not n.is_queued_for_deletion())
 	if slimes.is_empty():
 		_na("enemies", "no slimes")
 		_na("combat", "no slimes")
 		return
 	var start := {}
-	for s: Slime in slimes:
+	for s: Node2D in slimes:
 		start[s] = s.global_position
 	_freeze_enemies(false)
 	for k in game.knights:
@@ -287,18 +288,29 @@ func _enemies_and_combat() -> void:
 	await _frames(240)
 	var moved := 0
 	var bad := PackedStringArray()
-	for s: Slime in slimes:
+	for s: Node2D in slimes:
 		if not is_instance_valid(s):
 			continue
 		if s.global_position.distance_to(start[s]) > 4.0:
 			moved += 1
 		if s.global_position.y > LevelCatalog.level(level_id).camera_bounds.end.y:
 			bad.append("%s fell out" % s.name)
-		if not s.is_on_floor() and s.state != Slime.State.DEAD:
+		var flying: bool = s is Enemy and (s as Enemy).stats.flying
+		if not flying and not (s as CharacterBody2D).is_on_floor() and not s.is_dead():
 			bad.append("%s not on the ground" % s.name)
 	_record("enemies", moved > 0 and bad.is_empty(), "moved %d/%d %s" % [moved, slimes.size(), bad])
-	# Combat: P1 strikes the first slime with a real attack.
-	var target: Slime = slimes[0]
+	# Combat: P1 strikes the first ground enemy with a real attack.
+	var grounded := slimes.filter(func(n: Node) -> bool: return is_instance_valid(n) and not n.is_dead() and not (n is Enemy and (n as Enemy).stats.flying))
+	# Prefer a target that takes damage (an ember slime lights its fuse instead).
+	var plain := grounded.filter(func(n: Node) -> bool: return not (n is EmberSlime))
+	if not plain.is_empty():
+		grounded = plain
+	if grounded.is_empty():
+		_na("combat", "no ground enemies")
+		_freeze_enemies(true)
+		return
+	var target: CharacterBody2D = grounded[0]
+	var before_hp: int = target.health if target is Enemy else 0
 	var k := _k(0)
 	_heal(k)
 	_place(k, target.global_position + Vector2(-14, 0))
@@ -308,8 +320,12 @@ func _enemies_and_combat() -> void:
 	await _press(k, k.profile.action_attack, 2)
 	await _frames(15)
 	target.set_physics_process(true)
-	var hit := target.stagger.progress > 0 or target.state == Slime.State.STAGGERED or target.is_dead()
-	_record("combat", hit, "stagger progress %d" % target.stagger.progress)
+	var hit := false
+	if target is Slime:
+		hit = target.stagger.progress > 0 or target.state == Slime.State.STAGGERED or target.is_dead()
+	else:
+		hit = target.is_dead() or (target as Enemy).health < before_hp or (target is OrcGuard) 			or (target is EmberSlime and (target as Enemy).state == Enemy.State.SPECIAL)
+	_record("combat", hit, "hit %s" % target.name)
 	_freeze_enemies(true)
 	_place(k, LevelCatalog.level(level_id).spawn_p1)
 	await _frames(70)
@@ -434,6 +450,10 @@ func _puzzles() -> void:
 			failures.append("%s stayed %s" % [gate.name, PuzzleGate.State.keys()[gate.state]])
 		_release_all()
 		await _frames(10)
+	for zone: EncounterZone in game.level.find_children("*", "", true, false).filter(func(n: Node) -> bool: return n is EncounterZone):
+		var problem := await _fight(zone)
+		if problem != "":
+			failures.append(problem)
 	for pc: PlatformController in controls:
 		var platform := pc.get_node_or_null(pc.platform) as PlatformBody
 		var controller := pc.get_node_or_null(pc.controller)
@@ -456,6 +476,48 @@ func _puzzles() -> void:
 	_place(_k(0), def.spawn_p1)
 	_place(_k(1), def.spawn_p2)
 	await _frames(10)
+
+
+## An arena: both knights step inside, the gates must close, the arena's enemies are defeated
+## (by script: fighting is covered by the combat checks), then the gates must reopen.
+func _fight(zone: EncounterZone) -> String:
+	if zone.phase == EncounterZone.Phase.DONE:
+		return ""
+	var spot := zone.rect().get_center()
+	# A fresh copy: the live level's platforms have moved since it started.
+	var copy := (load(LevelCatalog.scene_for(level_id)) as PackedScene).instantiate()
+	var analyzer = preload("res://tools/level_analyzer.gd").new(copy)
+	var area: Dictionary = analyzer.analyze(false)
+	copy.free()
+	var best := Vector2.INF
+	for c: Vector2i in area:
+		var p := Vector2(c.x * T + 8, c.y * T)
+		if zone.rect().grow(-6.0).has_point(p + Vector2(0, -9)) and p.distance_to(spot) < best.distance_to(spot):
+			best = p
+	if best == Vector2.INF:
+		return "%s: no standing place inside" % zone.name
+	_place(_k(0), best)
+	_place(_k(1), best + Vector2(8, 0))
+	for f in 30:
+		await _frames(1)
+		if zone.phase == EncounterZone.Phase.FIGHTING:
+			break
+	if zone.phase != EncounterZone.Phase.FIGHTING:
+		return "%s did not start (%s)" % [zone.name, zone.debug_state()]
+	await _frames(40)
+	var gates := game.level.find_children("*", "", true, false).filter(func(n: Node) -> bool:
+		return n is PuzzleGate and n.get_node_or_null((n as PuzzleGate).controller) == zone)
+	for g: PuzzleGate in gates:
+		if g.is_open():
+			return "%s: gate %s did not close" % [zone.name, g.name]
+	for e in zone._tracked:
+		if is_instance_valid(e) and not e.is_dead():
+			e.kill()
+	for f in 90:
+		await _frames(1)
+		if zone.phase == EncounterZone.Phase.DONE and gates.all(func(g: PuzzleGate) -> bool: return g.is_open()):
+			return ""
+	return "%s did not release (%s)" % [zone.name, zone.debug_state()]
 
 
 ## Activates a puzzle source the way knights would: plates by standing on them, switches and

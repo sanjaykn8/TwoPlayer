@@ -44,8 +44,10 @@ func validate(level_id: String) -> Dictionary:
 	level.set_meta(&"level_id", level_id)
 	var remove: Array[Node] = []
 	for node in level.find_children("*", "", true, false):
-		if node is Slime or node is BossSlime or node is PuzzleGate:
+		if node is Slime or node is BossSlime or node is PuzzleGate or node is Enemy:
 			remove.append(node)
+		elif node is SawBlade or node is FireJet or node is FallingRock or node is BreakableBlock:
+			remove.append(node)  # damage and cracked blocks are not routing questions
 		elif node is Hazard and ((node as Hazard).kind == Hazard.Kind.LAVA or (node as Hazard).kind == Hazard.Kind.FALL):
 			remove.append(node)
 	for node in remove:
@@ -62,6 +64,7 @@ func validate(level_id: String) -> Dictionary:
 		analyzer.open_gates[gate] = true
 	analyzer._platform_control.clear()
 	analyzer._rebuild_platforms({}, false)
+	analyzer.lanterns.clear()  # pogo bounces are a skill route, never the main route
 	for attempt in 40:
 		var path := _route()
 		if path.is_empty():
@@ -157,7 +160,10 @@ func _edge(a: Vector2i, b: Vector2i) -> bool:
 		_verified[[a, b]] = true
 		return true
 	report.jumps += 1
-	for technique in ["run_up", "standing", "short_hop", "up_first", "walk_off"]:
+	var techniques := ["run_up", "standing", "short_hop", "up_first", "walk_off"]
+	if _in_updraft(a):
+		techniques.push_front("float")
+	for technique in techniques:
 		if technique == "walk_off" and up > 0:
 			continue
 		if await _attempt(a, b, technique, to_platform):
@@ -193,7 +199,7 @@ func _attempt(a: Vector2i, b: Vector2i, technique: String, target: PlatformBody)
 			if dir != 0:
 				Input.action_press(dir_action)
 			jumped = true
-		"up_first":
+		"up_first", "float":
 			Input.action_press(knight.profile.action_up)
 			jumped = true
 		"short_hop":
@@ -218,7 +224,9 @@ func _attempt(a: Vector2i, b: Vector2i, technique: String, target: PlatformBody)
 		if not knight.is_on_floor():
 			left_ground = true
 		# In the air a player steers toward the landing: keep going, ease off, or turn back.
-		if left_ground and not knight.is_on_floor() and not (technique == "up_first" and f < 7):
+		# Floating in an updraft: rise past the landing first, then steer off the column.
+		var floating := technique == "float" and knight.global_position.y > b.y * T - 10.0
+		if left_ground and not knight.is_on_floor() and not (technique == "up_first" and f < 7) and not floating:
 			var off := target_x - knight.global_position.x
 			Input.action_release(knight.profile.action_left)
 			Input.action_release(knight.profile.action_right)
@@ -232,6 +240,13 @@ func _attempt(a: Vector2i, b: Vector2i, technique: String, target: PlatformBody)
 	await _frames(2)
 	var cell := Vector2i(int(floor(knight.global_position.x / T)), int(round(knight.global_position.y / T)))
 	return knight.is_on_floor() and cell.y == b.y and absi(cell.x - b.x) <= 1
+
+
+func _in_updraft(c: Vector2i) -> bool:
+	for zone: Rect2i in analyzer.updrafts:
+		if c.x >= zone.position.x and c.x < zone.end.x and c.y >= zone.position.y and c.y <= zone.end.y + 3:
+			return true
+	return false
 
 
 ## Waits until a timed or blinking platform has just become solid.

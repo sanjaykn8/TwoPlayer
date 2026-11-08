@@ -22,6 +22,15 @@ extends RefCounted
 ##       moving: props.travel = Vector2i tiles)
 ##   ["control", platform, controller, mode]   ["seal", name]
 ##   ["boss", stats, x, r, arena_left, arena_right, seal]   ["deco", cell, x, r]
+## Overhaul ops:
+##   ["enemy", kind, x, r, left, right, props?]  kind: grunt brute guard archer bat ember
+##       warchief captain crowned (bat: r = the row it hangs in, under a ceiling)
+##   ["spring", x, r, props?]  ["fire", x, r, height, props?]  ["rock", x, r] (hangs from the
+##       ceiling above row r)  ["saw", x, y, dx, dy, props?] (rail from the tile centre)
+##   ["updraft"|"wind", x0, y0, x1, y1, props?]  ["ice", x0, x1, r]
+##   ["crack", name, x, y, w, h]  cracked block (its cells are carved from the terrain)
+##   ["lantern", x, y]  ["torch", x, y]  ["dark"]
+##   ["arena", name, x0, y0, x1, y1, props?]  encounter zone; its gates FOLLOW it (mode 0)
 ## Ids are "<level id>_<name>" (stable: written into the scene at build time, never generated
 ## at run time). Every collectible id is unique in the whole campaign because of the prefix.
 
@@ -60,6 +69,27 @@ const SCENES := {
 	"boss": "res://scenes/enemies/boss/boss_slime.tscn",
 	"seal": "res://scenes/enemies/boss/boss_seal.tscn",
 	"knight": "res://scenes/players/knight.tscn",
+	"spring": "res://scenes/mechanisms/spring_mushroom.tscn",
+	"envzone": "res://scenes/mechanisms/environment_zone.tscn",
+	"saw": "res://scenes/mechanisms/saw_blade.tscn",
+	"fire": "res://scenes/mechanisms/fire_jet.tscn",
+	"rock": "res://scenes/mechanisms/falling_rock.tscn",
+	"crack": "res://scenes/mechanisms/breakable_block.tscn",
+	"lantern": "res://scenes/mechanisms/pogo_lantern.tscn",
+	"arena": "res://scenes/mechanisms/encounter_zone.tscn",
+	"dark": "res://scenes/mechanisms/darkness.tscn",
+	"torch": "res://scenes/mechanisms/torch.tscn",
+}
+const ENEMIES := {
+	"grunt": "res://scenes/enemies/orc_grunt.tscn",
+	"brute": "res://scenes/enemies/orc_brute.tscn",
+	"guard": "res://scenes/enemies/orc_guard.tscn",
+	"archer": "res://scenes/enemies/hollow_archer.tscn",
+	"bat": "res://scenes/enemies/cave_bat.tscn",
+	"ember": "res://scenes/enemies/ember_slime.tscn",
+	"warchief": "res://scenes/enemies/boss/orc_warchief.tscn",
+	"captain": "res://scenes/enemies/boss/hollow_captain.tscn",
+	"crowned": "res://scenes/enemies/boss/crowned_hollow.tscn",
 }
 const FRUIT := {"green": 0, "yellow": 1, "red": 2, "purple": 3}
 const JAR := {"green": 0, "red": 1, "yellow": 2, "blue": 3}
@@ -136,6 +166,8 @@ func _terrain_op(op: Array) -> void:
 			_fill(solid, op[1], op[3], op[2], op[3] + depth - 1, false)
 		"hot":
 			_fill(solid, op[1], op[3], op[2], op[3] + 1, false)
+		"crack":
+			_fill(solid, op[2], op[3], op[2] + op[4] - 1, op[3] + op[5] - 1, false)
 
 
 func _fill(cells: Dictionary, x0: int, y0: int, x1: int, y1: int, on: bool) -> void:
@@ -378,6 +410,57 @@ func _entity_op(op: Array) -> void:
 			n.set(&"arena_left", float(op[4]) * T)
 			n.set(&"arena_right", float(op[5]) * T)
 			n.set(&"seal", n.get_path_to(_named[op[6]]))
+		"enemy":
+			var name := _auto(str(op[1]).capitalize())
+			var at := _feet(op[2], op[3]) if op[1] != "bat" else Vector2(op[2] * T + 8, op[3] * T + 12)
+			var n := _inst("Enemies", ENEMIES[op[1]], name, at)
+			n.set(&"save_id", _id(name))
+			n.set(&"patrol_left", float(op[4]) * T)
+			n.set(&"patrol_right", float(op[5]) * T)
+			_props(n, op, 6)
+			_mark(op[2], op[3] - 1, op[2], op[3] - 1)
+		"spring":
+			var n := _inst("Mechanisms", SCENES.spring, _auto("Spring"), _feet(op[1], op[2]))
+			_props(n, op, 3)
+			_mark(op[1], op[2] - 1, op[1], op[2] - 1)
+		"fire":
+			var n := _inst("Mechanisms", SCENES.fire, _auto("FireJet"), _feet(op[1], op[2]))
+			n.set(&"height_tiles", op[3])
+			_props(n, op, 4)
+			_mark(op[1], op[2] - op[3], op[1], op[2] - 1)
+		"rock":
+			var n := _inst("Mechanisms", SCENES.rock, _auto("Rock"), Vector2(op[1] * T + 8, op[2] * T))
+			_props(n, op, 3)
+		"saw":
+			var n := _inst("Mechanisms", SCENES.saw, _auto("Saw"), Vector2(op[1] * T + 8, op[2] * T + 8))
+			n.set(&"travel", Vector2(op[3], op[4]) * T)
+			_props(n, op, 5)
+		"updraft", "wind":
+			var n := _inst("Mechanisms", SCENES.envzone, _auto(str(op[0]).capitalize()), Vector2(op[1] * T, op[2] * T))
+			n.set(&"kind", EnvironmentZone.Kind.UPDRAFT if op[0] == "updraft" else EnvironmentZone.Kind.WIND)
+			n.set(&"size", Vector2((op[3] - op[1] + 1) * T, (op[4] - op[2] + 1) * T))
+			_props(n, op, 5)
+		"ice":
+			var n := _inst("Mechanisms", SCENES.envzone, _auto("Ice"), Vector2(op[1] * T, (op[3] - 1) * T))
+			n.set(&"kind", EnvironmentZone.Kind.ICE)
+			n.set(&"size", Vector2((op[2] - op[1] + 1) * T, T))
+		"crack":
+			var n := _inst("Mechanisms", SCENES.crack, op[1], Vector2(op[2] * T, op[3] * T))
+			n.set(&"block_id", _id(op[1]))
+			n.set(&"size_tiles", Vector2i(op[4], op[5]))
+			var fill: Vector2i = theme.fill
+			n.set(&"tile_region", Rect2(fill.x * T, fill.y * T, T, T))
+			_mark(op[2], op[3], op[2] + op[4] - 1, op[3] + op[5] - 1)
+		"lantern":
+			_inst("Mechanisms", SCENES.lantern, _auto("Lantern"), Vector2(op[1] * T + 8, op[2] * T + 8))
+		"torch":
+			_inst("Scenery", SCENES.torch, _auto("Torch"), Vector2(op[1] * T + 8, op[2] * T + 12))
+		"dark":
+			_inst("Mechanisms", SCENES.dark, "Darkness", Vector2.ZERO)
+		"arena":
+			var n := _puzzle(op[1], SCENES.arena, Vector2(op[2] * T, op[3] * T))
+			n.set(&"size", Vector2((op[4] - op[2] + 1) * T, (op[5] - op[3] + 1) * T))
+			_props(n, op, 6)
 		"deco":
 			var cell: Array = op[1]
 			var sprite := Sprite2D.new()

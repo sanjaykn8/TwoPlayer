@@ -27,12 +27,26 @@ func test_teleport_clears_the_ladder_regrab_delay() -> void:
 
 
 ## KI-100: the analyzer let a jump pass through the slab above the Heart of the Grove corridor
-## (from the upper walkway straight into the corridor beyond the gate).
+## (from the upper walkway straight into the corridor beyond the gate). Since the overhaul the
+## walkway is 4 rows lower (slab top row 27, corridor floor row 31).
 func test_analyzer_never_jumps_through_solid() -> void:
 	LevelCatalog.use_production()
 	var root: Node = (load(LevelCatalog.scene_for("l04")) as PackedScene).instantiate()
 	var a = Analyzer.new(root)
 	for g: Node in a.gates:
 		a.open_gates[g] = true
-	assert_false(a.neighbours(Vector2i(107, 23)).has(Vector2i(113, 27)), "no jump through the slab")
+	assert_true(a.standable(Vector2i(107, 27)) and a.standable(Vector2i(113, 31)), "both places exist (walkway, corridor)")
+	assert_false(a.neighbours(Vector2i(107, 27)).has(Vector2i(113, 31)), "no jump through the slab")
+	root.free()
+
+
+## KI-108: a short downward jump could drop straight through solid ground, because the landing
+## column under the arc was never checked (Crystal Descent: from the shelf edge into the hidden
+## crystal room below it).
+func test_analyzer_never_falls_through_the_landing_column() -> void:
+	LevelCatalog.use_production()
+	var root: Node = (load(LevelCatalog.scene_for("l05")) as PackedScene).instantiate()
+	var a = Analyzer.new(root)
+	assert_true(a.standable(Vector2i(59, 24)) and a.standable(Vector2i(58, 32)), "shelf edge and room floor exist")
+	assert_false(a.neighbours(Vector2i(59, 24)).has(Vector2i(58, 32)), "no drop through the shelf into the room")
 	root.free()

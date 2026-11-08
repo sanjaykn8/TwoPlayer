@@ -99,7 +99,9 @@ func begin() -> Error:
 		StartMode.LOAD, StartMode.CONTINUE:
 			var result := saves.load_run(slot)
 			if result.ok:
-				world = result.world
+				world = WorldSnapshot.for_current_layout(result.world, RunState.current().campaign.level_id)
+				if world.is_empty() and not (result.world as Dictionary).is_empty():
+					_notice("This level was rebuilt since the save: it starts from its beginning.")
 				for warning: String in result.warnings:
 					_notice("Slot %d: %s" % [slot, warning])
 			elif start_mode == StartMode.CONTINUE and saves.slot_status(slot) == SaveManager.Status.EMPTY:
