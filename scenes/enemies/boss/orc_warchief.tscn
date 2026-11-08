@@ -1,0 +1,12 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/enemies/enemy_base.tscn" id="1_base"]
+[ext_resource type="Script" path="res://scenes/enemies/boss/orc_warchief.gd" id="2_script"]
+[ext_resource type="Resource" path="res://resources/enemies/orc_warchief.tres" id="3_stats"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/orc_grunt.tscn" id="4_minion"]
+
+[node name="OrcWarchief" instance=ExtResource("1_base")]
+script = ExtResource("2_script")
+stats = ExtResource("3_stats")
+minion_scene = ExtResource("4_minion")
+phase_thresholds = Array[float]([0.5])

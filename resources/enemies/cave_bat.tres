@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="EnemyStats" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/enemies/enemy_stats.gd" id="1_es"]
+
+[resource]
+script = ExtResource("1_es")
+display_name = "Cave Bat"
+sprite_offset = Vector2(0, 0)
+drawn_by_code = true
+body_size = Vector2(10, 8)
+hurtbox_size = Vector2(12, 10)
+knockback_factor = 1.0
+flying = true
+max_health = 1
+contact_damage = 1
+contact_interval = 0.5
+patrol_speed = 0.0
+idle_time = 0.5
+detection_radius = 88.0
+reaction_time = 0.4
+windup_time = 0.4
+attack_cooldown = 1.6
+attack_damage = 1
+special_speed = 140.0
+special_range = 72.0
+special_time = 1.1
+coin_min = 1
+coin_max = 2

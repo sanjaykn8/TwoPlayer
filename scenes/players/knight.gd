@@ -22,7 +22,7 @@ const PLAYERS_BIT := 1 << 2
 const CLIMB_BIT := 1 << 9
 ## How far below the feet to look for a climbable that continues downward.
 const FEET_PROBE := 4.0
-## Pixels climbed between flips of the placeholder climb pose.
+## Pixels climbed between the two climb frames.
 const CLIMB_FLIP_STEP := 6.0
 const HURT_ANIMATION_TIME := 0.4
 ## Invulnerability blink: the sprite alternates between full and this opacity.
@@ -59,6 +59,8 @@ var _drop_surface_y := 0.0
 var _drop_timer := 0.0
 var _restore_one_way := false
 var _restore_players := false
+## Hit pause: while > 0 the knight holds still (a hit landed).
+var _hitstop := 0.0
 var _point_query := PhysicsPointQueryParameters2D.new()
 
 @onready var sprite: AnimatedSprite2D = $Sprite
@@ -80,11 +82,9 @@ func _ready() -> void:
 	var missing := profile.missing_actions()
 	if not missing.is_empty():
 		push_error("%s: InputMap is missing actions %s" % [name, missing])
-	# Each instance gets its own shape and material so crouching or recolouring one
-	# knight never affects the other.
+	# Each instance gets its own shape so crouching one knight never affects the other.
 	body_shape.shape = body_shape.shape.duplicate()
-	sprite.material = sprite.material.duplicate()
-	_apply_palette()
+	_apply_appearance()
 	hurtbox.entity = self
 	hurtbox.hit_received.connect(_on_hit_received)
 	_set_body_size(config.standing_size)
@@ -93,6 +93,11 @@ func _ready() -> void:
 	health.damaged.connect(_on_damaged)
 	health.depleted.connect(_on_depleted)
 	combat.setup(self, profile.player_id, _body_height)
+	combat.hit_landed.connect(_on_hit_landed)
+	combat.heavy_started.connect(_on_heavy_started)
+	combat.charge_ready.connect(_on_charge_ready)
+	combat.coop_strike.connect(_on_coop_strike)
+	combat.pose_updated.connect(_apply_attack_pose)
 	# Health, combat stats and timed effects come from this player's run record.
 	progress.bind(self)
 	safe_spot.setup(self)
@@ -108,6 +113,13 @@ func _physics_process(delta: float) -> void:
 	_tick_timers(delta)
 	if input.attack_pressed and state != State.DISABLED and state != State.DEAD:
 		_request_attack()
+	if state != State.DISABLED and state != State.DEAD:
+		var grounded := is_on_floor() and (state == State.GROUNDED or state == State.CROUCHING)
+		combat.update_charge(input.attack_held, AttackDirection.resolve(input.up_held, input.down_held, facing), grounded, delta)
+	if _hitstop > 0.0:
+		_hitstop = maxf(_hitstop - delta, 0.0)
+		_update_animation(delta)
+		return
 	match state:
 		State.DISABLED, State.DEAD:
 			velocity.x = move_toward(velocity.x, 0.0, config.ground_deceleration * delta)
@@ -562,12 +574,41 @@ func _shape_overlaps(size: Vector2, local_offset: Vector2, mask: int) -> bool:
 	return not get_world_2d().direct_space_state.intersect_shape(params, 1).is_empty()
 
 
+# --- Combat reactions --------------------------------------------------------------
+
+## A landed hit: a short hit pause, and a downward air attack bounces the knight (pogo).
+func _on_hit_landed(_target: Node, event: DamageEvent) -> void:
+	_hitstop = combat.config.hitstop_time
+	if event.direction == Vector2i.DOWN and state == State.AIRBORNE:
+		velocity.y = -combat.config.pogo_velocity
+		_jump_cut_available = false
+		_coyote_timer = 0.0
+
+
+## A grounded heavy side slash lunges forward.
+func _on_heavy_started(_id: int, attack_direction: AttackDirection.Direction) -> void:
+	if not is_on_floor() or state == State.CLIMBING:
+		return
+	if attack_direction == AttackDirection.Direction.LEFT or attack_direction == AttackDirection.Direction.RIGHT:
+		var side := 1 if attack_direction == AttackDirection.Direction.RIGHT else -1
+		velocity.x = side * combat.config.heavy_lunge_speed
+
+
+func _on_charge_ready() -> void:
+	Sfx.cue(&"charge_ready", self)
+
+
+func _on_coop_strike(target: Node) -> void:
+	if target is Node2D:
+		FloatingText.spawn(target as Node2D, Vector2(0, -26), "CO-OP!", Color(1.0, 0.86, 0.35))
+	Sfx.cue(&"coop", self)
+
+
 # --- Presentation ------------------------------------------------------------------
 
-func _apply_palette() -> void:
-	var palette := sprite.material as ShaderMaterial
-	palette.set_shader_parameter(&"target_tunic", profile.tunic_color)
-	palette.set_shader_parameter(&"target_plume", profile.plume_color)
+func _apply_appearance() -> void:
+	if profile.sprite_frames != null:
+		sprite.sprite_frames = profile.sprite_frames
 	debug_tag.add_theme_color_override(&"font_color", profile.tunic_color.lightened(0.35))
 
 
@@ -605,6 +646,7 @@ func _on_depleted() -> void:
 func _update_animation(delta: float) -> void:
 	sprite.flip_h = facing < 0
 	if state == State.DEAD:
+		sprite.modulate = Color.WHITE
 		_play(&"death")
 		return
 	var blink_off := health.is_invulnerable() and int(health.invulnerability_left() / BLINK_PERIOD) % 2 == 0
@@ -612,14 +654,22 @@ func _update_animation(delta: float) -> void:
 	if _hurt_timer > 0.0:
 		_play(&"hurt")
 		return
+	# A charged slash is ready: the knight glints.
+	if combat.charge_is_ready:
+		sprite.modulate = Color(1.6, 1.5, 1.2) if int(Time.get_ticks_msec() / 80) % 2 == 0 else Color.WHITE
+	elif combat.is_charging():
+		sprite.modulate = Color.WHITE.lerp(Color(1.3, 1.25, 1.1), combat.charge / combat.config.charge_time)
+	else:
+		sprite.modulate = Color.WHITE
+	if _apply_attack_pose():
+		return
 	match state:
 		State.CLIMBING:
-			_play(&"climb")
 			_climb_travel += velocity.length() * delta
 			if _climb_travel >= CLIMB_FLIP_STEP:
 				_climb_travel = 0.0
 				_climb_flip = not _climb_flip
-			sprite.flip_h = _climb_flip
+			_show_frame(&"climb", 1 if _climb_flip else 0)
 		State.CROUCHING:
 			_play(&"crouch")
 		State.AIRBORNE, State.DISABLED:
@@ -630,6 +680,27 @@ func _update_animation(delta: float) -> void:
 	sprite.speed_scale = progress.speed_multiplier() if sprite.animation == &"run" else 1.0
 
 
+## Shows the attack pose of the current swing (called on every combat tick, after the combat
+## timeline advanced, so the frame matches the hitbox). False when no pose applies.
+func _apply_attack_pose() -> bool:
+	if not combat.is_attacking() or state == State.CLIMBING or state == State.DEAD or _hurt_timer > 0.0:
+		return false
+	var pose := combat.visual_pose()
+	_show_frame(pose[0], pose[1])
+	var sided := combat.profile == HitboxGeometry.Profile.SIDE or combat.profile == HitboxGeometry.Profile.LOW
+	sprite.flip_h = combat.animation_name().ends_with("left") if sided else facing < 0
+	return true
+
+
 func _play(animation: StringName) -> void:
-	if sprite.animation != animation:
+	# A looping animation stopped by _show_frame() resumes; a finished one-shot stays finished.
+	if sprite.animation != animation or (not sprite.is_playing() and sprite.sprite_frames.get_animation_loop(animation)):
 		sprite.play(animation)
+
+
+## Shows one frame of an animation without playing it (poses stepped by code).
+func _show_frame(animation: StringName, frame: int) -> void:
+	if sprite.animation != animation:
+		sprite.animation = animation
+	sprite.stop()
+	sprite.frame = frame

@@ -6,15 +6,12 @@ extends SceneTree
 ##   godot --headless --path . --script res://tools/build_phase1_content.gd -- content
 ## Outputs:
 ##   art:     res://assets/created/ladder.png
-##   content: res://resources/players/knight_frames.tres
-##            res://resources/tilesets/dev_world_tileset.tres
+##   content: res://resources/tilesets/dev_world_tileset.tres
 ##            res://scenes/dev/phase_1_test_room.tscn
 
-const KNIGHT_SHEET := "res://assets/sprites/knight.png"
 const WORLD_SHEET := "res://assets/sprites/world_tileset.png"
 const PLATFORM_SHEET := "res://assets/sprites/platforms.png"
 const LADDER_PNG := "res://assets/created/ladder.png"
-const FRAMES_PATH := "res://resources/players/knight_frames.tres"
 const TILESET_PATH := "res://resources/tilesets/dev_world_tileset.tres"
 const ROOM_PATH := "res://scenes/dev/phase_1_test_room.tscn"
 
@@ -33,7 +30,6 @@ func _init() -> void:
 		"art":
 			_build_ladder_png()
 		"content":
-			_build_knight_frames()
 			_build_tileset()
 			_build_test_room()
 		_:
@@ -68,42 +64,7 @@ func _build_ladder_png() -> void:
 
 
 # --- Knight animations -------------------------------------------------------------
-
-func _build_knight_frames() -> void:
-	var sheet: Texture2D = load(KNIGHT_SHEET)
-	var frames := SpriteFrames.new()
-	frames.remove_animation(&"default")
-	# Cells are (column, row) in 32x32 units; see docs/ASSET_CATALOG.md. Label cells are never used.
-	_add_animation(frames, sheet, &"idle", _row(0, 0, 4), 6.0, true)
-	_add_animation(frames, sheet, &"run", _row(2, 0, 8) + _row(3, 0, 8), 16.0, true)
-	_add_animation(frames, sheet, &"jump", [Vector2i(0, 2)], 1.0, true)      # placeholder: run stride
-	_add_animation(frames, sheet, &"fall", [Vector2i(7, 5)], 1.0, true)      # placeholder: roll recovery
-	_add_animation(frames, sheet, &"crouch", [Vector2i(2, 5)], 1.0, true)    # placeholder: compact roll pose
-	_add_animation(frames, sheet, &"climb", [Vector2i(0, 0)], 1.0, true)     # placeholder: idle, flipped in code
-	_add_animation(frames, sheet, &"hurt", _row(6, 0, 4), 10.0, false)
-	_add_animation(frames, sheet, &"death", _row(7, 0, 4), 8.0, false)
-	DirAccess.make_dir_recursive_absolute(FRAMES_PATH.get_base_dir())
-	_report(FRAMES_PATH, ResourceSaver.save(frames, FRAMES_PATH))
-
-
-func _row(row: int, first: int, count: int) -> Array[Vector2i]:
-	var cells: Array[Vector2i] = []
-	for c in range(first, first + count):
-		cells.append(Vector2i(c, row))
-	return cells
-
-
-func _add_animation(frames: SpriteFrames, sheet: Texture2D, anim: StringName,
-		cells: Array, fps: float, loop: bool) -> void:
-	frames.add_animation(anim)
-	frames.set_animation_speed(anim, fps)
-	frames.set_animation_loop(anim, loop)
-	for cell: Vector2i in cells:
-		var atlas := AtlasTexture.new()
-		atlas.atlas = sheet
-		atlas.region = Rect2(cell.x * 32, cell.y * 32, 32, 32)
-		atlas.filter_clip = true
-		frames.add_frame(anim, atlas)
+# Since the overhaul the knights use the Tiny RPG soldier: tools/build_overhaul_art.gd.
 
 
 # --- Tileset -----------------------------------------------------------------------

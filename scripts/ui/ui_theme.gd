@@ -20,7 +20,7 @@ const GOLD := Color("e3b450")
 const DANGER := Color("d4574b")
 const WARNING := Color("e39a3c")
 const OK_GREEN := Color("7fcf6e")
-const P1 := Color("5ccf72")
+const P1 := Color("ff6b6b")
 const P2 := Color("6a9cff")
 const SHADOW := Color(0, 0, 0, 0.85)
 

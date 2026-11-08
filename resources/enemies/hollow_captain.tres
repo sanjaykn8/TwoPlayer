@@ -1,0 +1,32 @@
+[gd_resource type="Resource" script_class="EnemyStats" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/enemies/enemy_stats.gd" id="1_es"]
+[ext_resource type="SpriteFrames" path="res://resources/enemies/frames/hollow_soldier_frames.tres" id="2_fr"]
+
+[resource]
+script = ExtResource("1_es")
+display_name = "Hollow Captain"
+sprite_frames = ExtResource("2_fr")
+sprite_offset = Vector2(0, -20)
+sprite_scale = 2
+tint = Color(1.05, 1.0, 1.15, 1)
+body_size = Vector2(18, 32)
+hurtbox_size = Vector2(22, 34)
+knockback_factor = 0.0
+max_health = 18
+contact_damage = 1
+contact_interval = 0.8
+patrol_speed = 28.0
+detection_radius = 240.0
+reaction_time = 0.6
+attack_range = 40.0
+windup_time = 0.55
+active_time = 0.12
+recovery_time = 0.6
+attack_cooldown = 0.6
+attack_damage = 1
+attack_rect = Rect2(4, -30, 36, 28)
+special_speed = 230.0
+special_range = 260.0
+coin_min = 10
+coin_max = 14

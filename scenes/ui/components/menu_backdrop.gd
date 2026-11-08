@@ -6,10 +6,8 @@ extends Control
 ## Purely decorative: no physics, no AI, nothing from gameplay runs here.
 
 const WORLD := preload("res://assets/sprites/world_tileset.png")
-const KNIGHT_FRAMES := preload("res://resources/players/knight_frames.tres")
 const GREEN_FRAMES := preload("res://resources/enemies/green_slime_frames.tres")
 const PURPLE_FRAMES := preload("res://resources/enemies/purple_slime_frames.tres")
-const PALETTE_SHADER := preload("res://resources/shaders/knight_palette.gdshader")
 const GROUND_Y := 312
 
 
@@ -78,19 +76,15 @@ func _piece(region: Rect2, at: Vector2) -> void:
 
 
 func _knight(player_id: int, feet: Vector2, flip: bool) -> void:
-	var sprite := _actor(KNIGHT_FRAMES, feet, flip)
 	var profile: KnightProfile = load("res://resources/players/p%d_profile.tres" % player_id)
-	var material := ShaderMaterial.new()
-	material.shader = PALETTE_SHADER
-	material.set_shader_parameter(&"target_tunic", profile.tunic_color)
-	material.set_shader_parameter(&"target_plume", profile.plume_color)
-	sprite.material = material
+	_actor(profile.sprite_frames, feet, flip, -20.0)
 
 
-func _actor(frames: SpriteFrames, feet: Vector2, flip: bool) -> AnimatedSprite2D:
+## `lift`: how far above the feet the frame's centre sits (half the frame height).
+func _actor(frames: SpriteFrames, feet: Vector2, flip: bool, lift := -12.0) -> AnimatedSprite2D:
 	var sprite := AnimatedSprite2D.new()
 	sprite.sprite_frames = frames
-	sprite.position = feet + Vector2(0, -12)
+	sprite.position = feet + Vector2(0, lift)
 	sprite.flip_h = flip
 	add_child(sprite)
 	sprite.play(&"idle")

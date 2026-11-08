@@ -24,6 +24,8 @@ enum Mode {
 
 const VIEW_A := 0
 const VIEW_B := 1
+## Group of the rig (camera shake requests).
+const GROUP := &"camera_rig"
 
 @export var config: CameraConfig
 
@@ -53,7 +55,14 @@ var _layout_key := []
 @onready var _divider: ColorRect = $Divider
 
 
+## Camera shake (heavy hits, explosions, boss slams): offset strength in pixels and time left.
+var _shake_strength := 0.0
+var _shake_left := 0.0
+var _shake_rng := RandomNumberGenerator.new()
+
+
 func _ready() -> void:
+	add_to_group(GROUP)
 	# Run after the knights have moved this tick.
 	process_physics_priority = 100
 	if config == null:
@@ -80,6 +89,26 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	if _has_valid_targets():
 		update_cameras(delta)
+	_update_shake(delta)
+
+
+## Shakes both views for `duration` seconds by up to `strength` pixels. A stronger request
+## replaces a weaker one; the shake fades out. Anything can ask through the group:
+##   get_tree().call_group(SplitScreenRig.GROUP, &"shake", 3.0, 0.25)
+func shake(strength: float, duration: float) -> void:
+	if strength * duration >= _shake_strength * _shake_left or _shake_left <= 0.0:
+		_shake_strength = strength * config.shake_scale
+		_shake_left = duration
+
+
+func _update_shake(delta: float) -> void:
+	var offset := Vector2.ZERO
+	if _shake_left > 0.0:
+		_shake_left = maxf(_shake_left - delta, 0.0)
+		var amount := _shake_strength * minf(_shake_left * 8.0, 1.0)
+		offset = Vector2(_shake_rng.randf_range(-amount, amount), _shake_rng.randf_range(-amount, amount)).round()
+	for camera in _cameras:
+		camera.offset = offset
 
 
 # --- Public interface -------------------------------------------------------------

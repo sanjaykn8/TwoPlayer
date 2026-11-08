@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="EnemyStats" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/enemies/enemy_stats.gd" id="1_es"]
+[ext_resource type="SpriteFrames" path="res://resources/enemies/frames/orc_guard_frames.tres" id="2_fr"]
+
+[resource]
+script = ExtResource("1_es")
+display_name = "Orc Shieldbearer"
+sprite_frames = ExtResource("2_fr")
+sprite_offset = Vector2(0, -16)
+body_size = Vector2(12, 15)
+hurtbox_size = Vector2(14, 16)
+knockback_factor = 0.6
+max_health = 4
+contact_damage = 1
+contact_interval = 0.6
+patrol_speed = 26.0
+detection_radius = 112.0
+reaction_time = 0.3
+attack_range = 20.0
+windup_time = 0.5
+active_time = 0.15
+recovery_time = 0.6
+attack_cooldown = 0.9
+attack_damage = 1
+attack_rect = Rect2(2, -16, 22, 16)
+coin_min = 4
+coin_max = 6

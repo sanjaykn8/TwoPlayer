@@ -97,17 +97,18 @@ func test_game_code_is_offline() -> void:
 
 
 func test_knight_sprite_frames() -> void:
-	var frames: SpriteFrames = load("res://resources/players/knight_frames.tres")
-	for anim: StringName in [&"idle", &"run", &"jump", &"fall", &"crouch", &"climb", &"hurt", &"death"]:
-		assert_true(frames.has_animation(anim), "animation %s exists" % anim)
-	assert_eq(frames.get_frame_count(&"idle"), 4, "idle frames")
-	assert_eq(frames.get_frame_count(&"run"), 16, "run frames")
-	assert_eq(frames.get_frame_count(&"hurt"), 4, "hurt frames")
-	# Label cells in the sheet ("IDLE", "RUN", "ROLL", "HIT", "DEATH") must never be used.
-	var label_cells := [Vector2i(4, 0), Vector2i(5, 0), Vector2i(0, 1), Vector2i(1, 1), Vector2i(0, 4),
-		Vector2i(1, 4), Vector2i(4, 6), Vector2i(5, 6), Vector2i(4, 7), Vector2i(5, 7), Vector2i(6, 7)]
-	for anim in frames.get_animation_names():
-		for i in frames.get_frame_count(anim):
-			var tex := frames.get_frame_texture(anim, i) as AtlasTexture
-			var cell := Vector2i(tex.region.position / 32.0)
-			assert_false(cell in label_cells, "%s frame %d uses label cell %s" % [anim, i, cell])
+	for path in ["res://resources/players/knight_frames_p1.tres", "res://resources/players/knight_frames_p2.tres"]:
+		var frames: SpriteFrames = load(path)
+		for anim: StringName in [&"idle", &"run", &"jump", &"fall", &"crouch", &"climb", &"hurt", &"death", &"attack_side", &"attack_chop"]:
+			assert_true(frames.has_animation(anim), "%s: animation %s exists" % [path, anim])
+		assert_eq(frames.get_frame_count(&"idle"), 6, "idle frames")
+		assert_eq(frames.get_frame_count(&"run"), 8, "run frames")
+		assert_eq(frames.get_frame_count(&"attack_side"), 6, "slash frames")
+		# Every frame is a 56x40 crop inside one 100x100 cell of the soldier sheet (feet on the
+		# crop's bottom edge), so no frame bleeds into a neighbouring cell.
+		for anim in frames.get_animation_names():
+			for i in frames.get_frame_count(anim):
+				var tex := frames.get_frame_texture(anim, i) as AtlasTexture
+				assert_eq(tex.region.size, Vector2(56, 40), "%s %s frame %d size" % [path, anim, i])
+				var inside := Vector2(fposmod(tex.region.position.x, 100.0), fposmod(tex.region.position.y, 100.0))
+				assert_eq(inside, Vector2(20, 17), "%s %s frame %d crop offset" % [path, anim, i])

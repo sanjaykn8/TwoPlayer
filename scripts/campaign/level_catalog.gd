@@ -19,6 +19,15 @@ const DEVELOPMENT_PATH := "res://resources/campaign/development_campaign.tres"
 const ENTITY_SCENES := {
 	"green_slime": "res://scenes/enemies/green_slime.tscn",
 	"purple_slime": "res://scenes/enemies/purple_slime.tscn",
+	"orc_grunt": "res://scenes/enemies/orc_grunt.tscn",
+	"orc_brute": "res://scenes/enemies/orc_brute.tscn",
+	"orc_guard": "res://scenes/enemies/orc_guard.tscn",
+	"hollow_archer": "res://scenes/enemies/hollow_archer.tscn",
+	"cave_bat": "res://scenes/enemies/cave_bat.tscn",
+	"ember_slime": "res://scenes/enemies/ember_slime.tscn",
+	"orc_warchief": "res://scenes/enemies/boss/orc_warchief.tscn",
+	"hollow_captain": "res://scenes/enemies/boss/hollow_captain.tscn",
+	"crowned_hollow": "res://scenes/enemies/boss/crowned_hollow.tscn",
 	"dropped_coin": "res://scenes/objects/dropped_coin.tscn",
 }
 

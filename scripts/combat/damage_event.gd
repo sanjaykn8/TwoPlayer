@@ -30,6 +30,12 @@ var direction := Vector2i.ZERO
 var attacker_player_id := 0
 ## Seconds of poison a melee hit applies to an enemy (purple fruit). 0 = none.
 var poison_seconds := 0.0
+## A charged slash: breaks shields and cracked blocks, knocks back harder.
+var heavy := false
+## The second knight's hit of a co-op strike (already includes the bonus in `amount`).
+var coop := false
+## Explosions and other blasts (break cracked blocks like heavy hits).
+var blast := false
 
 static var _next_event_id := 1
 

@@ -41,6 +41,10 @@ extends Resource
 ## If a camera's target jumps further than this (teleport, respawn), the camera cuts.
 @export var snap_distance := 192.0
 
+@export_group("Shake")
+## Multiplies every camera shake request (0 turns shaking off).
+@export_range(0.0, 2.0) var shake_scale := 1.0
+
 @export_group("Divider")
 @export_range(0, 8) var divider_width := 2
 @export var divider_color := Color(0.06, 0.06, 0.09, 1.0)

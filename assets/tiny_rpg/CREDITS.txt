@@ -1,0 +1,12 @@
+Tiny RPG Character Asset Pack 01 v2.0 (free "Soldier & Orc" version)
+by Zerie - https://zerie.itch.io/tiny-rpg-character-asset-pack
+
+Files here: soldier.png (Soldier.png, no-shadow sheet), orc.png (Orc.png, no-shadow sheet),
+arrow.png (Arrow01(32x32).png). Recoloured copies in assets/created/ are generated from
+these by tools/build_overhaul_art.gd.
+
+Licence (from the pack's itch.io page, 2026-11-08): may be used and modified in personal and
+commercial video game projects; credit appreciated, not required. NOT allowed: redistributing,
+reselling or re-uploading the assets (modified or not), AI training, NFT projects.
+=> Ship these only inside the game. Do not publish this folder or its recolours on their own
+   (for example in a public source repository).

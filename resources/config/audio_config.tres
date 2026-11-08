@@ -67,12 +67,73 @@ world_tracks = {
 }
 default_world_track = "world_1"
 cues = {
-"attack": {
+"arrow_hit": {
 "jitter": 0.1,
-"path": "res://assets/sounds/tap.wav",
-"pitch": 1.9,
-"volume_db": -13.0
+"path": "res://assets/created/sfx/arrow_hit.wav",
+"pitch": 1.0,
+"volume_db": -12.0
 },
+"arrow_shot": {
+"jitter": 0.08,
+"path": "res://assets/created/sfx/arrow.wav",
+"pitch": 1.0,
+"volume_db": -11.0
+},
+"attack": {
+"jitter": 0.12,
+"path": "res://assets/created/sfx/swing.wav",
+"pitch": 1.0,
+"volume_db": -12.0
+},
+"attack_heavy": {
+"jitter": 0.05,
+"path": "res://assets/created/sfx/swing_heavy.wav",
+"pitch": 1.0,
+"volume_db": -8.0
+},
+"bat": {
+"jitter": 0.15,
+"path": "res://assets/created/sfx/bat.wav",
+"pitch": 1.0,
+"volume_db": -14.0
+},
+"blast": {
+"jitter": 0.05,
+"path": "res://assets/created/sfx/blast.wav",
+"pitch": 1.0,
+"volume_db": -5.0
+},
+"bow_draw": {
+"jitter": 0.05,
+"path": "res://assets/created/sfx/shoot_draw.wav",
+"pitch": 1.0,
+"volume_db": -14.0
+},
+"boss_roar": {
+"jitter": 0.0,
+"path": "res://assets/created/sfx/roar.wav",
+"pitch": 1.0,
+"volume_db": -6.0
+},
+"break": {
+"jitter": 0.1,
+"path": "res://assets/created/sfx/break.wav",
+"pitch": 1.0,
+"volume_db": -7.0
+},
+"charge_ready": {
+"jitter": 0.0,
+"path": "res://assets/created/sfx/charge_ready.wav",
+"pitch": 1.0,
+"volume_db": -14.0
+},
+"coop": {
+"jitter": 0.0,
+"path": "res://assets/created/sfx/coop.wav",
+"pitch": 1.0,
+"volume_db": -9.0
+},
+
 "enemy_death": {
 "jitter": 0.05,
 "path": "res://assets/sounds/explosion.wav",
@@ -156,5 +217,53 @@ cues = {
 "path": "res://assets/sounds/power_up.wav",
 "pitch": 1.25,
 "volume_db": -4.0
+},
+"fire": {
+"jitter": 0.1,
+"path": "res://assets/created/sfx/fire.wav",
+"pitch": 1.0,
+"volume_db": -14.0
+},
+"fuse": {
+"jitter": 0.0,
+"path": "res://assets/created/sfx/fuse.wav",
+"pitch": 1.0,
+"volume_db": -11.0
+},
+"orc_alert": {
+"jitter": 0.1,
+"path": "res://assets/created/sfx/orc_alert.wav",
+"pitch": 1.0,
+"volume_db": -11.0
+},
+"orc_swing": {
+"jitter": 0.06,
+"path": "res://assets/created/sfx/swing_heavy.wav",
+"pitch": 0.8,
+"volume_db": -9.0
+},
+"rock": {
+"jitter": 0.1,
+"path": "res://assets/created/sfx/rock.wav",
+"pitch": 1.0,
+"volume_db": -10.0
+},
+"shield_block": {
+"jitter": 0.06,
+"path": "res://assets/created/sfx/clang.wav",
+"pitch": 1.0,
+"volume_db": -8.0
+},
+"slam": {
+"jitter": 0.05,
+"path": "res://assets/created/sfx/slam.wav",
+"pitch": 1.0,
+"volume_db": -6.0
+},
+"spring": {
+"jitter": 0.05,
+"path": "res://assets/created/sfx/spring.wav",
+"pitch": 1.0,
+"volume_db": -10.0
 }
 }

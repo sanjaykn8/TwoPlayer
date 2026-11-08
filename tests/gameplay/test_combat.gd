@@ -142,16 +142,18 @@ func test_knights_cannot_hit_each_other() -> void:
 func test_four_directions_and_animation_selection() -> void:
 	await _tap([&"p1_attack"])
 	assert_eq(k1.combat.animation_name(), "attack_right", "default facing: right")
-	assert_true(k1.combat.weapon.visible and not k1.combat.weapon.flip_h, "weapon shown facing right")
+	assert_eq(k1.sprite.animation, &"attack_side", "the knight's own slash animation shows")
+	assert_false(k1.sprite.flip_h, "slash faces right")
+	assert_false(k1.combat.weapon.visible, "side slashes need no knife overlay")
 	await physics_frames(20)
-	assert_false(k1.combat.weapon.visible, "weapon hidden after the attack")
+	assert_false(k1.sprite.animation == &"attack_side", "slash pose ends with the attack")
 	Input.action_press(&"p1_move_left")
 	await physics_frames(3)
 	Input.action_release(&"p1_move_left")
 	await physics_frames(10)
 	await _tap([&"p1_attack"])
 	assert_eq(k1.combat.animation_name(), "attack_left", "after moving left: left")
-	assert_true(k1.combat.weapon.flip_h, "weapon mirrored")
+	assert_true(k1.sprite.flip_h, "slash mirrored")
 	await physics_frames(20)
 	await _tap([&"p1_move_up", &"p1_attack"])
 	assert_eq(k1.combat.direction, Dir.UP, "Up held: UP")
@@ -195,7 +197,7 @@ func test_hit_frames_and_animation_are_synchronised() -> void:
 	var at_hit := []
 	c.hit_window_opened.connect(func(_id: int) -> void: opened.append(c.elapsed()))
 	c.hit_window_closed.connect(func(_id: int) -> void: closed.append(c.elapsed()))
-	target.hit.connect(func(_e: DamageEvent, _a: int) -> void: at_hit.append([c.elapsed(), c.weapon.frame]))
+	target.hit.connect(func(_e: DamageEvent, _a: int) -> void: at_hit.append([c.elapsed(), k1.sprite.frame]))
 	var active_frames := 0
 	var weapon_frames_while_active := {}
 	var weapon_frames_before := {}
@@ -203,19 +205,20 @@ func test_hit_frames_and_animation_are_synchronised() -> void:
 	for i in 25:
 		if c.hitbox.active:
 			active_frames += 1
-			weapon_frames_while_active[c.weapon.frame] = true
+			weapon_frames_while_active[k1.sprite.frame] = true
 		elif c.state == S.ATTACKING:
-			weapon_frames_before[c.weapon.frame] = true
+			weapon_frames_before[k1.sprite.frame] = true
 		await physics_frames(1)
 	var cfg := c.config
 	assert_eq(active_frames, int(round(cfg.active_time * 60.0)), "hitbox active for exactly the hit frames")
 	assert_near(opened[0], cfg.windup_time + 1.0 / 60.0, 0.001, "opens on the first tick after the windup")
 	assert_near(closed[0], cfg.hit_window_end() + 1.0 / 60.0, 0.001, "closes right after the hit frames")
-	assert_eq(weapon_frames_while_active.keys().all(func(f: int) -> bool: return f == 1 or f == 2), true, "slash frames 1-2 shown only during hit frames")
-	assert_eq(weapon_frames_before.keys(), [0], "windup frame 0 before the hit frames")
+	# Soldier slash sheet: frame 1 sword raised (windup), 3-4 the arc (hit frames), 5 follow-through.
+	assert_eq(weapon_frames_while_active.keys().all(func(f: int) -> bool: return f == 3 or f == 4), true, "arc frames 3-4 shown only during hit frames")
+	assert_eq(weapon_frames_before.keys(), [1], "windup frame 1 before the hit frames")
 	assert_eq(at_hit.size(), 1, "one hit")
 	assert_near(at_hit[0][0], opened[0], 0.0001, "damage lands on the first hit frame")
-	assert_eq(at_hit[0][1], 1, "the slash frame is showing when damage lands")
+	assert_eq(at_hit[0][1], 3, "the arc frame is showing when damage lands")
 	assert_false(c.hitbox.active, "hitbox closed after the attack")
 	assert_eq(c.state, S.IDLE, "back to idle")
 

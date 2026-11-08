@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="EnemyStats" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/enemies/enemy_stats.gd" id="1_es"]
+[ext_resource type="SpriteFrames" path="res://resources/enemies/green_slime_frames.tres" id="2_fr"]
+
+[resource]
+script = ExtResource("1_es")
+display_name = "Ember Slime"
+sprite_frames = ExtResource("2_fr")
+sprite_offset = Vector2(0, -12)
+tint = Color(1.7, 0.75, 0.35, 1)
+body_size = Vector2(12, 10)
+hurtbox_size = Vector2(14, 12)
+knockback_factor = 0.8
+max_health = 1
+contact_damage = 0
+contact_interval = 0.6
+patrol_speed = 24.0
+detection_radius = 104.0
+reaction_time = 0.25
+windup_time = 0.3
+attack_damage = 0
+special_range = 30.0
+special_time = 1.0
+coin_min = 1
+coin_max = 2

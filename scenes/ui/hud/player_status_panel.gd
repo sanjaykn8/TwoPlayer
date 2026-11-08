@@ -7,9 +7,6 @@ extends PanelContainer
 ## Updates come from signals (health_changed, PlayerStats.changed, PlayerEffects.changed);
 ## the only per-frame work is refreshing the seconds shown on active effect indicators.
 
-const KNIGHT_SHEET := preload("res://assets/sprites/knight.png")
-const PALETTE_SHADER := preload("res://resources/shaders/knight_palette.gdshader")
-
 var player_id := 1
 var stats: PlayerStats
 var health: HealthComponent
@@ -44,14 +41,9 @@ func _init(id: int) -> void:
 	tag.add_theme_font_override(&"font", UiTheme.FONT_BOLD)
 	tag.add_theme_color_override(&"font_color", UiTheme.player_color(id))
 	portrait = TextureRect.new()
-	portrait.texture = UiTheme.sprite(KNIGHT_SHEET, Rect2(8, 12, 16, 16))
-	portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var profile: KnightProfile = load("res://resources/players/p%d_profile.tres" % id)
-	var material := ShaderMaterial.new()
-	material.shader = PALETTE_SHADER
-	material.set_shader_parameter(&"target_tunic", profile.tunic_color)
-	material.set_shader_parameter(&"target_plume", profile.plume_color)
-	portrait.material = material
+	portrait.texture = profile.portrait()
+	portrait.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	hearts = HealthDisplay.new()
 	hearts.right_aligned = right
 	hearts.size_flags_vertical = Control.SIZE_SHRINK_CENTER

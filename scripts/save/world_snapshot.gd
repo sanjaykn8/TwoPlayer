@@ -6,8 +6,9 @@ extends RefCounted
 ##
 ## Captured, by stable id only (never NodePaths, instance ids or object references):
 ##   players    position, facing, last safe position
-##   enemies    living slimes with a save_id (SlimeStagger progress/timer, poison, home);
-##              defeated ones are recorded in the run and remove themselves on load
+##   enemies    living slimes and enemies with a save_id (slimes: stagger progress/timer,
+##              poison, home; other enemies: health, poison, home); defeated ones are recorded
+##              in the run and remove themselves on load
 ##   coins      dropped coins not yet collected (position, motion, pickup delay)
 ##   puzzles    temporary puzzle state (timed gates, momentary switches, timed plates, active
 ##              locks); completed/latched states are in the run's PuzzleRegistry
@@ -41,10 +42,9 @@ static func capture(level: Node, knights: Array) -> Dictionary:
 	for node in level.find_children("*", "", true, false):
 		if node.is_queued_for_deletion():
 			continue
-		if node is Slime:
-			var slime := node as Slime
-			if slime.save_id != "" and not slime.is_dead():
-				enemies[slime.save_id] = slime.save_state()
+		if node is Slime or node is Enemy:
+			if node.save_id != "" and not node.is_dead():
+				enemies[node.save_id] = node.save_state()
 		elif node is DroppedCoin:
 			var coin := node as DroppedCoin
 			if coin.is_collected():
@@ -173,14 +173,14 @@ static func after_ready(level: Node, world: Dictionary) -> PackedStringArray:
 	for node in level.find_children("*", "", true, false):
 		if node.is_queued_for_deletion():
 			continue
-		if node is Slime and node.save_id != "":
+		if (node is Slime or node is Enemy) and node.save_id != "":
 			slimes[node.save_id] = node
 		elif node is PuzzleSource and node.puzzle_id != "":
 			puzzles[node.puzzle_id] = node
 		elif node is PlatformBody and node.save_id != "":
 			platforms[node.save_id] = node
 	for id: String in slimes:
-		var slime: Slime = slimes[id]
+		var slime: Node = slimes[id]
 		if not world.enemies.has(id):
 			# Not alive in the save: it was defeated (normally already removed via the run).
 			slime.queue_free()

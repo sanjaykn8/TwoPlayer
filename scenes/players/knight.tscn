@@ -1,9 +1,8 @@
-[gd_scene load_steps=17 format=3]
+[gd_scene load_steps=15 format=3]
 
 [ext_resource type="Script" path="res://scenes/players/knight.gd" id="1_knight"]
 [ext_resource type="Resource" path="res://resources/config/knight_config.tres" id="2_config"]
-[ext_resource type="SpriteFrames" path="res://resources/players/knight_frames.tres" id="3_frames"]
-[ext_resource type="Shader" path="res://resources/shaders/knight_palette.gdshader" id="4_palette"]
+[ext_resource type="SpriteFrames" path="res://resources/players/knight_frames_p1.tres" id="3_frames"]
 [ext_resource type="Script" path="res://components/health/health_component.gd" id="5_health"]
 [ext_resource type="Resource" path="res://resources/players/p1_profile.tres" id="6_profile"]
 [ext_resource type="Script" path="res://components/combat/combat_component.gd" id="7_combat"]
@@ -13,9 +12,6 @@
 [ext_resource type="Script" path="res://components/combat/hurtbox_component.gd" id="11_hurtbox"]
 [ext_resource type="Script" path="res://components/progression/player_progress.gd" id="12_progress"]
 [ext_resource type="Script" path="res://components/safety/safe_spot_tracker.gd" id="13_safe"]
-
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_palette"]
-shader = ExtResource("4_palette")
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
 size = Vector2(10, 18)
@@ -33,8 +29,7 @@ profile = ExtResource("6_profile")
 config = ExtResource("2_config")
 
 [node name="Sprite" type="AnimatedSprite2D" parent="."]
-material = SubResource("ShaderMaterial_palette")
-position = Vector2(0, -12)
+position = Vector2(0, -20)
 sprite_frames = ExtResource("3_frames")
 animation = &"idle"
 autoplay = "idle"

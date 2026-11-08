@@ -1,0 +1,28 @@
+[gd_resource type="Resource" script_class="EnemyStats" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/enemies/enemy_stats.gd" id="1_es"]
+[ext_resource type="SpriteFrames" path="res://resources/enemies/frames/orc_grunt_frames.tres" id="2_fr"]
+
+[resource]
+script = ExtResource("1_es")
+display_name = "Orc Grunt"
+sprite_frames = ExtResource("2_fr")
+sprite_offset = Vector2(0, -16)
+body_size = Vector2(12, 15)
+hurtbox_size = Vector2(14, 16)
+knockback_factor = 1.0
+max_health = 3
+contact_damage = 1
+contact_interval = 0.6
+patrol_speed = 30.0
+detection_radius = 120.0
+reaction_time = 0.35
+attack_range = 20.0
+windup_time = 0.45
+active_time = 0.15
+recovery_time = 0.55
+attack_cooldown = 0.7
+attack_damage = 1
+attack_rect = Rect2(2, -16, 22, 16)
+coin_min = 3
+coin_max = 5

@@ -35,6 +35,33 @@ extends Resource
 @export var low_reach := 14.0
 @export var low_thickness := 8.0
 
+@export_group("Charged slash")
+## Keep attack held this long after a swing to charge a heavy slash; release to strike.
+@export var charge_time := 0.5
+## Extra power of the heavy slash (it counts as a stronger hit for slimes too).
+@export_range(0, 9) var heavy_power_bonus := 1
+## Reach multiplier of the heavy slash, on top of the knight's own range.
+@export var heavy_range_multiplier := 1.3
+@export var heavy_windup_time := 0.08
+@export var heavy_active_time := 0.14
+@export var heavy_cooldown := 0.5
+## Forward speed given to a grounded knight starting a heavy side slash.
+@export var heavy_lunge_speed := 150.0
+
+@export_group("Feel")
+## Speed an ordinary hit pushes a light enemy back (enemies scale it by their weight).
+@export var knockback_speed := 110.0
+@export var heavy_knockback_speed := 230.0
+## How long the attacker freezes when a hit lands.
+@export var hitstop_time := 0.05
+## Upward speed of a downward air attack that hits something (pogo bounce).
+@export var pogo_velocity := 300.0
+
+@export_group("Co-op strike")
+## Both knights hitting the same target within this window: the second hit is a co-op strike.
+@export var coop_window := 0.35
+@export_range(0, 9) var coop_bonus := 1
+
 @export_group("Physics")
 ## Hurtbox layers a knight's attack can hit (layer 7 enemy_hurtbox).
 @export_flags_2d_physics var hit_mask := 1 << 6
@@ -56,4 +83,8 @@ func validate() -> PackedStringArray:
 		problems.append("cooldown must cover windup + active time")
 	if side_reach <= 0.0 or vertical_reach <= 0.0 or low_reach <= 0.0:
 		problems.append("reaches must be > 0")
+	if heavy_active_time <= 0.0 or heavy_cooldown < heavy_windup_time + heavy_active_time:
+		problems.append("heavy cooldown must cover heavy windup + active time")
+	if charge_time <= 0.0:
+		problems.append("charge_time must be > 0")
 	return problems
