@@ -25,9 +25,9 @@ in `docs/PLAYTEST_FEEDBACK.md`.
 
 
 ## Ancient Forest
-### 1. The Mossy Path (`l01`) — pending (rebuilt in the overhaul; the user's first-attempt pass was on the old layout)
+### 1. The Mossy Path (`l01`) — pending (rebuilt in the overhaul and extended in the final pass; the user's first-attempt pass was on the old layout)
 
-Design: The Mossy Path: steps and a pit, the first slimes, a spring mushroom up to the canopy (red fruit, coins), a cracked wall that teaches the charged slash (a secret room above it needs a charged up-strike and a partner's boost), a plate gate, and the first orc grunt.
+Design: The Mossy Path: steps and a pit, the first slimes, a spring mushroom up to the canopy (red fruit, coins) and a second spring from there onto the roof of the old tree (coins, a shield fruit): a high road past the cracked wall below, which teaches the charged slash (a secret room above it needs a charged up-strike and a partner's boost). Then a plate gate behind the first spikes, and the first orc grunt.
 
 | Check | Result |
 |---|---|
@@ -35,8 +35,31 @@ Design: The Mossy Path: steps and a pit, the first slimes, a spring mushroom up 
 | Player Two spawn | |
 | Movement and jumps feel fair | |
 | Enemies (3 green, 0 purple slimes, 1 Orc Grunt) | |
-| Mechanisms readable and fair (1 spring, 2 cracked block) | |
-| Hazards (spikes 0, lava 0, hot ground 0 tiles) readable and fair | |
+| Mechanisms readable and fair (2 spring, 2 cracked block) | |
+| Hazards (spikes 2, lava 0, hot ground 0 tiles) readable and fair | |
+| Main route clear from the scenery and clues | |
+| Optional route(s) and secrets found / reachable | |
+| Cooperative puzzles solvable and recoverable | |
+| Collectibles (8 placed) collected once, not respawning | |
+| Exit works for either knight; both arrive in the next level | |
+| Death: a knight dying restarts the whole run | |
+| Save and resume mid-level | |
+| Camera (shared / split) readable | |
+| Completion time (design estimate 3.5 min) | |
+| Notes (unclear, frustrating, spikes in difficulty, softlocks) | |
+
+### 2. Rootway Hollows (`l02`) — pending (rebuilt in the overhaul and extended in the final pass; the user's first-attempt pass was on the old layout)
+
+Design: Rootway Hollows: a ladder down from the cliff, a spring back up to a root ledge (coins) and from there a crumbling root bridge, or the lift below it, over the pit; orc grunts, the hollow with the first two-knight lock, a root tunnel behind the hollow (a slime, coins, a green fruit), a cracked root wall hiding a cave of coins, and a ladder up to the high road.
+
+| Check | Result |
+|---|---|
+| Player One spawn (stands, can move at once) | |
+| Player Two spawn | |
+| Movement and jumps feel fair | |
+| Enemies (4 green, 0 purple slimes, 3 Orc Grunt) | |
+| Mechanisms readable and fair (1 spring, 1 cracked block) | |
+| Hazards (spikes 2, lava 0, hot ground 0 tiles) readable and fair | |
 | Main route clear from the scenery and clues | |
 | Optional route(s) and secrets found / reachable | |
 | Cooperative puzzles solvable and recoverable | |
@@ -45,48 +68,25 @@ Design: The Mossy Path: steps and a pit, the first slimes, a spring mushroom up 
 | Death: a knight dying restarts the whole run | |
 | Save and resume mid-level | |
 | Camera (shared / split) readable | |
-| Completion time (design estimate 3.5 min) | |
-| Notes (unclear, frustrating, spikes in difficulty, softlocks) | |
-
-### 2. Rootway Hollows (`l02`) — pending (rebuilt in the overhaul; the user's first-attempt pass was on the old layout)
-
-Design: Rootway Hollows: a ladder down from the cliff, a spring back up to a root ledge (coins), a lift over a pit, orc grunts, the hollow with the first two-knight lock, a cracked root wall hiding a cave of coins, and a ladder up to the high road.
-
-| Check | Result |
-|---|---|
-| Player One spawn (stands, can move at once) | |
-| Player Two spawn | |
-| Movement and jumps feel fair | |
-| Enemies (3 green, 0 purple slimes, 3 Orc Grunt) | |
-| Mechanisms readable and fair (1 spring, 1 cracked block) | |
-| Hazards (spikes 2, lava 0, hot ground 0 tiles) readable and fair | |
-| Main route clear from the scenery and clues | |
-| Optional route(s) and secrets found / reachable | |
-| Cooperative puzzles solvable and recoverable | |
-| Collectibles (4 placed) collected once, not respawning | |
-| Exit works for either knight; both arrive in the next level | |
-| Death: a knight dying restarts the whole run | |
-| Save and resume mid-level | |
-| Camera (shared / split) readable | |
 | Completion time (design estimate 4.0 min) | |
 | Notes (unclear, frustrating, spikes in difficulty, softlocks) | |
 
-### 3. Old Watchtrees (`l03`) — pending (rebuilt in the overhaul; the user's first-attempt pass was on the old layout)
+### 3. Old Watchtrees (`l03`) — pending (rebuilt in the overhaul and extended in the final pass; the user's first-attempt pass was on the old layout)
 
-Design: Old Watchtrees: one knight holds the plate while the other rides the lift and strikes the switch that keeps it running. Then up the trees on branches and a spring, an orc on the high branch, a gliding platform between trunks, and down to the exit. Optional: a chain of spirit lanterns (strike down to bounce) to a ledge with the green jar.
+Design: Old Watchtrees: one knight holds the plate while the other rides the lift and strikes the switch that keeps it running. Then up the trees on branches and springs (a slime on the first branch, an orc on the high one, a nest above it with coins and a green fruit), a gliding platform between trunks, and down to the exit. Optional: a chain of spirit lanterns (strike down to bounce) to a ledge with the green jar.
 
 | Check | Result |
 |---|---|
 | Player One spawn (stands, can move at once) | |
 | Player Two spawn | |
 | Movement and jumps feel fair | |
-| Enemies (2 green, 0 purple slimes, 2 Orc Grunt) | |
-| Mechanisms readable and fair (1 spring, 3 pogo lantern) | |
+| Enemies (3 green, 0 purple slimes, 2 Orc Grunt) | |
+| Mechanisms readable and fair (2 spring, 3 pogo lantern) | |
 | Hazards (spikes 0, lava 0, hot ground 0 tiles) readable and fair | |
 | Main route clear from the scenery and clues | |
 | Optional route(s) and secrets found / reachable | |
 | Cooperative puzzles solvable and recoverable | |
-| Collectibles (3 placed) collected once, not respawning | |
+| Collectibles (5 placed) collected once, not respawning | |
 | Exit works for either knight; both arrive in the next level | |
 | Death: a knight dying restarts the whole run | |
 | Save and resume mid-level | |
@@ -94,9 +94,9 @@ Design: Old Watchtrees: one knight holds the plate while the other rides the lif
 | Completion time (design estimate 4.5 min) | |
 | Notes (unclear, frustrating, spikes in difficulty, softlocks) | |
 
-### 4. Heart of the Grove (`l04`) — pending (rebuilt in the overhaul; the user's first-attempt pass was on the old layout)
+### 4. Heart of the Grove (`l04`) — pending (rebuilt in the overhaul and extended in the final pass; the user's first-attempt pass was on the old layout)
 
-Design: Heart of the Grove: the World 1 finale. An ambush in the clearing (the gates shut until the grunts and slime are beaten), a coin cave under a cracked floor (strike the earth from above; a ladder leads out), rafts over a pit, the split (one holds above, one runs below), more orcs and spikes, and the two-plate gate.
+Design: Heart of the Grove: the World 1 finale. An ambush in the clearing (the gates shut until the grunts and slime are beaten), a coin cave under a cracked floor (strike the earth from above; a ladder leads out), rafts over a pit with spirit lanterns above them to an islet (a venom fruit for the fights ahead), the split (one holds above, one runs below), more orcs and spikes, and the two-plate gate.
 
 | Check | Result |
 |---|---|
@@ -104,12 +104,12 @@ Design: Heart of the Grove: the World 1 finale. An ambush in the clearing (the g
 | Player Two spawn | |
 | Movement and jumps feel fair | |
 | Enemies (2 green, 0 purple slimes, 3 Orc Grunt) | |
-| Mechanisms readable and fair (1 cracked block) | |
+| Mechanisms readable and fair (1 cracked block, 2 pogo lantern) | |
 | Hazards (spikes 2, lava 0, hot ground 0 tiles) readable and fair | |
 | Main route clear from the scenery and clues | |
 | Optional route(s) and secrets found / reachable | |
 | Cooperative puzzles solvable and recoverable | |
-| Collectibles (5 placed) collected once, not respawning | |
+| Collectibles (7 placed) collected once, not respawning | |
 | Exit works for either knight; both arrive in the next level | |
 | Death: a knight dying restarts the whole run | |
 | Save and resume mid-level | |
@@ -121,20 +121,20 @@ Design: Heart of the Grove: the World 1 finale. An ambush in the clearing (the g
 ## Underground Caves
 ### 5. Crystal Descent (`l05`) — pending
 
-Design: Crystal Descent: a dark descent down shelves. A bat over the first steps, rocks over a spike gap, a cracked crystal wall hiding a room (purple fruit, coins), a drop shaft into the lowest chamber, and an updraft chimney above it (jump into the wind) to a crystal room with the yellow jar; a side shaft leads back down.
+Design: Crystal Descent: a dark descent down shelves. A cracked cliff face hides the first crystal room (a shield fruit), a bat over the first steps, rocks over a spike gap, a cracked crystal wall hiding a second room (purple fruit, coins), a drop shaft into the lowest chamber, a bat over a chasm crossed on crumbling crystal, and an updraft chimney (jump into the wind) to a crystal room: its yellow jar waits behind a door that only opens while the partner holds the stone below. A side shaft leads back down.
 
 | Check | Result |
 |---|---|
 | Player One spawn (stands, can move at once) | |
 | Player Two spawn | |
 | Movement and jumps feel fair | |
-| Enemies (0 green, 3 purple slimes, 2 Cave Bat, 2 Orc Grunt) | |
-| Mechanisms readable and fair (1 darkness, 2 falling rock, 1 cracked block, 1 updraft) | |
-| Hazards (spikes 3, lava 0, hot ground 0 tiles) readable and fair | |
+| Enemies (0 green, 3 purple slimes, 3 Cave Bat, 1 Orc Grunt) | |
+| Mechanisms readable and fair (1 darkness, 2 cracked block, 2 falling rock, 1 updraft) | |
+| Hazards (spikes 2, lava 0, hot ground 0 tiles) readable and fair | |
 | Main route clear from the scenery and clues | |
 | Optional route(s) and secrets found / reachable | |
 | Cooperative puzzles solvable and recoverable | |
-| Collectibles (4 placed) collected once, not respawning | |
+| Collectibles (6 placed) collected once, not respawning | |
 | Exit works for either knight; both arrive in the next level | |
 | Death: a knight dying restarts the whole run | |
 | Save and resume mid-level | |
@@ -144,7 +144,7 @@ Design: Crystal Descent: a dark descent down shelves. A bat over the first steps
 
 ### 6. Echoing Shafts (`l06`) — pending
 
-Design: Echoing Shafts: up through the caves on the wind. An updraft to the first shelf (a bat under its roof), the blinking bridge (stones vanish behind you), a second updraft to the high shelf under loose rocks and an orc, timed stones to the plateau. Optional: a spring at the end of the middle shelf up to a pocket (power tile, coins).
+Design: Echoing Shafts: up through the caves on the wind, by two roads. The high road: an updraft to the first shelf (a bat under its roof) and the blinking bridge (stones vanish behind you). The low road: crumbling stones over the abyss to an island (coins, purple fruit) and a second wind up to the middle shelf. Then an updraft to the high shelf under loose rocks and an orc, and timed stones to the plateau. Optional: a spring at the end of the middle shelf up to a pocket (power tile, coins).
 
 | Check | Result |
 |---|---|
@@ -152,12 +152,12 @@ Design: Echoing Shafts: up through the caves on the wind. An updraft to the firs
 | Player Two spawn | |
 | Movement and jumps feel fair | |
 | Enemies (0 green, 3 purple slimes, 2 Cave Bat, 1 Orc Grunt) | |
-| Mechanisms readable and fair (2 updraft, 1 spring, 2 falling rock) | |
+| Mechanisms readable and fair (3 updraft, 1 spring, 2 falling rock) | |
 | Hazards (spikes 0, lava 0, hot ground 0 tiles) readable and fair | |
 | Main route clear from the scenery and clues | |
 | Optional route(s) and secrets found / reachable | |
 | Cooperative puzzles solvable and recoverable | |
-| Collectibles (3 placed) collected once, not respawning | |
+| Collectibles (5 placed) collected once, not respawning | |
 | Exit works for either knight; both arrive in the next level | |
 | Death: a knight dying restarts the whole run | |
 | Save and resume mid-level | |
@@ -167,20 +167,20 @@ Design: Echoing Shafts: up through the caves on the wind. An updraft to the firs
 
 ### 7. Brood Caverns (`l07`) — pending
 
-Design: Brood Caverns: a dark cavern of slimes, orcs and bats under hanging rock, a ferry over the gap, loose rock, timed steps to a ledge of coins, and the brood below: an optional fight with the Brood Mother (her treasure: the red jar). The way out is an arena: the first orc brute and its shockwaves, with a grunt and a purple slime, before the gates open.
+Design: Brood Caverns: a dark cavern of slimes, orcs and bats under hanging rock. A gallery above the first hall (a spring leads up; a bat hangs over it; a shield fruit at its end), a brood nest sunk in the floor (slimes, coins), a ferry over the gap, loose rock, timed steps to a ledge (coins and venom for the fight), and the brood below: an optional fight with the Brood Mother (her treasure: the red jar). The way out is an arena: the first orc brute and its shockwaves, with a grunt and a purple slime, before the gates open.
 
 | Check | Result |
 |---|---|
 | Player One spawn (stands, can move at once) | |
 | Player Two spawn | |
 | Movement and jumps feel fair | |
-| Enemies (1 green, 3 purple slimes, 3 Orc Grunt, 2 Cave Bat, 1 Orc Brute, optional boss BROOD MOTHER) | |
-| Mechanisms readable and fair (1 darkness, 1 falling rock) | |
+| Enemies (2 green, 3 purple slimes, 3 Cave Bat, 3 Orc Grunt, 1 Orc Brute, optional boss BROOD MOTHER) | |
+| Mechanisms readable and fair (1 darkness, 1 spring, 1 falling rock) | |
 | Hazards (spikes 2, lava 0, hot ground 0 tiles) readable and fair | |
 | Main route clear from the scenery and clues | |
 | Optional route(s) and secrets found / reachable | |
 | Cooperative puzzles solvable and recoverable | |
-| Collectibles (5 placed) collected once, not respawning | |
+| Collectibles (8 placed) collected once, not respawning | |
 | Exit works for either knight; both arrive in the next level | |
 | Death: a knight dying restarts the whole run | |
 | Save and resume mid-level | |
@@ -190,20 +190,20 @@ Design: Brood Caverns: a dark cavern of slimes, orcs and bats under hanging rock
 
 ### 8. The Sunless Lift (`l08`) — pending
 
-Design: The Sunless Lift: the World 2 finale in the dark. One knight holds the floor plate so the other can ride to the middle shelf; the middle plate runs both lifts, so the first can ride to the top and latch the switch that keeps both running. Loose rock overhead, timed hops to high ledges (coins, red fruit), a treasure room down a crack, and at the top an arena: a brute, a grunt and a purple slime before the exit.
+Design: The Sunless Lift: the World 2 finale in the dark. One knight holds the floor plate so the other can ride to the middle shelf; the middle plate runs both lifts, so the first can ride to the top and latch the switch that keeps both running. A cracked wall beside the first lift hides a room (blue jar). Loose rock, spikes and a slime on the top road, timed hops to high ledges (coins, red fruit), a treasure room down a ladder, and at the top an arena: a brute, a grunt and a purple slime before the exit.
 
 | Check | Result |
 |---|---|
 | Player One spawn (stands, can move at once) | |
 | Player Two spawn | |
 | Movement and jumps feel fair | |
-| Enemies (0 green, 2 purple slimes, 2 Orc Grunt, 1 Orc Brute) | |
-| Mechanisms readable and fair (1 darkness, 2 falling rock) | |
-| Hazards (spikes 0, lava 0, hot ground 0 tiles) readable and fair | |
+| Enemies (0 green, 3 purple slimes, 2 Orc Grunt, 1 Orc Brute) | |
+| Mechanisms readable and fair (1 darkness, 1 cracked block, 2 falling rock) | |
+| Hazards (spikes 2, lava 0, hot ground 0 tiles) readable and fair | |
 | Main route clear from the scenery and clues | |
 | Optional route(s) and secrets found / reachable | |
 | Cooperative puzzles solvable and recoverable | |
-| Collectibles (4 placed) collected once, not respawning | |
+| Collectibles (6 placed) collected once, not respawning | |
 | Exit works for either knight; both arrive in the next level | |
 | Death: a knight dying restarts the whole run | |
 | Save and resume mid-level | |
@@ -215,7 +215,7 @@ Design: The Sunless Lift: the World 2 finale in the dark. One knight holds the f
 ## Abandoned Ruins
 ### 9. Sunken Gatehouse (`l09`) — pending
 
-Design: Sunken Gatehouse: the first shieldbearer in the courtyard, a spring to a ledge outside the gatehouse tower (a cracked wall into a hidden room), saws in the tunnel under the tower (jump the floor blade, time the falling one), a courtyard with an archer on the battlement and a gate that opens when one knight on the battlement and one below strike their targets together, then a guarded hall that locks until its defenders fall.
+Design: Sunken Gatehouse: the first shieldbearer in the courtyard, a spring to a ledge outside the gatehouse tower (a cracked wall into a hidden room), saws in the tunnel under the tower (jump the floor blade, time the falling one), a courtyard with an archer on the battlement, a cistern under its floor (a cracked flagstone or the ladder; coins and venom), and a gate that opens when one knight on the battlement and one below strike their targets together, then a guarded hall that locks until its defenders fall.
 
 | Check | Result |
 |---|---|
@@ -223,12 +223,12 @@ Design: Sunken Gatehouse: the first shieldbearer in the courtyard, a spring to a
 | Player Two spawn | |
 | Movement and jumps feel fair | |
 | Enemies (0 green, 1 purple slimes, 3 Orc Shieldbearer, 2 Hollow Archer, 1 Orc Grunt) | |
-| Mechanisms readable and fair (1 spring, 1 cracked block, 2 saw) | |
+| Mechanisms readable and fair (1 spring, 2 cracked block, 2 saw) | |
 | Hazards (spikes 0, lava 0, hot ground 0 tiles) readable and fair | |
 | Main route clear from the scenery and clues | |
 | Optional route(s) and secrets found / reachable | |
 | Cooperative puzzles solvable and recoverable | |
-| Collectibles (3 placed) collected once, not respawning | |
+| Collectibles (5 placed) collected once, not respawning | |
 | Exit works for either knight; both arrive in the next level | |
 | Death: a knight dying restarts the whole run | |
 | Save and resume mid-level | |
@@ -238,7 +238,7 @@ Design: Sunken Gatehouse: the first shieldbearer in the courtyard, a spring to a
 
 ### 10. Hall of Echoes (`l10`) — pending
 
-Design: Hall of Echoes: three targets in the order the sign gives (a shieldbearer watches), a pit whose plate holds a gate while a saw runs the pit floor, a bridge held from a balcony (archers wait on the far side), a timed door between two switches. Optional: a balcony ledge (coins, purple fruit) and the yellow jar past the bridge.
+Design: Hall of Echoes: three targets in the order the sign gives (a shieldbearer watches), a pit whose plate holds a gate while a saw runs the pit floor, a bridge held from a balcony (archers wait on the far side), a timed door between two switches. Optional: a balcony ledge (coins, purple fruit), and past the bridge a spring up to a ledge swept by a saw: the yellow jar waits at its far end.
 
 | Check | Result |
 |---|---|
@@ -246,7 +246,7 @@ Design: Hall of Echoes: three targets in the order the sign gives (a shieldbeare
 | Player Two spawn | |
 | Movement and jumps feel fair | |
 | Enemies (0 green, 1 purple slimes, 2 Orc Shieldbearer, 2 Hollow Archer, 1 Orc Grunt) | |
-| Mechanisms readable and fair (1 saw) | |
+| Mechanisms readable and fair (2 saw, 1 spring) | |
 | Hazards (spikes 0, lava 0, hot ground 0 tiles) readable and fair | |
 | Main route clear from the scenery and clues | |
 | Optional route(s) and secrets found / reachable | |
@@ -261,15 +261,15 @@ Design: Hall of Echoes: three targets in the order the sign gives (a shieldbeare
 
 ### 11. Twin Sanctums (`l11`) — pending
 
-Design: Twin Sanctums: the knights split at the first ladder. The upper knight walks the temple roof (saws, a shieldbearer, an archer), the lower one the crypt beneath (orcs, an archer); each route's switches open the other's doors in three stages (a held plate below keeps a roof door open until the roof latch). The routes join at the far end. Optional: a roof ledge above a power tile (coins, green fruit).
+Design: Twin Sanctums: the knights split at the first ladder. The upper knight walks the temple roof (saws, a shieldbearer, an archer), the lower one the crypt beneath (orcs, a saw, an archer); each route's switches open the other's doors in three stages (a held plate below, with an orc closing in on its holder, keeps a roof door open until the roof latch). The routes join at the far end, where a hall locks on both knights: a shieldbearer between two archers. Optional: a roof ledge above a power tile (coins, a feast fruit).
 
 | Check | Result |
 |---|---|
 | Player One spawn (stands, can move at once) | |
 | Player Two spawn | |
 | Movement and jumps feel fair | |
-| Enemies (1 green, 0 purple slimes, 2 Orc Shieldbearer, 2 Hollow Archer, 1 Orc Grunt) | |
-| Mechanisms readable and fair (1 saw) | |
+| Enemies (1 green, 0 purple slimes, 3 Orc Shieldbearer, 4 Hollow Archer, 2 Orc Grunt) | |
+| Mechanisms readable and fair (2 saw) | |
 | Hazards (spikes 9, lava 0, hot ground 0 tiles) readable and fair | |
 | Main route clear from the scenery and clues | |
 | Optional route(s) and secrets found / reachable | |
@@ -284,20 +284,20 @@ Design: Twin Sanctums: the knights split at the first ladder. The upper knight w
 
 ### 12. The Gilded Seal (`l12`) — pending
 
-Design: The Gilded Seal: the World 3 finale. A great chamber whose seal gate needs three locks: twin targets struck together, two plates stepped on within moments of each other (a shieldbearer guards the pit), three switches in the order the sign tells. Beyond the seal waits the Orc Warchief: the hall locks until it falls. Optional: a red jar above the right gallery.
+Design: The Gilded Seal: the World 3 finale. A great chamber whose seal gate needs three locks: twin targets struck together (a saw and an orc below them), two plates stepped on within moments of each other (a shieldbearer guards the pit), three switches in the order the sign tells (an archer at the gallery's end). Before the seal: a feast and a venom fruit. Beyond it waits the Orc Warchief: the hall locks until it falls. Optional: a red jar above the gallery.
 
 | Check | Result |
 |---|---|
 | Player One spawn (stands, can move at once) | |
 | Player Two spawn | |
 | Movement and jumps feel fair | |
-| Enemies (0 green, 1 purple slimes, 1 Orc Grunt, 1 Hollow Archer, 1 Orc Shieldbearer, boss fight Orc Warchief) | |
-| Mechanisms readable and fair (none) | |
+| Enemies (0 green, 1 purple slimes, 1 Orc Grunt, 2 Hollow Archer, 1 Orc Shieldbearer, boss fight Orc Warchief) | |
+| Mechanisms readable and fair (1 saw) | |
 | Hazards (spikes 0, lava 0, hot ground 0 tiles) readable and fair | |
 | Main route clear from the scenery and clues | |
 | Optional route(s) and secrets found / reachable | |
 | Cooperative puzzles solvable and recoverable | |
-| Collectibles (2 placed) collected once, not respawning | |
+| Collectibles (4 placed) collected once, not respawning | |
 | Exit works for either knight; both arrive in the next level | |
 | Death: a knight dying restarts the whole run | |
 | Save and resume mid-level | |
@@ -309,7 +309,7 @@ Design: The Gilded Seal: the World 3 finale. A great chamber whose seal gate nee
 ## Lava Kingdom
 ### 13. Ashen Steps (`l13`) — pending
 
-Design: Ashen Steps: two-tile lava pits, a hot-ground strip, crumbling stones over a lava pool, a plate beside burning ground that holds a gate until the runner latches it, and two moving platforms over a lava river. Optional: a ledge above the crumbling stones (green jar).
+Design: Ashen Steps: a steam vent beside the first lava pit (jump into it: hot air rises, to a ledge of coins), a hot-ground strip and fire jets, an ember slime beside a cracked wall, crumbling stones over a lava pool, a plate beside burning ground that holds a gate until the runner latches it, two moving platforms over a lava river, and a brute on a terrace. Optional: a ledge above the crumbling stones (green jar).
 
 | Check | Result |
 |---|---|
@@ -317,12 +317,12 @@ Design: Ashen Steps: two-tile lava pits, a hot-ground strip, crumbling stones ov
 | Player Two spawn | |
 | Movement and jumps feel fair | |
 | Enemies (0 green, 0 purple slimes, 2 Ember Slime, 1 Orc Grunt, 1 Orc Brute) | |
-| Mechanisms readable and fair (4 fire jet, 1 cracked block) | |
+| Mechanisms readable and fair (1 updraft, 4 fire jet, 1 cracked block) | |
 | Hazards (spikes 0, lava 38, hot ground 6 tiles) readable and fair | |
 | Main route clear from the scenery and clues | |
 | Optional route(s) and secrets found / reachable | |
 | Cooperative puzzles solvable and recoverable | |
-| Collectibles (3 placed) collected once, not respawning | |
+| Collectibles (4 placed) collected once, not respawning | |
 | Exit works for either knight; both arrive in the next level | |
 | Death: a knight dying restarts the whole run | |
 | Save and resume mid-level | |
@@ -332,7 +332,7 @@ Design: Ashen Steps: two-tile lava pits, a hot-ground strip, crumbling stones ov
 
 ### 14. Cinder Bridges (`l14`) — pending
 
-Design: Cinder Bridges: one-way bridges above a lava sea. Slimes and spikes on the bridge; a gate held from a rock shelf below (latched past the gate); a long run of blinking stones (a ledge above them holds purple fruit); solid ground and the exit beyond.
+Design: Cinder Bridges: one-way bridges above a lava sea. Blades swing through the bridge, slimes and spikes stand on it; a ladder under the first bridge leads down to a rock shelf (coins, a shield fruit); a gate held from a second shelf (latched past the gate); a long run of blinking stones (a ledge above them holds purple fruit); solid ground and the exit beyond.
 
 | Check | Result |
 |---|---|
@@ -340,12 +340,12 @@ Design: Cinder Bridges: one-way bridges above a lava sea. Slimes and spikes on t
 | Player Two spawn | |
 | Movement and jumps feel fair | |
 | Enemies (0 green, 0 purple slimes, 2 Ember Slime, 1 Orc Brute, 1 Orc Shieldbearer, 1 Orc Grunt) | |
-| Mechanisms readable and fair (2 fire jet) | |
+| Mechanisms readable and fair (2 fire jet, 2 saw) | |
 | Hazards (spikes 2, lava 141, hot ground 0 tiles) readable and fair | |
 | Main route clear from the scenery and clues | |
 | Optional route(s) and secrets found / reachable | |
 | Cooperative puzzles solvable and recoverable | |
-| Collectibles (2 placed) collected once, not respawning | |
+| Collectibles (4 placed) collected once, not respawning | |
 | Exit works for either knight; both arrive in the next level | |
 | Death: a knight dying restarts the whole run | |
 | Save and resume mid-level | |
@@ -355,7 +355,7 @@ Design: Cinder Bridges: one-way bridges above a lava sea. Slimes and spikes on t
 
 ### 15. Forge of Embers (`l15`) — pending
 
-Design: Forge of Embers: hot-ground strips, crumbling stones over a lava trench, a forge corridor of slimes under the boss hall. Optional: the Magma Heart above (ladder up); defeating it opens its reward niche (green jar). Then a lava pool crossed by a platform that only runs while a knight stands on the island plate (latched from the far side).
+Design: Forge of Embers: hot-ground strips, a cellar under the first floor (a cracked flagstone or the ladder; coins and venom), crumbling stones over a lava trench, a forge corridor of slimes, fire and falling hammers under the boss hall. Optional: the Magma Heart above (ladder up); defeating it opens its reward niche (green jar). Then a lava pool crossed by a platform that only runs while a knight stands on the island plate (latched from the far side), and a grinding wheel before the exit.
 
 | Check | Result |
 |---|---|
@@ -363,12 +363,12 @@ Design: Forge of Embers: hot-ground strips, crumbling stones over a lava trench,
 | Player Two spawn | |
 | Movement and jumps feel fair | |
 | Enemies (0 green, 1 purple slimes, 3 Ember Slime, 1 Orc Grunt, 1 Orc Brute, optional boss MAGMA HEART) | |
-| Mechanisms readable and fair (3 fire jet) | |
+| Mechanisms readable and fair (1 cracked block, 2 falling rock, 1 saw, 3 fire jet) | |
 | Hazards (spikes 2, lava 41, hot ground 12 tiles) readable and fair | |
 | Main route clear from the scenery and clues | |
 | Optional route(s) and secrets found / reachable | |
 | Cooperative puzzles solvable and recoverable | |
-| Collectibles (4 placed) collected once, not respawning | |
+| Collectibles (6 placed) collected once, not respawning | |
 | Exit works for either knight; both arrive in the next level | |
 | Death: a knight dying restarts the whole run | |
 | Save and resume mid-level | |
@@ -378,7 +378,7 @@ Design: Forge of Embers: hot-ground strips, crumbling stones over a lava trench,
 
 ### 16. Heart of the Mountain (`l16`) — pending
 
-Design: Heart of the Mountain: the World 4 finale. Hot ground and slimes, a lava lake crossed on crumbling stones to a rock pillar whose plate runs the ferry (latched on the far shore), a forge hall of burning floors, a long blinking-stone crossing with a rest pillar, and a lift up to the summit exit. Optional: a ledge above the pillar (red fruit, coins).
+Design: Heart of the Mountain: the World 4 finale. Hot ground and slimes, a lava lake crossed on crumbling stones to a rock pillar whose plate runs the ferry (latched on the far shore), a forge hall of burning floors, a long blinking-stone crossing with a rest pillar, and a lift up to the summit, where the last gate opens only when both knights strike the twin hearts together. Optional: a ledge above the pillar (red fruit, coins), a vent to the forge roof.
 
 | Check | Result |
 |---|---|
@@ -403,14 +403,14 @@ Design: Heart of the Mountain: the World 4 finale. Hot ground and slimes, a lava
 ## Dark Fortress
 ### 17. Iron Gate Keep (`l17`) — pending
 
-Design: Iron Gate Keep: a three-key gate (a held plate, a timed plate and a latch struck in time); a guard hall full of slimes with a catwalk above as the quiet way through, and a vault under a cracked floor tile (red jar past a spike bed); platforms over a spiked pit; twin targets before the exit.
+Design: Iron Gate Keep: a three-key gate (a held plate, a timed plate and a latch struck in time); a guard hall full of orcs and fire with a catwalk above as the quiet way through (it crumbles in front of its archer; the yellow jar waits behind him), and a vault under a cracked floor tile (red jar past a spike bed); platforms over a spiked pit, under saws and in an archer's sights (crouch, or cut the arrow); twin targets before the exit.
 
 | Check | Result |
 |---|---|
 | Player One spawn (stands, can move at once) | |
 | Player Two spawn | |
 | Movement and jumps feel fair | |
-| Enemies (0 green, 1 purple slimes, 3 Orc Shieldbearer, 1 Orc Grunt, 2 Hollow Archer) | |
+| Enemies (0 green, 1 purple slimes, 3 Orc Shieldbearer, 1 Orc Grunt, 3 Hollow Archer) | |
 | Mechanisms readable and fair (2 fire jet, 2 saw) | |
 | Hazards (spikes 35, lava 0, hot ground 0 tiles) readable and fair | |
 | Main route clear from the scenery and clues | |
@@ -426,7 +426,7 @@ Design: Iron Gate Keep: a three-key gate (a held plate, a timed plate and a latc
 
 ### 18. Clockwork Halls (`l18`) — pending
 
-Design: Clockwork Halls: the knights work two machines at once. Left hall: a switch triggers a timed bridge that one knight must cross; right hall (up a ladder): a plate that only counts while held and a crumbling catwalk. Both machines must be finished (latched) to open the clock door. Then a pen of slimes around a plate that holds the last gate (latched past it).
+Design: Clockwork Halls: the knights work two machines at once. Left hall: a switch triggers a timed bridge that one knight must cross; right hall (up a ladder): a plate that only counts while held and a crumbling catwalk. Both machines must be finished (latched) to open the clock door. Then a pen of slimes around a plate that holds the last gate (latched past it), and a shieldbearer, an archer and a pendulum blade before the exit. Optional: ticking steps above the pen to a ledge (coins, a shield fruit).
 
 | Check | Result |
 |---|---|
@@ -434,12 +434,12 @@ Design: Clockwork Halls: the knights work two machines at once. Left hall: a swi
 | Player Two spawn | |
 | Movement and jumps feel fair | |
 | Enemies (1 green, 1 purple slimes, 1 Orc Grunt, 2 Hollow Archer, 2 Orc Shieldbearer) | |
-| Mechanisms readable and fair (1 saw, 1 fire jet) | |
+| Mechanisms readable and fair (2 saw, 1 fire jet) | |
 | Hazards (spikes 24, lava 0, hot ground 0 tiles) readable and fair | |
 | Main route clear from the scenery and clues | |
 | Optional route(s) and secrets found / reachable | |
 | Cooperative puzzles solvable and recoverable | |
-| Collectibles (2 placed) collected once, not respawning | |
+| Collectibles (4 placed) collected once, not respawning | |
 | Exit works for either knight; both arrive in the next level | |
 | Death: a knight dying restarts the whole run | |
 | Save and resume mid-level | |
@@ -449,7 +449,7 @@ Design: Clockwork Halls: the knights work two machines at once. Left hall: a swi
 
 ### 19. Broken Towers (`l19`) — pending
 
-Design: Broken Towers: four ruined towers above a spiked courtyard. Ladders inside the towers, crumbling bridges and a moving platform between them, slimes on the tower tops. A switch on the last tower latches the courtyard gate. Ladders let a knight who falls into the spiked courtyard climb back to the tower it fell from. Optional: a precise climb above the last tower to a blue jar.
+Design: Broken Towers: four ruined towers above a spiked courtyard. Ladders inside the towers, crumbling bridges, and a span through the wind that only runs while one knight holds its plate on the second tower (the rider latches it on the third, under an archer's eye); timed stones to the last tower, whose switch latches the courtyard gate. Ladders let a knight who falls into the spiked courtyard climb back. Optional: a precise climb above the last tower to a blue jar, and a cracked stone at its foot (coins, a shield fruit).
 
 | Check | Result |
 |---|---|
@@ -457,12 +457,12 @@ Design: Broken Towers: four ruined towers above a spiked courtyard. Ladders insi
 | Player Two spawn | |
 | Movement and jumps feel fair | |
 | Enemies (0 green, 0 purple slimes, 2 Orc Grunt, 2 Orc Shieldbearer, 2 Hollow Archer) | |
-| Mechanisms readable and fair (1 wind) | |
+| Mechanisms readable and fair (1 wind, 1 cracked block) | |
 | Hazards (spikes 62, lava 0, hot ground 0 tiles) readable and fair | |
 | Main route clear from the scenery and clues | |
 | Optional route(s) and secrets found / reachable | |
 | Cooperative puzzles solvable and recoverable | |
-| Collectibles (3 placed) collected once, not respawning | |
+| Collectibles (5 placed) collected once, not respawning | |
 | Exit works for either knight; both arrive in the next level | |
 | Death: a knight dying restarts the whole run | |
 | Save and resume mid-level | |
@@ -472,7 +472,7 @@ Design: Broken Towers: four ruined towers above a spiked courtyard. Ladders insi
 
 ### 20. The Black Bastion (`l20`) — pending
 
-Design: The Black Bastion: the World 5 finale. A guarded plate pit and a timed gate open the outer wall; on the ramparts, two knights split at a tower: one rides a lift held by the other's plate, the rider latches it; a crumbling rampart over spikes; the inner seal needs twin targets and a two-plate step struck together. Optional: a coin vault under a cracked floor tile (a ladder leads back out) and purple fruit.
+Design: The Black Bastion: the World 5 finale. A guarded plate pit and a timed gate open the outer wall; on the ramparts, two knights split at a tower: one rides a lift held by the other's plate, the rider latches it; a crumbling rampart over spikes, against the wind; the inner seal needs twin targets and a two-plate step struck together. Beyond it the Hollow Captain holds the keep. Optional: a vault under a cracked floor tile (coins and a feast; a ladder leads back out), purple fruit above the rampart, a power tile before the seal.
 
 | Check | Result |
 |---|---|
@@ -480,12 +480,12 @@ Design: The Black Bastion: the World 5 finale. A guarded plate pit and a timed g
 | Player Two spawn | |
 | Movement and jumps feel fair | |
 | Enemies (0 green, 1 purple slimes, 2 Orc Shieldbearer, 1 Orc Grunt, 1 Hollow Archer, boss fight Hollow Captain) | |
-| Mechanisms readable and fair (none) | |
+| Mechanisms readable and fair (1 wind) | |
 | Hazards (spikes 15, lava 0, hot ground 0 tiles) readable and fair | |
 | Main route clear from the scenery and clues | |
 | Optional route(s) and secrets found / reachable | |
 | Cooperative puzzles solvable and recoverable | |
-| Collectibles (4 placed) collected once, not respawning | |
+| Collectibles (5 placed) collected once, not respawning | |
 | Exit works for either knight; both arrive in the next level | |
 | Death: a knight dying restarts the whole run | |
 | Save and resume mid-level | |
@@ -497,15 +497,15 @@ Design: The Black Bastion: the World 5 finale. A guarded plate pit and a timed g
 ## Final Citadel
 ### 21. Frost Causeway (`l21`) — pending
 
-Design: Frost Causeway: a broken bridge over a spiked chasm with slimes on it (ladders lead out of the chasm), a quick timed gate with a switch on each side, crumbling stones over a lava moat, and a second chasm crossed on alternating blinking and solid stones. Optional: a high ledge above the second chasm (red fruit), a yellow jar.
+Design: Frost Causeway: a broken bridge over a spiked chasm with slimes on it and icicles hanging over its middle (ladders lead out of the chasm), a quick timed gate with a switch on each side, on ice, crumbling stones over a lava moat, and a second chasm crossed on alternating blinking and solid stones, then a mixed pack on the ice. Optional: a high ledge above the second chasm (red fruit), and an alcove at the foot of the first chasm's far ladder, where an archer holds the corridor in front of the yellow jar (crouch, or cut the arrows).
 
 | Check | Result |
 |---|---|
 | Player One spawn (stands, can move at once) | |
 | Player Two spawn | |
 | Movement and jumps feel fair | |
-| Enemies (1 green, 0 purple slimes, 1 Orc Shieldbearer, 2 Hollow Archer, 1 Orc Grunt, 1 Ember Slime) | |
-| Mechanisms readable and fair (3 ice) | |
+| Enemies (1 green, 0 purple slimes, 3 Hollow Archer, 1 Orc Shieldbearer, 1 Orc Grunt, 1 Ember Slime) | |
+| Mechanisms readable and fair (2 falling rock, 3 ice) | |
 | Hazards (spikes 70, lava 20, hot ground 0 tiles) readable and fair | |
 | Main route clear from the scenery and clues | |
 | Optional route(s) and secrets found / reachable | |
@@ -520,20 +520,20 @@ Design: Frost Causeway: a broken bridge over a spiked chasm with slimes on it (l
 
 ### 22. Spire of Silence (`l22`) — pending
 
-Design: Spire of Silence: a tall climb. Crumbling stones from a power tile; a lift run by a plate on the first landing (latched at the second); a blinking staircase; at the top a door that only opens when one knight strikes the summit target and the other the target far below, together. Falls land on the spire floor (partly spiked) to climb again. Optional: a side climb to a green jar.
+Design: Spire of Silence: a tall climb. Crumbling stones from a power tile; a lift run by a plate on the first landing (latched at the second); a blinking staircase to a ledge swept by a blade; at the top a door that only opens when one knight strikes the summit target and the other the target far below, together. Falls land on the spire floor (partly spiked) to climb again. Optional: a side climb to a green jar, and a cache at the foot of the spire (coins, a strong shield fruit) guarded by a brute and an ember slime.
 
 | Check | Result |
 |---|---|
 | Player One spawn (stands, can move at once) | |
 | Player Two spawn | |
 | Movement and jumps feel fair | |
-| Enemies (0 green, 0 purple slimes, 1 Orc Grunt, 1 Hollow Archer, 2 Orc Shieldbearer) | |
-| Mechanisms readable and fair (none) | |
+| Enemies (0 green, 0 purple slimes, 1 Orc Grunt, 1 Hollow Archer, 2 Orc Shieldbearer, 1 Orc Brute, 1 Ember Slime) | |
+| Mechanisms readable and fair (1 saw) | |
 | Hazards (spikes 6, lava 0, hot ground 0 tiles) readable and fair | |
 | Main route clear from the scenery and clues | |
 | Optional route(s) and secrets found / reachable | |
 | Cooperative puzzles solvable and recoverable | |
-| Collectibles (3 placed) collected once, not respawning | |
+| Collectibles (5 placed) collected once, not respawning | |
 | Exit works for either knight; both arrive in the next level | |
 | Death: a knight dying restarts the whole run | |
 | Save and resume mid-level | |
@@ -543,15 +543,15 @@ Design: Spire of Silence: a tall climb. Crumbling stones from a power tile; a li
 
 ### 23. Warden's Vault (`l23`) — pending
 
-Design: Warden's Vault: a gauntlet of mixed slimes and burning floor, a plate-held door latched beyond it, three switches on high galleries struck low, low, then high; a crumbling crossing over lava. Optional: the Citadel Warden in the vault below (drop through the cracked floor; its armour yields only to strikes from both knights together); its niche holds a blue jar.
+Design: Warden's Vault: a gauntlet of mixed slimes and burning floor, a plate-held door latched beyond it, three switches on high galleries struck low, low, then high; an ice floor held by a shieldbearer, an orc and an archer; a crumbling crossing over lava under a saw. Optional: the Citadel Warden in the vault below (drop through the cracked floor; its armour yields only to strikes from both knights together); its niche holds a blue jar.
 
 | Check | Result |
 |---|---|
 | Player One spawn (stands, can move at once) | |
 | Player Two spawn | |
 | Movement and jumps feel fair | |
-| Enemies (0 green, 1 purple slimes, 2 Orc Shieldbearer, 1 Ember Slime, 1 Orc Brute, 2 Hollow Archer, 1 Orc Grunt, optional boss CITADEL WARDEN) | |
-| Mechanisms readable and fair (2 fire jet, 1 saw) | |
+| Enemies (0 green, 1 purple slimes, 2 Orc Shieldbearer, 1 Ember Slime, 1 Orc Brute, 3 Hollow Archer, 1 Orc Grunt, optional boss CITADEL WARDEN) | |
+| Mechanisms readable and fair (2 fire jet, 1 ice, 1 saw) | |
 | Hazards (spikes 0, lava 16, hot ground 3 tiles) readable and fair | |
 | Main route clear from the scenery and clues | |
 | Optional route(s) and secrets found / reachable | |
@@ -566,20 +566,20 @@ Design: Warden's Vault: a gauntlet of mixed slimes and burning floor, a plate-he
 
 ### 24. Crown of Dawn (`l24`) — pending
 
-Design: Crown of Dawn: the end of the campaign. A gauntlet of spikes, burning floor and slimes; a lava river crossed on crumbling stones and a ferry run from a pillar plate (latched on the far bank); the battlements and the vaults beneath, each opening the other's doors in two stages; and the Dawn Gate, sealed three ways: twin targets, two stones stepped together and three switches in order. Beyond it, the exit on the dais. Optional: a ledge above the battlements (green fruit, coins).
+Design: Crown of Dawn: the end of the campaign. A gauntlet of spikes, fire, burning floor, orcs and an ember slime; a lava river crossed on crumbling stones and a ferry run from a pillar plate (latched on the far bank); the battlements and the vaults beneath, each opening the other's doors in two stages; and the Dawn Gate, sealed three ways: twin targets, two stones stepped together and three switches in order. Behind it a feast and a venom fruit, and then the throne hall, where the Crowned Hollow waits. Optional: a ledge above the battlements (a feast fruit, coins).
 
 | Check | Result |
 |---|---|
 | Player One spawn (stands, can move at once) | |
 | Player Two spawn | |
 | Movement and jumps feel fair | |
-| Enemies (0 green, 0 purple slimes, 2 Orc Grunt, 2 Orc Shieldbearer, 2 Hollow Archer, boss fight The Crowned Hollow) | |
-| Mechanisms readable and fair (none) | |
+| Enemies (0 green, 0 purple slimes, 2 Orc Grunt, 2 Orc Shieldbearer, 1 Ember Slime, 2 Hollow Archer, boss fight The Crowned Hollow) | |
+| Mechanisms readable and fair (2 fire jet) | |
 | Hazards (spikes 11, lava 33, hot ground 3 tiles) readable and fair | |
 | Main route clear from the scenery and clues | |
 | Optional route(s) and secrets found / reachable | |
 | Cooperative puzzles solvable and recoverable | |
-| Collectibles (3 placed) collected once, not respawning | |
+| Collectibles (5 placed) collected once, not respawning | |
 | Exit works for either knight; both arrive in the next level | |
 | Death: a knight dying restarts the whole run | |
 | Save and resume mid-level | |

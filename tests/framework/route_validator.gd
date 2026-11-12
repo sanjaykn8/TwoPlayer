@@ -26,6 +26,10 @@ var level: Node2D
 var analyzer
 var knight: Knight
 var report := {"jumps": 0, "passed": 0, "skipped_moving": 0, "failed": [], "banned": [], "route_ok": false}
+## Optional: another goal than the exit (a reward's standing cell) and another start than the
+## spawn, to replay the jumps of an optional route the same way.
+var goal_cells: Array[Vector2i] = []
+var start_cell := Vector2i(-1, -1)
 var _verified := {}
 var _banned := {}
 
@@ -97,7 +101,8 @@ func _analysis_copy(level_id: String) -> Node:
 ## Cheapest route (Dijkstra): a walking step costs 1, a jump 2 + half its squared length, so
 ## walking and short hops are preferred, as a player would. Banned jumps are left out.
 func _route() -> Array[Vector2i]:
-	var start: Vector2i = analyzer.spawn[0]
+	var start: Vector2i = start_cell if start_cell.x >= 0 else analyzer.spawn[0]
+	var goals: Array[Vector2i] = goal_cells if not goal_cells.is_empty() else analyzer.exit_cells
 	var parent := {start: start}
 	var cost := {start: 0.0}
 	var open: Array[Vector2i] = [start]
@@ -109,7 +114,7 @@ func _route() -> Array[Vector2i]:
 				best = i
 		var c: Vector2i = open[best]
 		open.remove_at(best)
-		if analyzer.exit_cells.has(c):
+		if goals.has(c):
 			goal = c
 			break
 		for n: Vector2i in analyzer.neighbours(c):

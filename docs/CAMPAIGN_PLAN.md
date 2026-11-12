@@ -23,14 +23,14 @@ and the shared coins; optional content (collectibles, bosses) is never needed fo
 | Minimum movement | 16 s (analyzer lower bound) |
 | Size | 120 x 36 tiles |
 | Spawns | P1 (56.0, 480.0), P2 (88.0, 480.0) (px) |
-| Main route and puzzles | The Mossy Path: steps and a pit, the first slimes, a spring mushroom up to the canopy (red fruit, coins), a cracked wall that teaches the charged slash (a secret room above it needs a charged up-strike and a partner's boost), a plate gate, and the first orc grunt. |
+| Main route and puzzles | The Mossy Path: steps and a pit, the first slimes, a spring mushroom up to the canopy (red fruit, coins) and a second spring from there onto the roof of the old tree (coins, a shield fruit): a high road past the cracked wall below, which teaches the charged slash (a secret room above it needs a charged up-strike and a partner's boost). Then a plate gate behind the first spikes, and the first orc grunt. |
 | Enemies | 3 green slimes, 0 purple slimes, 1 Orc Grunt |
-| Mechanisms | 1 spring, 2 cracked block |
-| Hazards | spikes 0 tiles, lava 0 tiles, hot ground 0 tiles |
+| Mechanisms | 2 spring, 2 cracked block |
+| Hazards | spikes 2 tiles, lava 0 tiles, hot ground 0 tiles |
 | Platforms | none; 0 ladders |
 | Cooperative mechanisms | 1 plate; 1 gates |
-| Collectibles and secrets | 3 coins at x 49; red fruit (tier 1) at x 51; 5 coins at x 71; green fruit (tier 1) at x 75; power tile at x 110; 3 coins at x 110 |
-| Clues | "Two knights walk one road." / "Hold the blade. Let it ring." / "Stone hears the knight." |
+| Collectibles and secrets | 3 coins at x 49; red fruit (tier 1) at x 51; 4 coins at x 66; yellow fruit (tier 1) at x 74; 5 coins at x 71; green fruit (tier 1) at x 75; power tile at x 110; 3 coins at x 110 |
+| Clues | "Two knights walk one road." / "The old tree has a roof." / "Hold the blade. Let it ring." / "Stone hears the knight." |
 | Save points | 1 |
 | Exit | either living knight reaches the exit portal; next: l02 |
 | Assets | world_tileset (forest terrain), platforms.png, Tiny RPG soldier knights, orcs and hollow soldiers, slimes, fruit, coin, created spikes / ladder / UI icons, synthesised sounds |
@@ -46,13 +46,13 @@ and the shared coins; optional content (collectibles, bosses) is never needed fo
 | Minimum movement | 19 s (analyzer lower bound) |
 | Size | 130 x 44 tiles |
 | Spawns | P1 (56.0, 224.0), P2 (88.0, 224.0) (px) |
-| Main route and puzzles | Rootway Hollows: a ladder down from the cliff, a spring back up to a root ledge (coins), a lift over a pit, orc grunts, the hollow with the first two-knight lock, a cracked root wall hiding a cave of coins, and a ladder up to the high road. |
-| Enemies | 3 green slimes, 0 purple slimes, 3 Orc Grunt |
+| Main route and puzzles | Rootway Hollows: a ladder down from the cliff, a spring back up to a root ledge (coins) and from there a crumbling root bridge, or the lift below it, over the pit; orc grunts, the hollow with the first two-knight lock, a root tunnel behind the hollow (a slime, coins, a green fruit), a cracked root wall hiding a cave of coins, and a ladder up to the high road. |
+| Enemies | 4 green slimes, 0 purple slimes, 3 Orc Grunt |
 | Mechanisms | 1 spring, 1 cracked block |
 | Hazards | spikes 2 tiles, lava 0 tiles, hot ground 0 tiles |
-| Platforms | 1 MovingPlatform; 2 ladders |
+| Platforms | 3 CollapsingPlatform, 1 MovingPlatform; 2 ladders |
 | Cooperative mechanisms | 2 plate, 1 ALL; 1 gates |
-| Collectibles and secrets | 4 coins at x 34; 5 coins at x 110; purple fruit (tier 1) at x 112; yellow fruit (tier 1) at x 112 |
+| Collectibles and secrets | 4 coins at x 34; 4 coins at x 55; green fruit (tier 1) at x 56; 5 coins at x 110; purple fruit (tier 1) at x 112; yellow fruit (tier 1) at x 112 |
 | Clues | "The roots run deep." / "Two stones. Two knights." |
 | Save points | 1 |
 | Exit | either living knight reaches the exit portal; next: l03 |
@@ -69,13 +69,13 @@ and the shared coins; optional content (collectibles, bosses) is never needed fo
 | Minimum movement | 16 s (analyzer lower bound) |
 | Size | 112 x 56 tiles |
 | Spawns | P1 (56.0, 800.0), P2 (88.0, 800.0) (px) |
-| Main route and puzzles | Old Watchtrees: one knight holds the plate while the other rides the lift and strikes the switch that keeps it running. Then up the trees on branches and a spring, an orc on the high branch, a gliding platform between trunks, and down to the exit. Optional: a chain of spirit lanterns (strike down to bounce) to a ledge with the green jar. |
-| Enemies | 2 green slimes, 0 purple slimes, 2 Orc Grunt |
-| Mechanisms | 1 spring, 3 pogo lantern |
+| Main route and puzzles | Old Watchtrees: one knight holds the plate while the other rides the lift and strikes the switch that keeps it running. Then up the trees on branches and springs (a slime on the first branch, an orc on the high one, a nest above it with coins and a green fruit), a gliding platform between trunks, and down to the exit. Optional: a chain of spirit lanterns (strike down to bounce) to a ledge with the green jar. |
+| Enemies | 3 green slimes, 0 purple slimes, 2 Orc Grunt |
+| Mechanisms | 2 spring, 3 pogo lantern |
 | Hazards | spikes 0 tiles, lava 0 tiles, hot ground 0 tiles |
 | Platforms | 2 MovingPlatform; 0 ladders |
 | Cooperative mechanisms | 1 plate, 1 switch/target, 1 ANY; 0 gates |
-| Collectibles and secrets | 3 coins at x 71; green jar at x 89; power tile at x 99 |
+| Collectibles and secrets | 4 coins at x 37; green fruit (tier 1) at x 38; 3 coins at x 71; green jar at x 89; power tile at x 99 |
 | Clues | "One waits. One climbs." / "Strike down on the lights." |
 | Save points | 1 |
 | Exit | either living knight reaches the exit portal; next: l04 |
@@ -92,13 +92,13 @@ and the shared coins; optional content (collectibles, bosses) is never needed fo
 | Minimum movement | 21 s (analyzer lower bound) |
 | Size | 150 x 40 tiles |
 | Spawns | P1 (56.0, 512.0), P2 (88.0, 512.0) (px) |
-| Main route and puzzles | Heart of the Grove: the World 1 finale. An ambush in the clearing (the gates shut until the grunts and slime are beaten), a coin cave under a cracked floor (strike the earth from above; a ladder leads out), rafts over a pit, the split (one holds above, one runs below), more orcs and spikes, and the two-plate gate. |
+| Main route and puzzles | Heart of the Grove: the World 1 finale. An ambush in the clearing (the gates shut until the grunts and slime are beaten), a coin cave under a cracked floor (strike the earth from above; a ladder leads out), rafts over a pit with spirit lanterns above them to an islet (a venom fruit for the fights ahead), the split (one holds above, one runs below), more orcs and spikes, and the two-plate gate. |
 | Enemies | 2 green slimes, 0 purple slimes, 3 Orc Grunt |
-| Mechanisms | 1 cracked block; 1 arena lock(s) |
+| Mechanisms | 1 cracked block, 2 pogo lantern; 1 arena lock(s) |
 | Hazards | spikes 2 tiles, lava 0 tiles, hot ground 0 tiles |
 | Platforms | 2 MovingPlatform; 2 ladders |
 | Cooperative mechanisms | 3 plate, 1 switch/target, 1 ANY, 1 ALL; 4 gates |
-| Collectibles and secrets | yellow fruit (tier 1) at x 11; 5 coins at x 56; green fruit (tier 2) at x 58; 3 coins at x 108; power tile at x 125 |
+| Collectibles and secrets | yellow fruit (tier 1) at x 11; 5 coins at x 56; green fruit (tier 2) at x 58; purple fruit (tier 1) at x 71; 4 coins at x 70; 3 coins at x 108; power tile at x 125 |
 | Clues | "The grove remembers every step." / "Strike the earth from above." / "Above holds. Below runs." / "Two shadows wake the gate." |
 | Save points | 1 |
 | Exit | either living knight reaches the exit portal; next: l05 |
@@ -117,14 +117,14 @@ and the shared coins; optional content (collectibles, bosses) is never needed fo
 | Minimum movement | 16 s (analyzer lower bound) |
 | Size | 110 x 50 tiles |
 | Spawns | P1 (56.0, 160.0), P2 (88.0, 160.0) (px) |
-| Main route and puzzles | Crystal Descent: a dark descent down shelves. A bat over the first steps, rocks over a spike gap, a cracked crystal wall hiding a room (purple fruit, coins), a drop shaft into the lowest chamber, and an updraft chimney above it (jump into the wind) to a crystal room with the yellow jar; a side shaft leads back down. |
-| Enemies | 0 green slimes, 3 purple slimes, 2 Cave Bat, 2 Orc Grunt |
-| Mechanisms | 1 darkness, 2 falling rock, 1 cracked block, 1 updraft |
-| Hazards | spikes 3 tiles, lava 0 tiles, hot ground 0 tiles |
-| Platforms | none; 0 ladders |
-| Cooperative mechanisms | none; 0 gates |
-| Collectibles and secrets | 5 coins at x 56; purple fruit (tier 2) at x 58; yellow jar at x 102; 4 coins at x 98 |
-| Clues | "Light is short. The dark is long." |
+| Main route and puzzles | Crystal Descent: a dark descent down shelves. A cracked cliff face hides the first crystal room (a shield fruit), a bat over the first steps, rocks over a spike gap, a cracked crystal wall hiding a second room (purple fruit, coins), a drop shaft into the lowest chamber, a bat over a chasm crossed on crumbling crystal, and an updraft chimney (jump into the wind) to a crystal room: its yellow jar waits behind a door that only opens while the partner holds the stone below. A side shaft leads back down. |
+| Enemies | 0 green slimes, 3 purple slimes, 3 Cave Bat, 1 Orc Grunt |
+| Mechanisms | 1 darkness, 2 cracked block, 2 falling rock, 1 updraft |
+| Hazards | spikes 2 tiles, lava 0 tiles, hot ground 0 tiles |
+| Platforms | 2 CollapsingPlatform; 0 ladders |
+| Cooperative mechanisms | 1 plate; 1 gates |
+| Collectibles and secrets | 4 coins at x 12; yellow fruit (tier 1) at x 11; 5 coins at x 56; purple fruit (tier 2) at x 58; yellow jar at x 103; 4 coins at x 98 |
+| Clues | "Light is short. The dark is long." / "One waits below. One rides the wind." |
 | Save points | 1 |
 | Exit | either living knight reaches the exit portal; next: l06 |
 | Assets | world_tileset (caves terrain), platforms.png, Tiny RPG soldier knights, orcs and hollow soldiers, slimes, fruit, coin, created spikes / ladder / UI icons, synthesised sounds |
@@ -140,14 +140,14 @@ and the shared coins; optional content (collectibles, bosses) is never needed fo
 | Minimum movement | 15 s (analyzer lower bound) |
 | Size | 100 x 64 tiles |
 | Spawns | P1 (56.0, 928.0), P2 (88.0, 928.0) (px) |
-| Main route and puzzles | Echoing Shafts: up through the caves on the wind. An updraft to the first shelf (a bat under its roof), the blinking bridge (stones vanish behind you), a second updraft to the high shelf under loose rocks and an orc, timed stones to the plateau. Optional: a spring at the end of the middle shelf up to a pocket (power tile, coins). |
+| Main route and puzzles | Echoing Shafts: up through the caves on the wind, by two roads. The high road: an updraft to the first shelf (a bat under its roof) and the blinking bridge (stones vanish behind you). The low road: crumbling stones over the abyss to an island (coins, purple fruit) and a second wind up to the middle shelf. Then an updraft to the high shelf under loose rocks and an orc, and timed stones to the plateau. Optional: a spring at the end of the middle shelf up to a pocket (power tile, coins). |
 | Enemies | 0 green slimes, 3 purple slimes, 2 Cave Bat, 1 Orc Grunt |
-| Mechanisms | 2 updraft, 1 spring, 2 falling rock |
+| Mechanisms | 3 updraft, 1 spring, 2 falling rock |
 | Hazards | spikes 0 tiles, lava 0 tiles, hot ground 0 tiles |
-| Platforms | 5 TimedPlatform; 0 ladders |
+| Platforms | 5 CollapsingPlatform, 5 TimedPlatform; 0 ladders |
 | Cooperative mechanisms | none; 0 gates |
-| Collectibles and secrets | 4 coins at x 54; power tile at x 57; green fruit (tier 2) at x 92 |
-| Clues | "The wind remembers the way up." |
+| Collectibles and secrets | 5 coins at x 57; purple fruit (tier 1) at x 62; 4 coins at x 54; power tile at x 57; green fruit (tier 2) at x 92 |
+| Clues | "The wind remembers the way up." / "High road, thin air. Low road, loose stone." |
 | Save points | 1 |
 | Exit | either living knight reaches the exit portal; next: l07 |
 | Assets | world_tileset (caves terrain), platforms.png, Tiny RPG soldier knights, orcs and hollow soldiers, slimes, fruit, coin, created spikes / ladder / UI icons, synthesised sounds |
@@ -163,13 +163,13 @@ and the shared coins; optional content (collectibles, bosses) is never needed fo
 | Minimum movement | 25 s (analyzer lower bound) |
 | Size | 180 x 44 tiles |
 | Spawns | P1 (56.0, 384.0), P2 (88.0, 384.0) (px) |
-| Main route and puzzles | Brood Caverns: a dark cavern of slimes, orcs and bats under hanging rock, a ferry over the gap, loose rock, timed steps to a ledge of coins, and the brood below: an optional fight with the Brood Mother (her treasure: the red jar). The way out is an arena: the first orc brute and its shockwaves, with a grunt and a purple slime, before the gates open. |
-| Enemies | 1 green slimes, 3 purple slimes, 3 Orc Grunt, 2 Cave Bat, 1 Orc Brute; optional boss: BROOD MOTHER |
-| Mechanisms | 1 darkness, 1 falling rock; 1 arena lock(s) |
+| Main route and puzzles | Brood Caverns: a dark cavern of slimes, orcs and bats under hanging rock. A gallery above the first hall (a spring leads up; a bat hangs over it; a shield fruit at its end), a brood nest sunk in the floor (slimes, coins), a ferry over the gap, loose rock, timed steps to a ledge (coins and venom for the fight), and the brood below: an optional fight with the Brood Mother (her treasure: the red jar). The way out is an arena: the first orc brute and its shockwaves, with a grunt and a purple slime, before the gates open. |
+| Enemies | 2 green slimes, 3 purple slimes, 3 Cave Bat, 3 Orc Grunt, 1 Orc Brute; optional boss: BROOD MOTHER |
+| Mechanisms | 1 darkness, 1 spring, 1 falling rock; 1 arena lock(s) |
 | Hazards | spikes 2 tiles, lava 0 tiles, hot ground 0 tiles |
 | Platforms | 1 MovingPlatform, 1 TimedPlatform; 1 ladders |
 | Cooperative mechanisms | none; 3 gates |
-| Collectibles and secrets | yellow fruit (tier 2) at x 56; 4 coins at x 122; red jar at x 94; 6 coins at x 93; green fruit (tier 2) at x 134 |
+| Collectibles and secrets | 4 coins at x 34; 3 coins at x 12; yellow fruit (tier 2) at x 28; 4 coins at x 122; purple fruit (tier 2) at x 124; red jar at x 94; 6 coins at x 93; green fruit (tier 2) at x 134 |
 | Clues | "Many small mouths. One great hunger." / "Below, the mother keeps her treasure." |
 | Save points | 1 |
 | Exit | either living knight reaches the exit portal; next: l08 |
@@ -186,13 +186,13 @@ and the shared coins; optional content (collectibles, bosses) is never needed fo
 | Minimum movement | 18 s (analyzer lower bound) |
 | Size | 120 x 60 tiles |
 | Spawns | P1 (56.0, 896.0), P2 (88.0, 896.0) (px) |
-| Main route and puzzles | The Sunless Lift: the World 2 finale in the dark. One knight holds the floor plate so the other can ride to the middle shelf; the middle plate runs both lifts, so the first can ride to the top and latch the switch that keeps both running. Loose rock overhead, timed hops to high ledges (coins, red fruit), a treasure room down a crack, and at the top an arena: a brute, a grunt and a purple slime before the exit. |
-| Enemies | 0 green slimes, 2 purple slimes, 2 Orc Grunt, 1 Orc Brute |
-| Mechanisms | 1 darkness, 2 falling rock; 1 arena lock(s) |
-| Hazards | spikes 0 tiles, lava 0 tiles, hot ground 0 tiles |
+| Main route and puzzles | The Sunless Lift: the World 2 finale in the dark. One knight holds the floor plate so the other can ride to the middle shelf; the middle plate runs both lifts, so the first can ride to the top and latch the switch that keeps both running. A cracked wall beside the first lift hides a room (blue jar). Loose rock, spikes and a slime on the top road, timed hops to high ledges (coins, red fruit), a treasure room down a ladder, and at the top an arena: a brute, a grunt and a purple slime before the exit. |
+| Enemies | 0 green slimes, 3 purple slimes, 2 Orc Grunt, 1 Orc Brute |
+| Mechanisms | 1 darkness, 1 cracked block, 2 falling rock; 1 arena lock(s) |
+| Hazards | spikes 2 tiles, lava 0 tiles, hot ground 0 tiles |
 | Platforms | 2 MovingPlatform, 1 TimedPlatform; 1 ladders |
 | Cooperative mechanisms | 2 plate, 1 switch/target, 2 ANY; 2 gates |
-| Collectibles and secrets | 4 coins at x 75; red fruit (tier 2) at x 81; green fruit (tier 2) at x 62; 5 coins at x 66 |
+| Collectibles and secrets | blue jar at x 36; 4 coins at x 34; 4 coins at x 75; red fruit (tier 2) at x 81; green fruit (tier 2) at x 62; 5 coins at x 66 |
 | Clues | "The lift remembers who holds the stone." |
 | Save points | 1 |
 | Exit | either living knight reaches the exit portal; next: l09 |
@@ -211,13 +211,13 @@ and the shared coins; optional content (collectibles, bosses) is never needed fo
 | Minimum movement | 16 s (analyzer lower bound) |
 | Size | 120 x 48 tiles |
 | Spawns | P1 (56.0, 640.0), P2 (88.0, 640.0) (px) |
-| Main route and puzzles | Sunken Gatehouse: the first shieldbearer in the courtyard, a spring to a ledge outside the gatehouse tower (a cracked wall into a hidden room), saws in the tunnel under the tower (jump the floor blade, time the falling one), a courtyard with an archer on the battlement and a gate that opens when one knight on the battlement and one below strike their targets together, then a guarded hall that locks until its defenders fall. |
+| Main route and puzzles | Sunken Gatehouse: the first shieldbearer in the courtyard, a spring to a ledge outside the gatehouse tower (a cracked wall into a hidden room), saws in the tunnel under the tower (jump the floor blade, time the falling one), a courtyard with an archer on the battlement, a cistern under its floor (a cracked flagstone or the ladder; coins and venom), and a gate that opens when one knight on the battlement and one below strike their targets together, then a guarded hall that locks until its defenders fall. |
 | Enemies | 0 green slimes, 1 purple slimes, 3 Orc Shieldbearer, 2 Hollow Archer, 1 Orc Grunt |
-| Mechanisms | 1 spring, 1 cracked block, 2 saw; 1 arena lock(s) |
+| Mechanisms | 1 spring, 2 cracked block, 2 saw; 1 arena lock(s) |
 | Hazards | spikes 0 tiles, lava 0 tiles, hot ground 0 tiles |
-| Platforms | none; 1 ladders |
+| Platforms | none; 2 ladders |
 | Cooperative mechanisms | 2 switch/target, 1 SYNC; 3 gates |
-| Collectibles and secrets | 5 coins at x 44; red fruit (tier 2) at x 46; green fruit (tier 2) at x 86 |
+| Collectibles and secrets | 5 coins at x 44; red fruit (tier 2) at x 46; 5 coins at x 63; purple fruit (tier 2) at x 66; green fruit (tier 2) at x 86 |
 | Clues | "Strike where the shield is not." / "Strike as one." |
 | Save points | 1 |
 | Exit | either living knight reaches the exit portal; next: l10 |
@@ -234,13 +234,13 @@ and the shared coins; optional content (collectibles, bosses) is never needed fo
 | Minimum movement | 25 s (analyzer lower bound) |
 | Size | 180 x 40 tiles |
 | Spawns | P1 (56.0, 512.0), P2 (88.0, 512.0) (px) |
-| Main route and puzzles | Hall of Echoes: three targets in the order the sign gives (a shieldbearer watches), a pit whose plate holds a gate while a saw runs the pit floor, a bridge held from a balcony (archers wait on the far side), a timed door between two switches. Optional: a balcony ledge (coins, purple fruit) and the yellow jar past the bridge. |
+| Main route and puzzles | Hall of Echoes: three targets in the order the sign gives (a shieldbearer watches), a pit whose plate holds a gate while a saw runs the pit floor, a bridge held from a balcony (archers wait on the far side), a timed door between two switches. Optional: a balcony ledge (coins, purple fruit), and past the bridge a spring up to a ledge swept by a saw: the yellow jar waits at its far end. |
 | Enemies | 0 green slimes, 1 purple slimes, 2 Orc Shieldbearer, 2 Hollow Archer, 1 Orc Grunt |
-| Mechanisms | 1 saw |
+| Mechanisms | 2 saw, 1 spring |
 | Hazards | spikes 0 tiles, lava 0 tiles, hot ground 0 tiles |
 | Platforms | 1 MovingPlatform; 2 ladders |
 | Cooperative mechanisms | 7 switch/target, 1 SEQUENCE, 2 plate, 3 ANY; 3 gates |
-| Collectibles and secrets | 4 coins at x 101; purple fruit (tier 2) at x 103; yellow jar at x 128; power tile at x 135 |
+| Collectibles and secrets | 4 coins at x 101; purple fruit (tier 2) at x 103; yellow jar at x 136; power tile at x 135 |
 | Clues | "Left, right, then the heart." / "The guard sleeps for no one." / "The door forgets quickly." |
 | Save points | 1 |
 | Exit | either living knight reaches the exit portal; next: l11 |
@@ -254,17 +254,17 @@ and the shared coins; optional content (collectibles, bosses) is never needed fo
 | World / theme | ruins / ruins |
 | Difficulty | 6 / 10 |
 | Estimated first play | 5.0 min (estimate) |
-| Minimum movement | 23 s (analyzer lower bound) |
-| Size | 170 x 44 tiles |
+| Minimum movement | 26 s (analyzer lower bound) |
+| Size | 190 x 44 tiles |
 | Spawns | P1 (56.0, 576.0), P2 (88.0, 576.0) (px) |
-| Main route and puzzles | Twin Sanctums: the knights split at the first ladder. The upper knight walks the temple roof (saws, a shieldbearer, an archer), the lower one the crypt beneath (orcs, an archer); each route's switches open the other's doors in three stages (a held plate below keeps a roof door open until the roof latch). The routes join at the far end. Optional: a roof ledge above a power tile (coins, green fruit). |
-| Enemies | 1 green slimes, 0 purple slimes, 2 Orc Shieldbearer, 2 Hollow Archer, 1 Orc Grunt |
-| Mechanisms | 1 saw |
+| Main route and puzzles | Twin Sanctums: the knights split at the first ladder. The upper knight walks the temple roof (saws, a shieldbearer, an archer), the lower one the crypt beneath (orcs, a saw, an archer); each route's switches open the other's doors in three stages (a held plate below, with an orc closing in on its holder, keeps a roof door open until the roof latch). The routes join at the far end, where a hall locks on both knights: a shieldbearer between two archers. Optional: a roof ledge above a power tile (coins, a feast fruit). |
+| Enemies | 1 green slimes, 0 purple slimes, 3 Orc Shieldbearer, 4 Hollow Archer, 2 Orc Grunt |
+| Mechanisms | 2 saw; 1 arena lock(s) |
 | Hazards | spikes 9 tiles, lava 0 tiles, hot ground 0 tiles |
 | Platforms | 1 TimedPlatform; 1 ladders |
-| Cooperative mechanisms | 3 switch/target, 1 plate, 1 ANY; 4 gates |
+| Cooperative mechanisms | 3 switch/target, 1 plate, 1 ANY; 6 gates |
 | Collectibles and secrets | power tile at x 66; 5 coins at x 67; green fruit (tier 3) at x 69; power tile at x 100; yellow fruit (tier 2) at x 157 |
-| Clues | "Two roads. Each opens the other." |
+| Clues | "Two roads. Each opens the other." / "Two roads meet. So do their keepers." |
 | Save points | 1 |
 | Exit | either living knight reaches the exit portal; next: l12 |
 | Assets | world_tileset (ruins terrain), platforms.png, Tiny RPG soldier knights, orcs and hollow soldiers, slimes, fruit, coin, created spikes / ladder / UI icons, synthesised sounds |
@@ -280,13 +280,13 @@ and the shared coins; optional content (collectibles, bosses) is never needed fo
 | Minimum movement | 32 s (analyzer lower bound) |
 | Size | 230 x 46 tiles |
 | Spawns | P1 (56.0, 640.0), P2 (88.0, 640.0) (px) |
-| Main route and puzzles | The Gilded Seal: the World 3 finale. A great chamber whose seal gate needs three locks: twin targets struck together, two plates stepped on within moments of each other (a shieldbearer guards the pit), three switches in the order the sign tells. Beyond the seal waits the Orc Warchief: the hall locks until it falls. Optional: a red jar above the right gallery. |
-| Enemies | 0 green slimes, 1 purple slimes, 1 Orc Grunt, 1 Hollow Archer, 1 Orc Shieldbearer; boss fight: Orc Warchief |
-| Mechanisms | none; 1 arena lock(s) |
+| Main route and puzzles | The Gilded Seal: the World 3 finale. A great chamber whose seal gate needs three locks: twin targets struck together (a saw and an orc below them), two plates stepped on within moments of each other (a shieldbearer guards the pit), three switches in the order the sign tells (an archer at the gallery's end). Before the seal: a feast and a venom fruit. Beyond it waits the Orc Warchief: the hall locks until it falls. Optional: a red jar above the gallery. |
+| Enemies | 0 green slimes, 1 purple slimes, 1 Orc Grunt, 2 Hollow Archer, 1 Orc Shieldbearer; boss fight: Orc Warchief |
+| Mechanisms | 1 saw; 1 arena lock(s) |
 | Hazards | spikes 0 tiles, lava 0 tiles, hot ground 0 tiles |
 | Platforms | 1 MovingPlatform; 3 ladders |
 | Cooperative mechanisms | 5 switch/target, 1 SYNC, 2 plate, 2 ALL, 1 SEQUENCE; 3 gates |
-| Collectibles and secrets | power tile at x 145; red jar at x 141 |
+| Collectibles and secrets | power tile at x 145; red jar at x 141; green fruit (tier 3) at x 159; purple fruit (tier 2) at x 163 |
 | Clues | "Three locks. One seal." / "Strike as one." / "Two stones that count together." / "First, last, then between." / "The Warchief holds the hall." |
 | Save points | 3 |
 | Exit | either living knight reaches the exit portal; next: l13 |
@@ -302,17 +302,17 @@ and the shared coins; optional content (collectibles, bosses) is never needed fo
 | World / theme | lava / lava |
 | Difficulty | 6 / 10 |
 | Estimated first play | 4.5 min (estimate) |
-| Minimum movement | 23 s (analyzer lower bound) |
+| Minimum movement | 24 s (analyzer lower bound) |
 | Size | 170 x 36 tiles |
 | Spawns | P1 (56.0, 480.0), P2 (88.0, 480.0) (px) |
-| Main route and puzzles | Ashen Steps: two-tile lava pits, a hot-ground strip, crumbling stones over a lava pool, a plate beside burning ground that holds a gate until the runner latches it, and two moving platforms over a lava river. Optional: a ledge above the crumbling stones (green jar). |
+| Main route and puzzles | Ashen Steps: a steam vent beside the first lava pit (jump into it: hot air rises, to a ledge of coins), a hot-ground strip and fire jets, an ember slime beside a cracked wall, crumbling stones over a lava pool, a plate beside burning ground that holds a gate until the runner latches it, two moving platforms over a lava river, and a brute on a terrace. Optional: a ledge above the crumbling stones (green jar). |
 | Enemies | 0 green slimes, 0 purple slimes, 2 Ember Slime, 1 Orc Grunt, 1 Orc Brute |
-| Mechanisms | 4 fire jet, 1 cracked block |
+| Mechanisms | 1 updraft, 4 fire jet, 1 cracked block |
 | Hazards | spikes 0 tiles, lava 38 tiles, hot ground 6 tiles |
 | Platforms | 3 CollapsingPlatform, 2 MovingPlatform; 0 ladders |
 | Cooperative mechanisms | 1 plate, 1 switch/target, 1 ANY; 1 gates |
-| Collectibles and secrets | green jar at x 64; power tile at x 137; green fruit (tier 2) at x 150 |
-| Clues | "Red stone sleeps. Red water does not." / "Fire opens what steel cannot." / "What burns below also opens above." |
+| Collectibles and secrets | 4 coins at x 22; green jar at x 64; power tile at x 137; green fruit (tier 2) at x 151 |
+| Clues | "Hot air rises." / "Red stone sleeps. Red water does not." / "Fire opens what steel cannot." / "What burns below also opens above." |
 | Save points | 1 |
 | Exit | either living knight reaches the exit portal; next: l14 |
 | Assets | world_tileset (lava terrain), platforms.png, Tiny RPG soldier knights, orcs and hollow soldiers, slimes, fruit, coin, created spikes / ladder / UI icons, synthesised sounds |
@@ -328,13 +328,13 @@ and the shared coins; optional content (collectibles, bosses) is never needed fo
 | Minimum movement | 25 s (analyzer lower bound) |
 | Size | 180 x 44 tiles |
 | Spawns | P1 (56.0, 480.0), P2 (88.0, 480.0) (px) |
-| Main route and puzzles | Cinder Bridges: one-way bridges above a lava sea. Slimes and spikes on the bridge; a gate held from a rock shelf below (latched past the gate); a long run of blinking stones (a ledge above them holds purple fruit); solid ground and the exit beyond. |
+| Main route and puzzles | Cinder Bridges: one-way bridges above a lava sea. Blades swing through the bridge, slimes and spikes stand on it; a ladder under the first bridge leads down to a rock shelf (coins, a shield fruit); a gate held from a second shelf (latched past the gate); a long run of blinking stones (a ledge above them holds purple fruit); solid ground and the exit beyond. |
 | Enemies | 0 green slimes, 0 purple slimes, 2 Ember Slime, 1 Orc Brute, 1 Orc Shieldbearer, 1 Orc Grunt |
-| Mechanisms | 2 fire jet |
+| Mechanisms | 2 fire jet, 2 saw |
 | Hazards | spikes 2 tiles, lava 141 tiles, hot ground 0 tiles |
-| Platforms | 7 TimedPlatform; 1 ladders |
+| Platforms | 7 TimedPlatform; 2 ladders |
 | Cooperative mechanisms | 1 plate, 1 switch/target, 1 ANY; 1 gates |
-| Collectibles and secrets | purple fruit (tier 3) at x 114; 4 coins at x 116 |
+| Collectibles and secrets | 5 coins at x 48; yellow fruit (tier 2) at x 49; purple fruit (tier 3) at x 114; 4 coins at x 116 |
 | Clues | "Walk the thread. Do not look down." / "One below holds the way above." |
 | Save points | 2 |
 | Exit | either living knight reaches the exit portal; next: l15 |
@@ -351,13 +351,13 @@ and the shared coins; optional content (collectibles, bosses) is never needed fo
 | Minimum movement | 26 s (analyzer lower bound) |
 | Size | 190 x 40 tiles |
 | Spawns | P1 (56.0, 544.0), P2 (88.0, 544.0) (px) |
-| Main route and puzzles | Forge of Embers: hot-ground strips, crumbling stones over a lava trench, a forge corridor of slimes under the boss hall. Optional: the Magma Heart above (ladder up); defeating it opens its reward niche (green jar). Then a lava pool crossed by a platform that only runs while a knight stands on the island plate (latched from the far side). |
+| Main route and puzzles | Forge of Embers: hot-ground strips, a cellar under the first floor (a cracked flagstone or the ladder; coins and venom), crumbling stones over a lava trench, a forge corridor of slimes, fire and falling hammers under the boss hall. Optional: the Magma Heart above (ladder up); defeating it opens its reward niche (green jar). Then a lava pool crossed by a platform that only runs while a knight stands on the island plate (latched from the far side), and a grinding wheel before the exit. |
 | Enemies | 0 green slimes, 1 purple slimes, 3 Ember Slime, 1 Orc Grunt, 1 Orc Brute; optional boss: MAGMA HEART |
-| Mechanisms | 3 fire jet |
+| Mechanisms | 1 cracked block, 2 falling rock, 1 saw, 3 fire jet |
 | Hazards | spikes 2 tiles, lava 41 tiles, hot ground 12 tiles |
-| Platforms | 3 CollapsingPlatform, 2 MovingPlatform; 1 ladders |
+| Platforms | 3 CollapsingPlatform, 2 MovingPlatform; 2 ladders |
 | Cooperative mechanisms | 1 plate, 1 switch/target, 1 ANY; 1 gates |
-| Collectibles and secrets | green jar at x 103; 6 coins at x 102; power tile at x 97; yellow fruit (tier 3) at x 170 |
+| Collectibles and secrets | 5 coins at x 41; purple fruit (tier 2) at x 39; green jar at x 103; 6 coins at x 102; power tile at x 97; yellow fruit (tier 3) at x 170 |
 | Clues | "The forge-heart sleeps above." / "Stand where the fire parts." |
 | Save points | 2 |
 | Exit | either living knight reaches the exit portal; next: l16 |
@@ -374,14 +374,14 @@ and the shared coins; optional content (collectibles, bosses) is never needed fo
 | Minimum movement | 24 s (analyzer lower bound) |
 | Size | 170 x 44 tiles |
 | Spawns | P1 (56.0, 608.0), P2 (88.0, 608.0) (px) |
-| Main route and puzzles | Heart of the Mountain: the World 4 finale. Hot ground and slimes, a lava lake crossed on crumbling stones to a rock pillar whose plate runs the ferry (latched on the far shore), a forge hall of burning floors, a long blinking-stone crossing with a rest pillar, and a lift up to the summit exit. Optional: a ledge above the pillar (red fruit, coins). |
+| Main route and puzzles | Heart of the Mountain: the World 4 finale. Hot ground and slimes, a lava lake crossed on crumbling stones to a rock pillar whose plate runs the ferry (latched on the far shore), a forge hall of burning floors, a long blinking-stone crossing with a rest pillar, and a lift up to the summit, where the last gate opens only when both knights strike the twin hearts together. Optional: a ledge above the pillar (red fruit, coins), a vent to the forge roof. |
 | Enemies | 0 green slimes, 1 purple slimes, 3 Ember Slime, 1 Orc Grunt, 1 Orc Brute |
 | Mechanisms | 2 fire jet, 1 updraft; 1 arena lock(s) |
 | Hazards | spikes 0 tiles, lava 60 tiles, hot ground 14 tiles |
 | Platforms | 3 CollapsingPlatform, 2 MovingPlatform, 6 TimedPlatform; 0 ladders |
-| Cooperative mechanisms | 1 plate, 1 switch/target, 1 ANY; 2 gates |
+| Cooperative mechanisms | 1 plate, 3 switch/target, 1 ANY, 1 SYNC; 3 gates |
 | Collectibles and secrets | red fruit (tier 3) at x 57; 4 coins at x 55; yellow fruit (tier 2) at x 86; power tile at x 96; green fruit (tier 2) at x 118; 5 coins at x 113 |
-| Clues | "The mountain's heart beats twice." / "Hot air rises." |
+| Clues | "The mountain's heart beats twice." / "Hot air rises." / "Two hearts. One beat." |
 | Save points | 2 |
 | Exit | either living knight reaches the exit portal; next: l17 |
 | Assets | world_tileset (lava terrain), platforms.png, Tiny RPG soldier knights, orcs and hollow soldiers, slimes, fruit, coin, created spikes / ladder / UI icons, synthesised sounds |
@@ -399,13 +399,13 @@ and the shared coins; optional content (collectibles, bosses) is never needed fo
 | Minimum movement | 25 s (analyzer lower bound) |
 | Size | 180 x 40 tiles |
 | Spawns | P1 (56.0, 544.0), P2 (88.0, 544.0) (px) |
-| Main route and puzzles | Iron Gate Keep: a three-key gate (a held plate, a timed plate and a latch struck in time); a guard hall full of slimes with a catwalk above as the quiet way through, and a vault under a cracked floor tile (red jar past a spike bed); platforms over a spiked pit; twin targets before the exit. |
-| Enemies | 0 green slimes, 1 purple slimes, 3 Orc Shieldbearer, 1 Orc Grunt, 2 Hollow Archer |
+| Main route and puzzles | Iron Gate Keep: a three-key gate (a held plate, a timed plate and a latch struck in time); a guard hall full of orcs and fire with a catwalk above as the quiet way through (it crumbles in front of its archer; the yellow jar waits behind him), and a vault under a cracked floor tile (red jar past a spike bed); platforms over a spiked pit, under saws and in an archer's sights (crouch, or cut the arrow); twin targets before the exit. |
+| Enemies | 0 green slimes, 1 purple slimes, 3 Orc Shieldbearer, 1 Orc Grunt, 3 Hollow Archer |
 | Mechanisms | 2 fire jet, 2 saw |
 | Hazards | spikes 35 tiles, lava 0 tiles, hot ground 0 tiles |
-| Platforms | 2 MovingPlatform; 3 ladders |
+| Platforms | 2 CollapsingPlatform, 2 MovingPlatform; 3 ladders |
 | Cooperative mechanisms | 2 plate, 3 switch/target, 1 ALL, 1 SYNC; 2 gates |
-| Collectibles and secrets | yellow jar at x 52; green fruit (tier 2) at x 78; 3 coins at x 100; red jar at x 90; 4 coins at x 83 |
+| Collectibles and secrets | 3 coins at x 52; green fruit (tier 2) at x 78; yellow jar at x 103; red jar at x 90; 4 coins at x 83 |
 | Clues | "The keep has three keys." / "Three keys. Two hands." / "The quiet road runs high." / "Strike as one." |
 | Save points | 1 |
 | Exit | either living knight reaches the exit portal; next: l18 |
@@ -422,13 +422,13 @@ and the shared coins; optional content (collectibles, bosses) is never needed fo
 | Minimum movement | 25 s (analyzer lower bound) |
 | Size | 180 x 46 tiles |
 | Spawns | P1 (56.0, 640.0), P2 (88.0, 640.0) (px) |
-| Main route and puzzles | Clockwork Halls: the knights work two machines at once. Left hall: a switch triggers a timed bridge that one knight must cross; right hall (up a ladder): a plate that only counts while held and a crumbling catwalk. Both machines must be finished (latched) to open the clock door. Then a pen of slimes around a plate that holds the last gate (latched past it). |
+| Main route and puzzles | Clockwork Halls: the knights work two machines at once. Left hall: a switch triggers a timed bridge that one knight must cross; right hall (up a ladder): a plate that only counts while held and a crumbling catwalk. Both machines must be finished (latched) to open the clock door. Then a pen of slimes around a plate that holds the last gate (latched past it), and a shieldbearer, an archer and a pendulum blade before the exit. Optional: ticking steps above the pen to a ledge (coins, a shield fruit). |
 | Enemies | 1 green slimes, 1 purple slimes, 1 Orc Grunt, 2 Hollow Archer, 2 Orc Shieldbearer |
-| Mechanisms | 1 saw, 1 fire jet |
+| Mechanisms | 2 saw, 1 fire jet |
 | Hazards | spikes 24 tiles, lava 0 tiles, hot ground 0 tiles |
-| Platforms | 2 TimedPlatform, 4 CollapsingPlatform; 3 ladders |
+| Platforms | 5 TimedPlatform, 4 CollapsingPlatform; 3 ladders |
 | Cooperative mechanisms | 4 switch/target, 2 plate, 2 ANY, 1 ALL; 2 gates |
-| Collectibles and secrets | green fruit (tier 3) at x 93; power tile at x 146 |
+| Collectibles and secrets | green fruit (tier 3) at x 93; 4 coins at x 121; yellow fruit (tier 2) at x 123; power tile at x 146 |
 | Clues | "Two machines. One door." / "The pen keeps its own key." |
 | Save points | 2 |
 | Exit | either living knight reaches the exit portal; next: l19 |
@@ -445,14 +445,14 @@ and the shared coins; optional content (collectibles, bosses) is never needed fo
 | Minimum movement | 26 s (analyzer lower bound) |
 | Size | 160 x 50 tiles |
 | Spawns | P1 (56.0, 704.0), P2 (88.0, 704.0) (px) |
-| Main route and puzzles | Broken Towers: four ruined towers above a spiked courtyard. Ladders inside the towers, crumbling bridges and a moving platform between them, slimes on the tower tops. A switch on the last tower latches the courtyard gate. Ladders let a knight who falls into the spiked courtyard climb back to the tower it fell from. Optional: a precise climb above the last tower to a blue jar. |
+| Main route and puzzles | Broken Towers: four ruined towers above a spiked courtyard. Ladders inside the towers, crumbling bridges, and a span through the wind that only runs while one knight holds its plate on the second tower (the rider latches it on the third, under an archer's eye); timed stones to the last tower, whose switch latches the courtyard gate. Ladders let a knight who falls into the spiked courtyard climb back. Optional: a precise climb above the last tower to a blue jar, and a cracked stone at its foot (coins, a shield fruit). |
 | Enemies | 0 green slimes, 0 purple slimes, 2 Orc Grunt, 2 Orc Shieldbearer, 2 Hollow Archer |
-| Mechanisms | 1 wind |
+| Mechanisms | 1 wind, 1 cracked block |
 | Hazards | spikes 62 tiles, lava 0 tiles, hot ground 0 tiles |
 | Platforms | 5 CollapsingPlatform, 1 MovingPlatform, 5 TimedPlatform; 5 ladders |
-| Cooperative mechanisms | 1 switch/target; 1 gates |
-| Collectibles and secrets | blue jar at x 113; 4 coins at x 118; green fruit (tier 2) at x 130 |
-| Clues | "Climb the broken teeth of the keep." |
+| Cooperative mechanisms | 1 plate, 2 switch/target, 1 ANY; 1 gates |
+| Collectibles and secrets | blue jar at x 113; 4 coins at x 118; 6 coins at x 116; yellow fruit (tier 3) at x 115; green fruit (tier 2) at x 130 |
+| Clues | "Climb the broken teeth of the keep." / "One holds the span. One rides the wind." |
 | Save points | 1 |
 | Exit | either living knight reaches the exit portal; next: l20 |
 | Assets | world_tileset (fortress terrain), platforms.png, Tiny RPG soldier knights, orcs and hollow soldiers, slimes, fruit, coin, created spikes / ladder / UI icons, synthesised sounds |
@@ -468,13 +468,13 @@ and the shared coins; optional content (collectibles, bosses) is never needed fo
 | Minimum movement | 29 s (analyzer lower bound) |
 | Size | 200 x 48 tiles |
 | Spawns | P1 (56.0, 672.0), P2 (88.0, 672.0) (px) |
-| Main route and puzzles | The Black Bastion: the World 5 finale. A guarded plate pit and a timed gate open the outer wall; on the ramparts, two knights split at a tower: one rides a lift held by the other's plate, the rider latches it; a crumbling rampart over spikes; the inner seal needs twin targets and a two-plate step struck together. Optional: a coin vault under a cracked floor tile (a ladder leads back out) and purple fruit. |
+| Main route and puzzles | The Black Bastion: the World 5 finale. A guarded plate pit and a timed gate open the outer wall; on the ramparts, two knights split at a tower: one rides a lift held by the other's plate, the rider latches it; a crumbling rampart over spikes, against the wind; the inner seal needs twin targets and a two-plate step struck together. Beyond it the Hollow Captain holds the keep. Optional: a vault under a cracked floor tile (coins and a feast; a ladder leads back out), purple fruit above the rampart, a power tile before the seal. |
 | Enemies | 0 green slimes, 1 purple slimes, 2 Orc Shieldbearer, 1 Orc Grunt, 1 Hollow Archer; boss fight: Hollow Captain |
-| Mechanisms | none; 1 arena lock(s) |
+| Mechanisms | 1 wind; 1 arena lock(s) |
 | Hazards | spikes 15 tiles, lava 0 tiles, hot ground 0 tiles |
 | Platforms | 2 MovingPlatform, 4 CollapsingPlatform; 3 ladders |
 | Cooperative mechanisms | 4 plate, 4 switch/target, 2 ANY, 1 SYNC, 2 ALL; 4 gates |
-| Collectibles and secrets | 4 coins at x 82; purple fruit (tier 3) at x 81; 6 coins at x 143; green fruit (tier 2) at x 137 |
+| Collectibles and secrets | 4 coins at x 82; purple fruit (tier 3) at x 81; power tile at x 133; 6 coins at x 143; green fruit (tier 3) at x 137 |
 | Clues | "The bastion never sleeps." / "Strike as one. Step as one." / "The captain keeps the last door." |
 | Save points | 3 |
 | Exit | either living knight reaches the exit portal; next: l21 |
@@ -493,9 +493,9 @@ and the shared coins; optional content (collectibles, bosses) is never needed fo
 | Minimum movement | 27 s (analyzer lower bound) |
 | Size | 190 x 46 tiles |
 | Spawns | P1 (56.0, 544.0), P2 (88.0, 544.0) (px) |
-| Main route and puzzles | Frost Causeway: a broken bridge over a spiked chasm with slimes on it (ladders lead out of the chasm), a quick timed gate with a switch on each side, crumbling stones over a lava moat, and a second chasm crossed on alternating blinking and solid stones. Optional: a high ledge above the second chasm (red fruit), a yellow jar. |
-| Enemies | 1 green slimes, 0 purple slimes, 1 Orc Shieldbearer, 2 Hollow Archer, 1 Orc Grunt, 1 Ember Slime |
-| Mechanisms | 3 ice |
+| Main route and puzzles | Frost Causeway: a broken bridge over a spiked chasm with slimes on it and icicles hanging over its middle (ladders lead out of the chasm), a quick timed gate with a switch on each side, on ice, crumbling stones over a lava moat, and a second chasm crossed on alternating blinking and solid stones, then a mixed pack on the ice. Optional: a high ledge above the second chasm (red fruit), and an alcove at the foot of the first chasm's far ladder, where an archer holds the corridor in front of the yellow jar (crouch, or cut the arrows). |
+| Enemies | 1 green slimes, 0 purple slimes, 3 Hollow Archer, 1 Orc Shieldbearer, 1 Orc Grunt, 1 Ember Slime |
+| Mechanisms | 2 falling rock, 3 ice |
 | Hazards | spikes 70 tiles, lava 20 tiles, hot ground 0 tiles |
 | Platforms | 5 CollapsingPlatform, 5 TimedPlatform; 4 ladders |
 | Cooperative mechanisms | 2 switch/target, 1 ANY; 1 gates |
@@ -516,13 +516,13 @@ and the shared coins; optional content (collectibles, bosses) is never needed fo
 | Minimum movement | 16 s (analyzer lower bound) |
 | Size | 120 x 70 tiles |
 | Spawns | P1 (72.0, 1056.0), P2 (104.0, 1056.0) (px) |
-| Main route and puzzles | Spire of Silence: a tall climb. Crumbling stones from a power tile; a lift run by a plate on the first landing (latched at the second); a blinking staircase; at the top a door that only opens when one knight strikes the summit target and the other the target far below, together. Falls land on the spire floor (partly spiked) to climb again. Optional: a side climb to a green jar. |
-| Enemies | 0 green slimes, 0 purple slimes, 1 Orc Grunt, 1 Hollow Archer, 2 Orc Shieldbearer |
-| Mechanisms | none |
+| Main route and puzzles | Spire of Silence: a tall climb. Crumbling stones from a power tile; a lift run by a plate on the first landing (latched at the second); a blinking staircase to a ledge swept by a blade; at the top a door that only opens when one knight strikes the summit target and the other the target far below, together. Falls land on the spire floor (partly spiked) to climb again. Optional: a side climb to a green jar, and a cache at the foot of the spire (coins, a strong shield fruit) guarded by a brute and an ember slime. |
+| Enemies | 0 green slimes, 0 purple slimes, 1 Orc Grunt, 1 Hollow Archer, 2 Orc Shieldbearer, 1 Orc Brute, 1 Ember Slime |
+| Mechanisms | 1 saw |
 | Hazards | spikes 6 tiles, lava 0 tiles, hot ground 0 tiles |
 | Platforms | 3 CollapsingPlatform, 1 MovingPlatform, 4 TimedPlatform; 1 ladders |
 | Cooperative mechanisms | 1 plate, 3 switch/target, 1 ANY, 1 SYNC; 1 gates |
-| Collectibles and secrets | power tile at x 28; green jar at x 85; 4 coins at x 79 |
+| Collectibles and secrets | power tile at x 28; 8 coins at x 114; yellow fruit (tier 3) at x 116; green jar at x 85; 4 coins at x 79 |
 | Clues | "The silent road is the longer road." / "One above, one below. Strike as one." |
 | Save points | 1 |
 | Exit | either living knight reaches the exit portal; next: l23 |
@@ -539,9 +539,9 @@ and the shared coins; optional content (collectibles, bosses) is never needed fo
 | Minimum movement | 28 s (analyzer lower bound) |
 | Size | 200 x 50 tiles |
 | Spawns | P1 (56.0, 576.0), P2 (88.0, 576.0) (px) |
-| Main route and puzzles | Warden's Vault: a gauntlet of mixed slimes and burning floor, a plate-held door latched beyond it, three switches on high galleries struck low, low, then high; a crumbling crossing over lava. Optional: the Citadel Warden in the vault below (drop through the cracked floor; its armour yields only to strikes from both knights together); its niche holds a blue jar. |
-| Enemies | 0 green slimes, 1 purple slimes, 2 Orc Shieldbearer, 1 Ember Slime, 1 Orc Brute, 2 Hollow Archer, 1 Orc Grunt; optional boss: CITADEL WARDEN |
-| Mechanisms | 2 fire jet, 1 saw |
+| Main route and puzzles | Warden's Vault: a gauntlet of mixed slimes and burning floor, a plate-held door latched beyond it, three switches on high galleries struck low, low, then high; an ice floor held by a shieldbearer, an orc and an archer; a crumbling crossing over lava under a saw. Optional: the Citadel Warden in the vault below (drop through the cracked floor; its armour yields only to strikes from both knights together); its niche holds a blue jar. |
+| Enemies | 0 green slimes, 1 purple slimes, 2 Orc Shieldbearer, 1 Ember Slime, 1 Orc Brute, 3 Hollow Archer, 1 Orc Grunt; optional boss: CITADEL WARDEN |
+| Mechanisms | 2 fire jet, 1 ice, 1 saw |
 | Hazards | spikes 0 tiles, lava 16 tiles, hot ground 3 tiles |
 | Platforms | 4 CollapsingPlatform; 3 ladders |
 | Cooperative mechanisms | 1 plate, 4 switch/target, 1 ANY, 1 SEQUENCE; 3 gates |
@@ -562,13 +562,13 @@ and the shared coins; optional content (collectibles, bosses) is never needed fo
 | Minimum movement | 38 s (analyzer lower bound) |
 | Size | 270 x 50 tiles |
 | Spawns | P1 (56.0, 704.0), P2 (88.0, 704.0) (px) |
-| Main route and puzzles | Crown of Dawn: the end of the campaign. A gauntlet of spikes, burning floor and slimes; a lava river crossed on crumbling stones and a ferry run from a pillar plate (latched on the far bank); the battlements and the vaults beneath, each opening the other's doors in two stages; and the Dawn Gate, sealed three ways: twin targets, two stones stepped together and three switches in order. Beyond it, the exit on the dais. Optional: a ledge above the battlements (green fruit, coins). |
-| Enemies | 0 green slimes, 0 purple slimes, 2 Orc Grunt, 2 Orc Shieldbearer, 2 Hollow Archer; boss fight: The Crowned Hollow |
-| Mechanisms | none; 1 arena lock(s) |
+| Main route and puzzles | Crown of Dawn: the end of the campaign. A gauntlet of spikes, fire, burning floor, orcs and an ember slime; a lava river crossed on crumbling stones and a ferry run from a pillar plate (latched on the far bank); the battlements and the vaults beneath, each opening the other's doors in two stages; and the Dawn Gate, sealed three ways: twin targets, two stones stepped together and three switches in order. Behind it a feast and a venom fruit, and then the throne hall, where the Crowned Hollow waits. Optional: a ledge above the battlements (a feast fruit, coins). |
+| Enemies | 0 green slimes, 0 purple slimes, 2 Orc Grunt, 2 Orc Shieldbearer, 1 Ember Slime, 2 Hollow Archer; boss fight: The Crowned Hollow |
+| Mechanisms | 2 fire jet; 1 arena lock(s) |
 | Hazards | spikes 11 tiles, lava 33 tiles, hot ground 3 tiles |
 | Platforms | 3 CollapsingPlatform, 1 MovingPlatform, 2 TimedPlatform; 1 ladders |
 | Cooperative mechanisms | 4 plate, 9 switch/target, 2 ANY, 1 SYNC, 2 ALL, 1 SEQUENCE; 7 gates |
-| Collectibles and secrets | green fruit (tier 3) at x 101; 5 coins at x 103; power tile at x 146 |
+| Collectibles and secrets | green fruit (tier 3) at x 101; 5 coins at x 103; power tile at x 146; green fruit (tier 3) at x 207; purple fruit (tier 3) at x 208 |
 | Clues | "Here the long road ends. Walk it as two." / "Two roads. Each opens the other." / "Strike as one. Step as one. Then low to high." / "Dawn waits for two." |
 | Save points | 4 |
 | Exit | either living knight reaches the exit portal; next: campaign victory |
@@ -581,7 +581,7 @@ and the shared coins; optional content (collectibles, bosses) is never needed fo
 | Measure | Value |
 |---|---|
 | Sum of design estimates | 127 min |
-| Sum of minimum movement (analyzer) | 9.2 min |
+| Sum of minimum movement (analyzer) | 9.3 min |
 | Measured two-player first play | **not measured yet** (record in `docs/CAMPAIGN_PLAYTEST.md`) |
 
 The design estimates are guesses, not measurements, and they disagree strongly with the hard

@@ -88,7 +88,7 @@ func _assert_fresh(old_id: String) -> void:
 		assert_eq([s.max_health(), s.current_health, s.attack_power()], [3, 3, 1], "P%d health 3/3, power 1" % id)
 		assert_eq(s.range_multiplier(), 1.0, "P%d base range" % id)
 		assert_eq(s.speed_multiplier(), 1.0, "P%d base speed" % id)
-		assert_eq(s.poison_seconds, 0.0, "P%d no poison" % id)
+		assert_false(s.effects.has(PlayerEffects.VENOM) or s.effects.has(PlayerEffects.WARD), "P%d no venom or ward" % id)
 		assert_eq(s.effects.active_ids().size(), 0, "P%d no effects" % id)
 	assert_eq(run.puzzles.scope_keys().size(), 0, "no puzzle or enemy progress")
 	for knight in game.knights:

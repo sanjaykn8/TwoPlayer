@@ -3,6 +3,9 @@ extends HBoxContainer
 ## One active timed effect of one knight: the pickup's own sprite (yellow fruit, yellow jar,
 ## or the "?" power tile), a short name, the remaining hit charges where they apply, and the
 ## seconds left. The text is only rewritten when the shown whole second or charge changes.
+## With four or more effects on one knight the panel asks for the compact form: the icon and
+## colour name the effect, the text keeps only charges and seconds (the three "?" boosts
+## share an icon, so they keep a letter: H, F, G).
 
 const FRUIT_SHEET := preload("res://assets/sprites/fruit.png")
 const WORLD_SHEET := preload("res://assets/sprites/world_tileset.png")
@@ -10,13 +13,24 @@ const WORLD_SHEET := preload("res://assets/sprites/world_tileset.png")
 ## effect id -> [name, sheet, region, colour]
 const INFO := {
 	PlayerEffects.FRUIT_SHIELD: ["SHIELD", "fruit", Rect2(0, 16, 16, 16), Color(1.0, 0.9, 0.3)],
-	PlayerEffects.JAR_LUCK: ["LUCK", "world", Rect2(16, 112, 16, 16), Color(1.0, 0.78, 0.2)],
-	PlayerEffects.TILE_SHIELD: ["GUARD", "world", Rect2(0, 32, 16, 16), Color(0.85, 0.95, 1.0)],
-	PlayerEffects.SPEED_BOOST: ["SPEED", "world", Rect2(0, 32, 16, 16), Color(0.4, 0.85, 1.0)],
-	PlayerEffects.ATTACK_SPEED: ["FAST ATK", "world", Rect2(0, 32, 16, 16), Color(1.0, 0.6, 0.25)],
+	PlayerEffects.VENOM: ["VENOM", "fruit", Rect2(0, 32, 16, 16), Color(0.85, 0.5, 1.0)],
+	PlayerEffects.WARD: ["WARD", "world", Rect2(16, 112, 16, 16), Color(1.0, 0.78, 0.2)],
+	PlayerEffects.TILE_SHIELD: ["GUARD", "world", Rect2(0, 32, 16, 16), Color(0.9, 0.95, 1.0)],
+	PlayerEffects.SPEED_BOOST: ["HASTE", "world", Rect2(0, 32, 16, 16), Color(0.4, 0.85, 1.0)],
+	PlayerEffects.ATTACK_SPEED: ["FRENZY", "world", Rect2(0, 32, 16, 16), Color(1.0, 0.6, 0.25)],
+}
+
+## Compact names: empty where the icon is the effect's own.
+const SHORT := {
+	PlayerEffects.TILE_SHIELD: "G", PlayerEffects.SPEED_BOOST: "H", PlayerEffects.ATTACK_SPEED: "F",
 }
 
 var effect_id: StringName
+var compact := false:
+	set(value):
+		if compact != value:
+			compact = value
+			_shown_seconds = -1  # rewrite the text on the next update
 var _label: Label
 var _shown_seconds := -1
 var _shown_charges := -1
@@ -46,7 +60,19 @@ func update_from(effects: PlayerEffects) -> void:
 	_shown_seconds = seconds
 	_shown_charges = charges
 	var name_text: String = INFO.get(effect_id, [String(effect_id).to_upper()])[0]
-	_label.text = "%s x%d %ds" % [name_text, charges, seconds] if charges > 0 else "%s %ds" % [name_text, seconds]
+	if compact:
+		name_text = SHORT.get(effect_id, "")
+	var parts := PackedStringArray()
+	if name_text != "":
+		parts.append(name_text)
+	if effect_id == PlayerEffects.WARD:
+		# Permanent: ready, or the seconds until it is ready again.
+		parts.append("READY" if charges > 0 else "%ds" % seconds)
+	else:
+		if charges > 0:
+			parts.append("x%d" % charges)
+		parts.append("%ds" % seconds)
+	_label.text = " ".join(parts)
 
 
 func text() -> String:

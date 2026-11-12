@@ -13,12 +13,14 @@ static func levels() -> Array:
 	return [l21(), l22(), l23(), l24()]
 
 
-## Frost Causeway: a broken bridge over a spiked chasm with slimes on it (ladders lead out of
-## the chasm), a quick timed gate with a switch on each side, crumbling stones over a lava
-## moat, and a second chasm crossed on alternating blinking and solid stones. Optional: a high
-## ledge above the second chasm (red fruit), a yellow jar.
+## Frost Causeway: a broken bridge over a spiked chasm with slimes on it and icicles hanging
+## over its middle (ladders lead out of the chasm), a quick timed gate with a switch on each
+## side, on ice, crumbling stones over a lava moat, and a second chasm crossed on alternating
+## blinking and solid stones, then a mixed pack on the ice. Optional: a high ledge above the
+## second chasm (red fruit), and an alcove at the foot of the first chasm's far ladder, where an
+## archer holds the corridor in front of the yellow jar (crouch, or cut the arrows).
 static func l21() -> Dictionary:
-	return {"id": "l21", "layout": 2, "title": "Frost Causeway", "world": "citadel", "width": 190, "height": 46,
+	return {"id": "l21", "layout": 3, "title": "Frost Causeway", "world": "citadel", "width": 190, "height": 46,
 		"difficulty": 8, "minutes": 5.5, "spawn": [3, 34], "ops": [
 		["fill", 0, 0, 0, 45], ["fill", 189, 0, 189, 45],
 		["ground", 1, 25, 34], ["ground", 26, 60, 42], ["ground", 61, 119, 34], ["ground", 120, 160, 42], ["ground", 161, 188, 34],
@@ -30,9 +32,11 @@ static func l21() -> Dictionary:
 		["ledge", 141, 144, 31],
 		["clue", 6, 34, "Cold stone, thin road.\nWalk it together."],
 		["spikes", 28, 58, 42],
+		["fill", 37, 22, 50, 24], ["rock", 41, 25], ["rock", 46, 25],
+		["clear", 61, 39, 66, 41], ["enemy", "archer", 65, 42, 0, 0], ["jar", "yellow", 66, 42],
 		["enemy", "guard", 31, 34, -4, 4], ["slime", "g", 44, 34, -4, 4], ["enemy", "archer", 57, 34, -2, 2],
 		["ice", 61, 79, 34], ["ice", 81, 90, 34], ["ice", 161, 188, 34],
-		["save", 63, 34], ["jar", "yellow", 66, 34],
+		["save", 63, 34],
 		["clue", 68, 34, "Quick feet.\nQuicker friends."],
 		["switch", "SwA", 72, 34, {"mode": 1, "active_time": 0.4}],
 		["switch", "SwB", 85, 34, {"mode": 1, "active_time": 0.4}],
@@ -54,12 +58,13 @@ static func l21() -> Dictionary:
 
 
 ## Spire of Silence: a tall climb. Crumbling stones from a power tile; a lift run by a plate
-## on the first landing (latched at the second); a blinking staircase; at the top a door that
-## only opens when one knight strikes the summit target and the other the target far below,
-## together. Falls land on the spire floor (partly spiked) to climb again. Optional: a side
-## climb to a green jar.
+## on the first landing (latched at the second); a blinking staircase to a ledge swept by a
+## blade; at the top a door that only opens when one knight strikes the summit target and the
+## other the target far below, together. Falls land on the spire floor (partly spiked) to climb
+## again. Optional: a side climb to a green jar, and a cache at the foot of the spire (coins, a
+## strong shield fruit) guarded by a brute and an ember slime.
 static func l22() -> Dictionary:
-	return {"id": "l22", "layout": 2, "title": "Spire of Silence", "world": "citadel", "width": 120, "height": 70,
+	return {"id": "l22", "layout": 3, "title": "Spire of Silence", "world": "citadel", "width": 120, "height": 70,
 		"difficulty": 9, "minutes": 5.5, "spawn": [4, 66], "ops": [
 		["fill", 0, 0, 0, 69], ["fill", 119, 0, 119, 69], ["ground", 1, 118, 66],
 		["ledge", 30, 36, 62], ["ledge", 47, 55, 50],
@@ -80,6 +85,9 @@ static func l22() -> Dictionary:
 		["blink", "S2", 70, 28, 2, {"active_time": 2.4, "disabled_time": 1.2, "start_offset": 1.2}],
 		["blink", "S3", 67, 25, 2, {"active_time": 2.4, "disabled_time": 1.2, "start_offset": 0.6}],
 		["blink", "S4", 64, 22, 2, {"active_time": 2.4, "disabled_time": 1.2}],
+		["saw", 57, 18, 4, 0, {"speed": 40.0}],
+		["enemy", "brute", 100, 66, -6, 6], ["enemy", "ember", 110, 66, -3, 3],
+		["coins", 8, 114, 66], ["fruit", "yellow", 3, 116, 66],
 		["jar", "green", 85, 28], ["coins", 4, 79, 31],
 		["clue", 47, 10, "One above, one below.\nStrike as one."],
 		["target", "TopTarget", 52, 10], ["target", "LowTarget", 72, 34],
@@ -91,11 +99,12 @@ static func l22() -> Dictionary:
 
 
 ## Warden's Vault: a gauntlet of mixed slimes and burning floor, a plate-held door latched
-## beyond it, three switches on high galleries struck low, low, then high; a crumbling crossing
-## over lava. Optional: the Citadel Warden in the vault below (drop through the cracked floor;
-## its armour yields only to strikes from both knights together); its niche holds a blue jar.
+## beyond it, three switches on high galleries struck low, low, then high; an ice floor held by
+## a shieldbearer, an orc and an archer; a crumbling crossing over lava under a saw. Optional:
+## the Citadel Warden in the vault below (drop through the cracked floor; its armour yields only
+## to strikes from both knights together); its niche holds a blue jar.
 static func l23() -> Dictionary:
-	return {"id": "l23", "layout": 2, "title": "Warden's Vault", "world": "citadel", "width": 200, "height": 50,
+	return {"id": "l23", "layout": 3, "title": "Warden's Vault", "world": "citadel", "width": 200, "height": 50,
 		"difficulty": 9, "minutes": 6.0, "spawn": [3, 36], "ops": [
 		["fill", 0, 0, 0, 49], ["fill", 199, 0, 199, 49], ["ground", 1, 198, 36],
 		["hot", 32, 34, 36], ["fill", 54, 1, 54, 30], ["fill", 100, 1, 100, 29],
@@ -123,7 +132,8 @@ static func l23() -> Dictionary:
 		["boss", "boss_citadel_warden", 128, 48, -18, 18, "WardenSeal"],
 		["gate", "RewardGate", 108, 48, 3, "WardenSeal", 1],
 		["jar", "blue", 106, 48], ["coins", 8, 105, 48],
-		["enemy", "guard", 120, 36, -6, 6], ["enemy", "grunt", 140, 36, -5, 5], ["saw", 160, 35, 10, 0, {"speed": 55.0}],
+		["enemy", "guard", 120, 36, -6, 6], ["enemy", "grunt", 138, 36, -5, 5],
+		["ice", 115, 146, 36], ["enemy", "archer", 145, 36, -1, 1], ["saw", 160, 35, 10, 0, {"speed": 55.0}],
 		["save", 156, 36],
 		["collapse", "C1", 161, 35, 2], ["collapse", "C2", 165, 35, 2], ["collapse", "C3", 169, 35, 2], ["collapse", "C4", 173, 35, 2],
 		["enemy", "archer", 186, 36, -2, 2], ["slime", "p", 182, 36, -4, 4],
@@ -131,14 +141,15 @@ static func l23() -> Dictionary:
 	]}
 
 
-## Crown of Dawn: the end of the campaign. A gauntlet of spikes, burning floor and slimes; a
-## lava river crossed on crumbling stones and a ferry run from a pillar plate (latched on the
-## far bank); the battlements and the vaults beneath, each opening the other's doors in two
-## stages; and the Dawn Gate, sealed three ways: twin targets, two stones stepped together and
-## three switches in order. Beyond it, the exit on the dais. Optional: a ledge above the
-## battlements (green fruit, coins).
+## Crown of Dawn: the end of the campaign. A gauntlet of spikes, fire, burning floor, orcs and
+## an ember slime; a lava river crossed on crumbling stones and a ferry run from a pillar plate
+## (latched on the far bank); the battlements and the vaults beneath, each opening the other's
+## doors in two stages; and the Dawn Gate, sealed three ways: twin targets, two stones stepped
+## together and three switches in order. Behind it a feast and a venom fruit, and then the
+## throne hall, where the Crowned Hollow waits. Optional: a ledge above the battlements (a
+## feast fruit, coins).
 static func l24() -> Dictionary:
-	return {"id": "l24", "layout": 2, "title": "Crown of Dawn", "world": "citadel", "width": 270, "height": 50,
+	return {"id": "l24", "layout": 3, "title": "Crown of Dawn", "world": "citadel", "width": 270, "height": 50,
 		"difficulty": 10, "minutes": 8.0, "spawn": [3, 44], "ops": [
 		["fill", 0, 0, 0, 49], ["fill", 269, 0, 269, 49], ["ground", 1, 268, 44],
 		["hot", 26, 28, 44],
@@ -149,6 +160,7 @@ static func l24() -> Dictionary:
 		["fill", 206, 1, 206, 36],
 		["clue", 6, 44, "Here the long road ends.\nWalk it as two."],
 		["spikes", 14, 15, 44], ["enemy", "grunt", 20, 44, -4, 4], ["enemy", "guard", 34, 44, -5, 5],
+		["fire", 18, 44, 2], ["fire", 31, 44, 2, {"start_offset": 0.9}], ["enemy", "ember", 23, 44, -2, 2],
 		["save", 40, 44],
 		["collapse", "C1", 47, 43, 2], ["collapse", "C2", 51, 43, 2], ["collapse", "C3", 55, 43, 2],
 		["plate", "RelayP", 58, 43],
@@ -187,6 +199,7 @@ static func l24() -> Dictionary:
 		["logic", "SeqLock", ["Q1", "Q2", "Q3"], 3, {"latch": true, "window": 5.0}],
 		["logic", "DawnSeal", ["SyncLock", "StepLock", "SeqLock"], 0, {"latch": true}],
 		["gate", "DawnGate", 206, 44, 7, "DawnSeal", 1],
+		["fruit", "green", 3, 207, 44], ["fruit", "purple", 3, 208, 44],
 		["save", 209, 44],
 		["fill", 207, 1, 262, 33],
 		["clue", 213, 44, "Dawn waits\nfor two."],

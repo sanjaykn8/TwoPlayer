@@ -13,14 +13,19 @@ static func levels() -> Array:
 	return [l13(), l14(), l15(), l16()]
 
 
-## Ashen Steps: two-tile lava pits, a hot-ground strip, crumbling stones over a lava pool, a
-## plate beside burning ground that holds a gate until the runner latches it, and two moving
-## platforms over a lava river. Optional: a ledge above the crumbling stones (green jar).
+## Ashen Steps: a steam vent beside the first lava pit (jump into it: hot air rises, to a
+## ledge of coins), a hot-ground strip and fire jets, an ember slime beside a cracked wall,
+## crumbling stones over a lava pool, a plate beside burning ground that holds a gate until the
+## runner latches it, two moving platforms over a lava river, and a brute on a terrace.
+## Optional: a ledge above the crumbling stones (green jar).
 static func l13() -> Dictionary:
-	return {"id": "l13", "layout": 2, "title": "Ashen Steps", "world": "lava", "width": 170, "height": 36,
+	return {"id": "l13", "layout": 3, "title": "Ashen Steps", "world": "lava", "width": 170, "height": 36,
 		"difficulty": 6, "minutes": 4.5, "spawn": [3, 30], "ops": [
 		["fill", 0, 0, 0, 35], ["fill", 169, 0, 169, 35], ["ground", 1, 168, 30],
 		["lava", 20, 21, 30], ["hot", 30, 32, 30],
+		["updraft", 17, 21, 18, 26], ["ledge", 20, 23, 22], ["coins", 4, 22, 22],
+		["clue", 16, 30, "Hot air rises."],
+		["fill", 140, 28, 152, 29],
 		["lava", 60, 71, 30, 2], ["ledge", 63, 66, 26],
 		["fill", 90, 1, 90, 26], ["hot", 86, 88, 30],
 		["lava", 100, 111, 30, 2], ["ground", 112, 113, 29], ["lava", 114, 125, 30, 2],
@@ -40,18 +45,19 @@ what steel cannot."],
 		["gate", "HoldGate", 90, 30, 4, "HoldLogic", 0],
 		["moving", "M1", 100, 29, 3, {"travel": Vector2i(8, 0), "speed": 34.0}],
 		["moving", "M2", 115, 29, 3, {"travel": Vector2i(8, 0), "speed": 34.0, "start_delay": 1.0}],
-		["enemy", "ember", 132, 30, -5, 5], ["tile", 137, 29], ["enemy", "brute", 145, 30, -5, 5],
+		["enemy", "ember", 132, 30, -5, 5], ["tile", 137, 29], ["enemy", "brute", 146, 28, -5, 5],
 		["fire", 155, 30, 2], ["fire", 158, 30, 2, {"start_offset": 0.9}],
-		["fruit", "green", 2, 150, 30],
+		["fruit", "green", 2, 151, 28],
 		["exit", 164, 30],
 	]}
 
 
-## Cinder Bridges: one-way bridges above a lava sea. Slimes and spikes on the bridge; a gate
-## held from a rock shelf below (latched past the gate); a long run of blinking stones (a
-## ledge above them holds purple fruit); solid ground and the exit beyond.
+## Cinder Bridges: one-way bridges above a lava sea. Blades swing through the bridge, slimes
+## and spikes stand on it; a ladder under the first bridge leads down to a rock shelf (coins, a
+## shield fruit); a gate held from a second shelf (latched past the gate); a long run of
+## blinking stones (a ledge above them holds purple fruit); solid ground and the exit beyond.
 static func l14() -> Dictionary:
-	return {"id": "l14", "layout": 2, "title": "Cinder Bridges", "world": "lava", "width": 180, "height": 44,
+	return {"id": "l14", "layout": 3, "title": "Cinder Bridges", "world": "lava", "width": 180, "height": 44,
 		"difficulty": 7, "minutes": 5.0, "spawn": [3, 30], "ops": [
 		["fill", 0, 0, 0, 43], ["fill", 179, 0, 179, 43],
 		["ground", 1, 19, 30], ["ground", 20, 160, 40], ["lava", 20, 160, 40, 2], ["ground", 161, 178, 30],
@@ -60,6 +66,9 @@ static func l14() -> Dictionary:
 		["clue", 6, 30, "Walk the thread.\nDo not look down."],
 		["enemy", "ember", 35, 30, -6, 6], ["spikes", 45, 46, 30], ["enemy", "brute", 54, 30, -4, 4],
 		["fire", 40, 30, 2],
+		["saw", 27, 25, 0, 6, {"speed": 40.0}], ["saw", 133, 25, 0, 6, {"speed": 40.0, "start_phase": 0.5}],
+		["fill", 47, 36, 52, 39], ["ladder", 52, 30, 36],
+		["coins", 5, 48, 36], ["fruit", "yellow", 2, 49, 36],
 		["save", 66, 30],
 		["clue", 74, 30, "One below holds\nthe way above."],
 		["plate", "ShelfPlate", 76, 36],
@@ -81,12 +90,14 @@ static func l14() -> Dictionary:
 	]}
 
 
-## Forge of Embers: hot-ground strips, crumbling stones over a lava trench, a forge corridor
-## of slimes under the boss hall. Optional: the Magma Heart above (ladder up); defeating it
-## opens its reward niche (green jar). Then a lava pool crossed by a platform that only runs
-## while a knight stands on the island plate (latched from the far side).
+## Forge of Embers: hot-ground strips, a cellar under the first floor (a cracked flagstone or
+## the ladder; coins and venom), crumbling stones over a lava trench, a forge corridor of
+## slimes, fire and falling hammers under the boss hall. Optional: the Magma Heart above
+## (ladder up); defeating it opens its reward niche (green jar). Then a lava pool crossed by a
+## platform that only runs while a knight stands on the island plate (latched from the far
+## side), and a grinding wheel before the exit.
 static func l15() -> Dictionary:
-	return {"id": "l15", "layout": 2, "title": "Forge of Embers", "world": "lava", "width": 190, "height": 40,
+	return {"id": "l15", "layout": 3, "title": "Forge of Embers", "world": "lava", "width": 190, "height": 40,
 		"difficulty": 7, "minutes": 5.5, "spawn": [3, 34], "ops": [
 		["fill", 0, 0, 0, 39], ["fill", 189, 0, 189, 39], ["ground", 1, 188, 34],
 		["hot", 15, 17, 34], ["hot", 24, 26, 34], ["hot", 33, 35, 34],
@@ -94,6 +105,11 @@ static func l15() -> Dictionary:
 		["fill", 65, 22, 105, 24], ["fill", 63, 10, 63, 21], ["fill", 106, 10, 106, 21], ["ladder", 64, 22, 34],
 		["lava", 110, 123, 34, 2], ["ground", 124, 125, 33], ["lava", 126, 140, 34, 2],
 		["hot", 150, 152, 34],
+		["clear", 37, 35, 42, 37], ["crack", "ForgeFloor", 40, 34, 1, 1],
+		["clear", 37, 34, 37, 34], ["ladder", 37, 34, 38],
+		["coins", 5, 41, 38], ["fruit", "purple", 2, 39, 38],
+		["rock", 78, 25], ["rock", 96, 25],
+		["saw", 174, 33, 6, 0, {"speed": 55.0}],
 		["clue", 6, 34, "The forge-heart\nsleeps above."],
 		["enemy", "ember", 20, 34, -3, 3], ["enemy", "grunt", 29, 34, -3, 3],
 		["collapse", "C1", 46, 33, 2], ["collapse", "C2", 50, 33, 2], ["collapse", "C3", 54, 33, 2],
@@ -121,9 +137,10 @@ static func l15() -> Dictionary:
 ## Heart of the Mountain: the World 4 finale. Hot ground and slimes, a lava lake crossed on
 ## crumbling stones to a rock pillar whose plate runs the ferry (latched on the far shore), a
 ## forge hall of burning floors, a long blinking-stone crossing with a rest pillar, and a lift
-## up to the summit exit. Optional: a ledge above the pillar (red fruit, coins).
+## up to the summit, where the last gate opens only when both knights strike the twin hearts
+## together. Optional: a ledge above the pillar (red fruit, coins), a vent to the forge roof.
 static func l16() -> Dictionary:
-	return {"id": "l16", "layout": 2, "title": "Heart of the Mountain", "world": "lava", "width": 170, "height": 44,
+	return {"id": "l16", "layout": 3, "title": "Heart of the Mountain", "world": "lava", "width": 170, "height": 44,
 		"difficulty": 8, "minutes": 6.0, "spawn": [3, 38], "ops": [
 		["fill", 0, 0, 0, 43], ["fill", 169, 0, 169, 43], ["ground", 1, 168, 38],
 		["hot", 12, 14, 38], ["hot", 25, 27, 38],
@@ -158,6 +175,11 @@ static func l16() -> Dictionary:
 		["moving", "SummitLift", 149, 38, 3, {"travel": Vector2i(0, -14), "speed": 36.0}],
 		["updraft", 116, 24, 116, 34], ["ledge", 112, 115, 24], ["coins", 5, 113, 24],
 		["clue", 115, 38, "Hot air rises."],
-		["slime", "p", 160, 24, -5, 5],
-		["exit", 164, 24],
+		["slime", "p", 158, 24, -4, 3],
+		["clue", 154, 24, "Two hearts.\nOne beat."],
+		["target", "HeartA", 156, 24], ["target", "HeartB", 161, 24],
+		["logic", "Heart", ["HeartA", "HeartB"], 2, {"window": 2.0, "latch": true, "distinct_players": true}],
+		["fill", 163, 1, 163, 19],
+		["gate", "HeartGate", 163, 24, 4, "Heart", 1],
+		["exit", 165, 24],
 	]}

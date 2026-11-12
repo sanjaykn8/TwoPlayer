@@ -83,11 +83,13 @@ func test_effects_appear_under_the_right_player_and_count_down() -> void:
 	p2.collect_jar(PlayerStats.JarType.YELLOW)
 	var shield := hud.panel(2).indicator(PlayerEffects.FRUIT_SHIELD)
 	assert_true(shield != null, "yellow fruit shield under P2")
-	assert_true(hud.panel(2).indicator(PlayerEffects.JAR_LUCK) != null, "yellow jar luck under P2")
+	var ward := hud.panel(2).indicator(PlayerEffects.WARD)
+	assert_true(ward != null, "yellow jar ward under P2")
+	assert_eq(ward.text(), "WARD READY", "a ready ward says so")
 	assert_eq(hud.panel(1).indicator_ids().size(), 0, "nothing under P1")
-	assert_eq(shield.text(), "SHIELD x2 10s", "identity, charges and seconds")
+	assert_eq(shield.text(), "SHIELD x2 30s", "identity, charges and seconds")
 	await physics_frames(130)
-	assert_eq(shield.text(), "SHIELD x2 8s", "the seconds count down")
+	assert_eq(shield.text(), "SHIELD x2 28s", "the seconds count down")
 	assert_true(hud.panel(2).indicator(PlayerEffects.FRUIT_SHIELD) == shield, "the same indicator (not rebuilt)")
 	_k(1).health.take_damage(DamageEvent.create(1, DamageEvent.Category.CONTACT, self))
 	await physics_frames(1)
@@ -99,10 +101,34 @@ func test_expired_effects_disappear() -> void:
 	var p1 := RunState.current().player(1)
 	p1.effects.add_tile_effect(PlayerEffects.SPEED_BOOST)
 	assert_true(hud.panel(1).indicator(PlayerEffects.SPEED_BOOST) != null, "speed boost shown")
-	assert_eq(hud.panel(1).indicator(PlayerEffects.SPEED_BOOST).text(), "SPEED 5s", "5 seconds")
-	await physics_frames(int(5.2 * 60))
+	assert_eq(hud.panel(1).indicator(PlayerEffects.SPEED_BOOST).text(), "HASTE 12s", "12 seconds")
+	await physics_frames(int(12.2 * 60))
 	assert_true(hud.panel(1).indicator(PlayerEffects.SPEED_BOOST) == null, "removed when it expires")
 	assert_false(hud.panel(1).effects_row.visible, "empty row hidden")
+
+
+func test_six_effects_wrap_and_never_cover_the_middle_panel() -> void:
+	for n in [1, 2]:
+		var p := RunState.current().player(n)
+		p.collect_jar(PlayerStats.JarType.YELLOW)
+		p.collect_fruit(PlayerStats.FruitType.YELLOW, 3)
+		p.collect_fruit(PlayerStats.FruitType.PURPLE, 3)
+		for effect in PlayerEffects.TILE_POOL:
+			p.effects.add_tile_effect(effect)
+		p.collect_fruit(PlayerStats.FruitType.RED, 3)
+		p.collect_jar(PlayerStats.JarType.BLUE)
+		p.collect_jar(PlayerStats.JarType.RED)
+	await physics_frames(4)
+	assert_eq(hud.panel(1).indicator_ids().size(), 6, "all six effects are listed")
+	assert_eq(hud.panel(1).indicator(PlayerEffects.FRUIT_SHIELD).text(), "x3 45s", "four or more effects: compact text, the icon names the effect")
+	assert_eq(hud.panel(1).indicator(PlayerEffects.WARD).text(), "READY", "the ward too")
+	assert_eq(hud.panel(1).indicator(PlayerEffects.SPEED_BOOST).text(), "H 12s", "the tile boosts keep a letter")
+	var middle := (hud.get_node("Root/Center/Coins") as Control).get_global_rect()
+	for n in [1, 2]:
+		var rect := hud.panel(n).get_global_rect()
+		assert_false(rect.intersects(middle), "P%d's panel (%s) stays clear of the coin panel (%s)" % [n, rect, middle])
+		assert_true(rect.position.x >= 0.0 and rect.end.x <= 640.0, "P%d's panel is inside the 640 px screen" % n)
+		assert_lt(rect.size.y, 72.0, "P%d's panel stays within a fifth of the screen height" % n)
 
 
 func test_permanent_upgrades_shown() -> void:
@@ -111,7 +137,8 @@ func test_permanent_upgrades_shown() -> void:
 	p1.collect_jar(PlayerStats.JarType.RED)
 	p1.collect_fruit(PlayerStats.FruitType.PURPLE, 2)
 	p1.collect_fruit(PlayerStats.FruitType.RED, 1)
-	assert_eq(hud.panel(1).upgrades.text, "PWR 2  RANGE +10%  POISON 2s", "power, range and poison")
+	assert_eq(hud.panel(1).upgrades.text, "PWR 2  REACH +10%", "permanent upgrades: power and reach")
+	assert_eq(hud.panel(1).indicator(PlayerEffects.VENOM).text(), "VENOM 45s", "venom is timed, so it is shown with its seconds")
 	assert_eq(hud.panel(2).upgrades.text, "", "P2 unaffected")
 
 

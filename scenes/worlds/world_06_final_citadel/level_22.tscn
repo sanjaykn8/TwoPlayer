@@ -1,59 +1,63 @@
 [gd_scene format=4]
 
-[ext_resource type="Texture2D" path="res://assets/sprites/world_tileset.png" id="1_boeux"]
-[ext_resource type="TileSet" path="res://resources/tilesets/dev_world_tileset.tres" id="2_yb1bn"]
-[ext_resource type="Script" path="res://components/camera/camera_bounds.gd" id="3_ds788"]
-[ext_resource type="PackedScene" path="res://scenes/objects/ladder.tscn" id="4_b5yrj"]
-[ext_resource type="PackedScene" path="res://scenes/puzzles/puzzle_clue.tscn" id="5_lnu38"]
-[ext_resource type="PackedScene" path="res://scenes/collectibles/power_tile.tscn" id="6_0cdvt"]
-[ext_resource type="PackedScene" path="res://scenes/collectibles/jar.tscn" id="7_ghj66"]
-[ext_resource type="PackedScene" path="res://scenes/collectibles/coin_stash.tscn" id="8_0trx2"]
-[ext_resource type="PackedScene" path="res://scenes/hazards/spikes.tscn" id="9_jr2lc"]
-[ext_resource type="PackedScene" path="res://scenes/hazards/fall_boundary.tscn" id="10_cewv6"]
-[ext_resource type="PackedScene" path="res://scenes/platforms/collapsing_platform.tscn" id="11_me8gl"]
-[ext_resource type="PackedScene" path="res://scenes/platforms/moving_platform.tscn" id="12_lt16h"]
-[ext_resource type="PackedScene" path="res://scenes/platforms/disappearing_platform.tscn" id="13_re1jk"]
-[ext_resource type="PackedScene" path="res://scenes/enemies/orc_grunt.tscn" id="14_gegmt"]
-[ext_resource type="PackedScene" path="res://scenes/enemies/hollow_archer.tscn" id="15_cx6ww"]
-[ext_resource type="PackedScene" path="res://scenes/enemies/orc_guard.tscn" id="16_831xc"]
-[ext_resource type="PackedScene" path="res://scenes/puzzles/pressure_plate.tscn" id="17_x25qk"]
-[ext_resource type="PackedScene" path="res://scenes/puzzles/attack_switch.tscn" id="18_p8vog"]
-[ext_resource type="PackedScene" path="res://scenes/puzzles/puzzle_logic.tscn" id="19_udb6h"]
-[ext_resource type="PackedScene" path="res://scenes/puzzles/platform_controller.tscn" id="20_juoly"]
-[ext_resource type="PackedScene" path="res://scenes/puzzles/puzzle_target.tscn" id="21_0ds6r"]
-[ext_resource type="PackedScene" path="res://scenes/puzzles/puzzle_gate.tscn" id="22_gmnlw"]
-[ext_resource type="PackedScene" path="res://scenes/campaign/save_point.tscn" id="23_x5yol"]
-[ext_resource type="PackedScene" path="res://scenes/campaign/level_exit.tscn" id="24_wf4u2"]
-[ext_resource type="PackedScene" path="res://scenes/players/knight.tscn" id="25_1hkl6"]
-[ext_resource type="Resource" path="res://resources/players/p2_profile.tres" id="26_wierb"]
+[ext_resource type="Texture2D" path="res://assets/sprites/world_tileset.png" id="1_lnu38"]
+[ext_resource type="TileSet" path="res://resources/tilesets/dev_world_tileset.tres" id="2_0cdvt"]
+[ext_resource type="Script" path="res://components/camera/camera_bounds.gd" id="3_ghj66"]
+[ext_resource type="PackedScene" path="res://scenes/objects/ladder.tscn" id="4_0trx2"]
+[ext_resource type="PackedScene" path="res://scenes/puzzles/puzzle_clue.tscn" id="5_jr2lc"]
+[ext_resource type="PackedScene" path="res://scenes/collectibles/power_tile.tscn" id="6_cewv6"]
+[ext_resource type="PackedScene" path="res://scenes/collectibles/coin_stash.tscn" id="7_me8gl"]
+[ext_resource type="PackedScene" path="res://scenes/collectibles/fruit.tscn" id="8_lt16h"]
+[ext_resource type="PackedScene" path="res://scenes/collectibles/jar.tscn" id="9_re1jk"]
+[ext_resource type="PackedScene" path="res://scenes/hazards/spikes.tscn" id="10_gegmt"]
+[ext_resource type="PackedScene" path="res://scenes/hazards/fall_boundary.tscn" id="11_cx6ww"]
+[ext_resource type="PackedScene" path="res://scenes/platforms/collapsing_platform.tscn" id="12_831xc"]
+[ext_resource type="PackedScene" path="res://scenes/platforms/moving_platform.tscn" id="13_x25qk"]
+[ext_resource type="PackedScene" path="res://scenes/platforms/disappearing_platform.tscn" id="14_p8vog"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/orc_grunt.tscn" id="15_udb6h"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/hollow_archer.tscn" id="16_juoly"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/orc_guard.tscn" id="17_0ds6r"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/orc_brute.tscn" id="18_gmnlw"]
+[ext_resource type="PackedScene" path="res://scenes/enemies/ember_slime.tscn" id="19_x5yol"]
+[ext_resource type="PackedScene" path="res://scenes/puzzles/pressure_plate.tscn" id="20_wf4u2"]
+[ext_resource type="PackedScene" path="res://scenes/puzzles/attack_switch.tscn" id="21_1hkl6"]
+[ext_resource type="PackedScene" path="res://scenes/puzzles/puzzle_logic.tscn" id="22_wierb"]
+[ext_resource type="PackedScene" path="res://scenes/puzzles/platform_controller.tscn" id="23_pm745"]
+[ext_resource type="PackedScene" path="res://scenes/puzzles/puzzle_target.tscn" id="24_dg35l"]
+[ext_resource type="PackedScene" path="res://scenes/puzzles/puzzle_gate.tscn" id="25_7kvp6"]
+[ext_resource type="PackedScene" path="res://scenes/campaign/save_point.tscn" id="26_nmfht"]
+[ext_resource type="PackedScene" path="res://scenes/campaign/level_exit.tscn" id="27_r654d"]
+[ext_resource type="PackedScene" path="res://scenes/mechanisms/saw_blade.tscn" id="28_7n0lk"]
+[ext_resource type="PackedScene" path="res://scenes/players/knight.tscn" id="29_lpxev"]
+[ext_resource type="Resource" path="res://resources/players/p2_profile.tres" id="30_krt8v"]
 
-[sub_resource type="Gradient" id="Gradient_pm745"]
+[sub_resource type="Gradient" id="Gradient_mjii1"]
 interpolation_mode = 1
 offsets = PackedFloat32Array(0, 0.2, 0.4, 0.6, 0.8)
 colors = PackedColorArray(0.105882354, 0.12941177, 0.2, 1, 0.20196079, 0.23725492, 0.32254905, 1, 0.29803923, 0.34509808, 0.44509804, 1, 0.39411765, 0.45294118, 0.5676471, 1, 0.49019608, 0.56078434, 0.6901961, 1)
 
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_dg35l"]
-gradient = SubResource("Gradient_pm745")
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_i0gf8"]
+gradient = SubResource("Gradient_mjii1")
 width = 4
 fill_to = Vector2(0, 1)
 
-[sub_resource type="AtlasTexture" id="AtlasTexture_7kvp6"]
-atlas = ExtResource("1_boeux")
+[sub_resource type="AtlasTexture" id="AtlasTexture_2316m"]
+atlas = ExtResource("1_lnu38")
 region = Rect2(128, 16, 16, 16)
 
-[node name="L22" type="Node2D" unique_id=1026870533]
+[node name="L22" type="Node2D" unique_id=777311154]
 metadata/level_id = "l22"
 
-[node name="Sky" type="TextureRect" parent="." unique_id=1573094718]
+[node name="Sky" type="TextureRect" parent="." unique_id=1371691001]
 z_index = -20
 offset_right = 1920.0
 offset_bottom = 1120.0
 mouse_filter = 2
-texture = SubResource("GradientTexture2D_dg35l")
+texture = SubResource("GradientTexture2D_i0gf8")
 
-[node name="FarScenery" type="Node2D" parent="." unique_id=1691134283]
+[node name="FarScenery" type="Node2D" parent="." unique_id=334442751]
 
-[node name="TextureRect" type="TextureRect" parent="FarScenery" unique_id=1851334711]
+[node name="TextureRect" type="TextureRect" parent="FarScenery" unique_id=1967553615]
 modulate = Color(0.3682353, 0.41058826, 0.50058824, 0.28)
 z_index = -15
 offset_left = 48.0
@@ -61,10 +65,10 @@ offset_top = 1008.0
 offset_right = 80.0
 offset_bottom = 1056.0
 mouse_filter = 2
-texture = SubResource("AtlasTexture_7kvp6")
+texture = SubResource("AtlasTexture_2316m")
 stretch_mode = 1
 
-[node name="TextureRect2" type="TextureRect" parent="FarScenery" unique_id=1216607546]
+[node name="TextureRect2" type="TextureRect" parent="FarScenery" unique_id=1640954101]
 modulate = Color(0.3682353, 0.41058826, 0.50058824, 0.28)
 z_index = -15
 offset_left = 320.0
@@ -72,10 +76,10 @@ offset_top = 1008.0
 offset_right = 336.0
 offset_bottom = 1056.0
 mouse_filter = 2
-texture = SubResource("AtlasTexture_7kvp6")
+texture = SubResource("AtlasTexture_2316m")
 stretch_mode = 1
 
-[node name="TextureRect3" type="TextureRect" parent="FarScenery" unique_id=1151184910]
+[node name="TextureRect3" type="TextureRect" parent="FarScenery" unique_id=22032702]
 modulate = Color(0.3682353, 0.41058826, 0.50058824, 0.28)
 z_index = -15
 offset_left = 528.0
@@ -83,10 +87,10 @@ offset_top = 880.0
 offset_right = 560.0
 offset_bottom = 1056.0
 mouse_filter = 2
-texture = SubResource("AtlasTexture_7kvp6")
+texture = SubResource("AtlasTexture_2316m")
 stretch_mode = 1
 
-[node name="TextureRect4" type="TextureRect" parent="FarScenery" unique_id=1550148009]
+[node name="TextureRect4" type="TextureRect" parent="FarScenery" unique_id=1530129375]
 modulate = Color(0.3682353, 0.41058826, 0.50058824, 0.28)
 z_index = -15
 offset_left = 720.0
@@ -94,10 +98,10 @@ offset_top = 928.0
 offset_right = 752.0
 offset_bottom = 1056.0
 mouse_filter = 2
-texture = SubResource("AtlasTexture_7kvp6")
+texture = SubResource("AtlasTexture_2316m")
 stretch_mode = 1
 
-[node name="TextureRect5" type="TextureRect" parent="FarScenery" unique_id=1386858457]
+[node name="TextureRect5" type="TextureRect" parent="FarScenery" unique_id=1730038664]
 modulate = Color(0.3682353, 0.41058826, 0.50058824, 0.28)
 z_index = -15
 offset_left = 976.0
@@ -105,10 +109,10 @@ offset_top = 880.0
 offset_right = 1024.0
 offset_bottom = 1056.0
 mouse_filter = 2
-texture = SubResource("AtlasTexture_7kvp6")
+texture = SubResource("AtlasTexture_2316m")
 stretch_mode = 1
 
-[node name="TextureRect6" type="TextureRect" parent="FarScenery" unique_id=832298824]
+[node name="TextureRect6" type="TextureRect" parent="FarScenery" unique_id=957719725]
 modulate = Color(0.3682353, 0.41058826, 0.50058824, 0.28)
 z_index = -15
 offset_left = 1200.0
@@ -116,10 +120,10 @@ offset_top = 976.0
 offset_right = 1216.0
 offset_bottom = 1056.0
 mouse_filter = 2
-texture = SubResource("AtlasTexture_7kvp6")
+texture = SubResource("AtlasTexture_2316m")
 stretch_mode = 1
 
-[node name="TextureRect7" type="TextureRect" parent="FarScenery" unique_id=1504104443]
+[node name="TextureRect7" type="TextureRect" parent="FarScenery" unique_id=73088218]
 modulate = Color(0.3682353, 0.41058826, 0.50058824, 0.28)
 z_index = -15
 offset_left = 1488.0
@@ -127,10 +131,10 @@ offset_top = 864.0
 offset_right = 1520.0
 offset_bottom = 1056.0
 mouse_filter = 2
-texture = SubResource("AtlasTexture_7kvp6")
+texture = SubResource("AtlasTexture_2316m")
 stretch_mode = 1
 
-[node name="TextureRect8" type="TextureRect" parent="FarScenery" unique_id=1902329811]
+[node name="TextureRect8" type="TextureRect" parent="FarScenery" unique_id=873434175]
 modulate = Color(0.3682353, 0.41058826, 0.50058824, 0.28)
 z_index = -15
 offset_left = 1648.0
@@ -138,301 +142,310 @@ offset_top = 928.0
 offset_right = 1696.0
 offset_bottom = 1056.0
 mouse_filter = 2
-texture = SubResource("AtlasTexture_7kvp6")
+texture = SubResource("AtlasTexture_2316m")
 stretch_mode = 1
 
-[node name="Terrain" type="TileMapLayer" parent="." unique_id=1785401344]
+[node name="Terrain" type="TileMapLayer" parent="." unique_id=954769895]
 tile_map_data = PackedByteArray("AAAAAAAAAAAHAAAAAAAAAAEAAAAIAAEAAAAAAAIAAAAIAAEAAAAAAAMAAAAIAAEAAAAAAAQAAAAIAAEAAAAAAAUAAAAIAAEAAAAAAAYAAAAIAAEAAAAAAAcAAAAIAAEAAAAAAAgAAAAIAAEAAAAAAAkAAAAIAAEAAAAAAAoAAAAIAAEAAAAAAAsAAAAIAAEAAAAAAAwAAAAIAAEAAAAAAA0AAAAIAAEAAAAAAA4AAAAIAAEAAAAAAA8AAAAIAAEAAAAAABAAAAAIAAEAAAAAABEAAAAIAAEAAAAAABIAAAAIAAEAAAAAABMAAAAIAAEAAAAAABQAAAAIAAEAAAAAABUAAAAIAAEAAAAAABYAAAAIAAEAAAAAABcAAAAIAAEAAAAAABgAAAAIAAEAAAAAABkAAAAIAAEAAAAAABoAAAAIAAEAAAAAABsAAAAIAAEAAAAAABwAAAAIAAEAAAAAAB0AAAAIAAEAAAAAAB4AAAAIAAEAAAAAAB8AAAAIAAEAAAAAACAAAAAIAAEAAAAAACEAAAAIAAEAAAAAACIAAAAIAAEAAAAAACMAAAAIAAEAAAAAACQAAAAIAAEAAAAAACUAAAAIAAEAAAAAACYAAAAIAAEAAAAAACcAAAAIAAEAAAAAACgAAAAIAAEAAAAAACkAAAAIAAEAAAAAACoAAAAIAAEAAAAAACsAAAAIAAEAAAAAACwAAAAIAAEAAAAAAC0AAAAIAAEAAAAAAC4AAAAIAAEAAAAAAC8AAAAIAAEAAAAAADAAAAAIAAEAAAAAADEAAAAIAAEAAAAAADIAAAAIAAEAAAAAADMAAAAIAAEAAAAAADQAAAAIAAEAAAAAADUAAAAIAAEAAAAAADYAAAAIAAEAAAAAADcAAAAIAAEAAAAAADgAAAAIAAEAAAAAADkAAAAIAAEAAAAAADoAAAAIAAEAAAAAADsAAAAIAAEAAAAAADwAAAAIAAEAAAAAAD0AAAAIAAEAAAAAAD4AAAAIAAEAAAAAAD8AAAAIAAEAAAAAAEAAAAAIAAEAAAAAAEEAAAAIAAEAAAAAAEIAAAAGAAEAAAAAAEMAAAAGAAEAAAAAAEQAAAAGAAEAAAAAAEUAAAAGAAEAAAB3AAAAAAAHAAAAAAB3AAEAAAAIAAEAAAB3AAIAAAAIAAEAAAB3AAMAAAAIAAEAAAB3AAQAAAAIAAEAAAB3AAUAAAAIAAEAAAB3AAYAAAAIAAEAAAB3AAcAAAAIAAEAAAB3AAgAAAAIAAEAAAB3AAkAAAAIAAEAAAB3AAoAAAAIAAEAAAB3AAsAAAAIAAEAAAB3AAwAAAAIAAEAAAB3AA0AAAAIAAEAAAB3AA4AAAAIAAEAAAB3AA8AAAAIAAEAAAB3ABAAAAAIAAEAAAB3ABEAAAAIAAEAAAB3ABIAAAAIAAEAAAB3ABMAAAAIAAEAAAB3ABQAAAAIAAEAAAB3ABUAAAAIAAEAAAB3ABYAAAAIAAEAAAB3ABcAAAAIAAEAAAB3ABgAAAAIAAEAAAB3ABkAAAAIAAEAAAB3ABoAAAAIAAEAAAB3ABsAAAAIAAEAAAB3ABwAAAAIAAEAAAB3AB0AAAAIAAEAAAB3AB4AAAAIAAEAAAB3AB8AAAAIAAEAAAB3ACAAAAAIAAEAAAB3ACEAAAAIAAEAAAB3ACIAAAAIAAEAAAB3ACMAAAAIAAEAAAB3ACQAAAAIAAEAAAB3ACUAAAAIAAEAAAB3ACYAAAAIAAEAAAB3ACcAAAAIAAEAAAB3ACgAAAAIAAEAAAB3ACkAAAAIAAEAAAB3ACoAAAAIAAEAAAB3ACsAAAAIAAEAAAB3ACwAAAAIAAEAAAB3AC0AAAAIAAEAAAB3AC4AAAAIAAEAAAB3AC8AAAAIAAEAAAB3ADAAAAAIAAEAAAB3ADEAAAAIAAEAAAB3ADIAAAAIAAEAAAB3ADMAAAAIAAEAAAB3ADQAAAAIAAEAAAB3ADUAAAAIAAEAAAB3ADYAAAAIAAEAAAB3ADcAAAAIAAEAAAB3ADgAAAAIAAEAAAB3ADkAAAAIAAEAAAB3ADoAAAAIAAEAAAB3ADsAAAAIAAEAAAB3ADwAAAAIAAEAAAB3AD0AAAAIAAEAAAB3AD4AAAAIAAEAAAB3AD8AAAAIAAEAAAB3AEAAAAAIAAEAAAB3AEEAAAAIAAEAAAB3AEIAAAAGAAEAAAB3AEMAAAAGAAEAAAB3AEQAAAAGAAEAAAB3AEUAAAAGAAEAAAABAEIAAAAHAAAAAAACAEIAAAAHAAAAAAADAEIAAAAHAAAAAAAEAEIAAAAHAAAAAAAFAEIAAAAHAAAAAAAGAEIAAAAHAAAAAAAHAEIAAAAHAAAAAAAIAEIAAAAHAAAAAAAJAEIAAAAHAAAAAAAKAEIAAAAHAAAA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AABrAEUAAAAGAAEAAABsAEUAAAAGAAEAAABtAEUAAAAGAAEAAABuAEUAAAAGAAEAAABvAEUAAAAGAAEAAABwAEUAAAAGAAEAAABxAEUAAAAGAAEAAAByAEUAAAAGAAEAAABzAEUAAAAGAAEAAAB0AEUAAAAGAAEAAAB1AEUAAAAGAAEAAAB2AEUAAAAGAAEAAAAyAAEAAAAHAAAAAAAyAAIAAAAIAAEAAAAyAAMAAAAIAAEAAAAyAAQAAAAIAAEAAAAyAAUAAAAIAAEAAAAyAAYAAAAIAAEAAAAeAD4AAQABAAMAAAAfAD4AAQACAAMAAAAgAD4AAQABAAMAAAAhAD4AAQACAAMAAAAiAD4AAQABAAMAAAAjAD4AAQACAAMAAAAkAD4AAQACAAMAAAAvADIAAQABAAMAAAAwADIAAQABAAMAAAAxADIAAQACAAMAAAAyADIAAQABAAMAAAAzADIAAQACAAMAAAA0ADIAAQABAAMAAAA1ADIAAQACAAMAAAA2ADIAAQABAAMAAAA3ADIAAQACAAMAAAA7ACIAAQABAAMAAAA8ACIAAQABAAMAAAA9ACIAAQACAAMAAAA+ACIAAQABAAMAAAA/ACIAAQACAAMAAABAACIAAQABAAMAAABBACIAAQACAAMAAABCACIAAQABAAMAAABDACIAAQACAAMAAABEACIAAQABAAMAAABFACIAAQACAAMAAABGACIAAQABAAMAAABHACIAAQACAAMAAABIACIAAQABAAMAAABJACIAAQACAAMAAABKACIAAQABAAMAAABLACIAAQACAAMAAAA3ABMAAQABAAMAAAA4ABMAAQABAAMAAAA5ABMAAQACAAMAAAA6ABMAAQABAAMAAAA7ABMAAQACAAMAAAA8ABMAAQABAAMAAAA9ABMAAQACAAMAAAA+ABMAAQACAAMAAAAmAAoAAQABAAMAAAAnAAoAAQACAAMAAAAoAAoAAQABAAMAAAApAAoAAQACAAMAAAAqAAoAAQABAAMAAAArAAoAAQACAAMAAAAsAAoAAQABAAMAAAAtAAoAAQACAAMAAAAuAAoAAQABAAMAAAAvAAoAAQACAAMAAAAwAAoAAQABAAMAAAAxAAoAAQACAAMAAAAyAAoAAQABAAMAAAAzAAoAAQACAAMAAAA0AAoAAQABAAMAAAA1AAoAAQACAAMAAAA2AAoAAQABAAMAAAA3AAoAAQACAAMAAABNAB8AAQABAAMAAABOAB8AAQABAAMAAABPAB8AAQACAAMAAABQAB8AAQABAAMAAABRAB8AAQACAAMAAABSABwAAQABAAMAAABTABwAAQACAAMAAABUABwAAQABAAMAAABVABwAAQACAAMAAABWABwAAQACAAMAAAA=")
-tile_set = ExtResource("2_yb1bn")
+tile_set = ExtResource("2_0cdvt")
 
-[node name="CameraBounds" type="Node2D" parent="." unique_id=461130855]
-script = ExtResource("3_ds788")
+[node name="CameraBounds" type="Node2D" parent="." unique_id=365864448]
+script = ExtResource("3_ghj66")
 size = Vector2(1920, 1120)
 
-[node name="SpawnP1" type="Marker2D" parent="." unique_id=61730318]
+[node name="SpawnP1" type="Marker2D" parent="." unique_id=112599225]
 position = Vector2(72, 1056)
 
-[node name="SpawnP2" type="Marker2D" parent="." unique_id=1144898475]
+[node name="SpawnP2" type="Marker2D" parent="." unique_id=112418979]
 position = Vector2(104, 1056)
 
-[node name="Climbables" type="Node2D" parent="." unique_id=1164985906]
+[node name="Climbables" type="Node2D" parent="." unique_id=1102149783]
 
-[node name="Ladder1" parent="Climbables" unique_id=1186347776 instance=ExtResource("4_b5yrj")]
+[node name="Ladder1" parent="Climbables" unique_id=2123029396 instance=ExtResource("4_0trx2")]
 position = Vector2(888, 160)
 size = Vector2(16, 144)
 
-[node name="Clues" type="Node2D" parent="." unique_id=1877707995]
+[node name="Clues" type="Node2D" parent="." unique_id=1077201126]
 
-[node name="Clue1" parent="Clues" unique_id=1761456504 instance=ExtResource("5_lnu38")]
+[node name="Clue1" parent="Clues" unique_id=1788028480 instance=ExtResource("5_jr2lc")]
 position = Vector2(136, 1056)
 text = "The silent road
 is the longer road."
 
-[node name="Clue2" parent="Clues" unique_id=1651795903 instance=ExtResource("5_lnu38")]
+[node name="Clue2" parent="Clues" unique_id=1750561991 instance=ExtResource("5_jr2lc")]
 position = Vector2(760, 160)
 text = "One above, one below.
 Strike as one."
 
-[node name="Items" type="Node2D" parent="." unique_id=189220892]
+[node name="Items" type="Node2D" parent="." unique_id=1215613476]
 
-[node name="PowerTile1" parent="Items" unique_id=1798309339 instance=ExtResource("6_0cdvt")]
+[node name="PowerTile1" parent="Items" unique_id=1448700455 instance=ExtResource("6_cewv6")]
 position = Vector2(456, 1048)
 
-[node name="JarGreen1" parent="Items" unique_id=1235612185 instance=ExtResource("7_ghj66")]
+[node name="Coins1" parent="Items" unique_id=699164999 instance=ExtResource("7_me8gl")]
+position = Vector2(1832, 1056)
+amount = 8
+collectible_id = "l22_coins_1"
+
+[node name="FruitYellow1" parent="Items" unique_id=1611003174 instance=ExtResource("8_lt16h")]
+position = Vector2(1864, 1056)
+fruit_type = 1
+tier = 3
+collectible_id = "l22_fruit_yellow_1"
+
+[node name="JarGreen1" parent="Items" unique_id=1148504338 instance=ExtResource("9_re1jk")]
 position = Vector2(1368, 448)
 collectible_id = "l22_jar_green_1"
 
-[node name="Coins1" parent="Items" unique_id=695165174 instance=ExtResource("8_0trx2")]
+[node name="Coins2" parent="Items" unique_id=457464683 instance=ExtResource("7_me8gl")]
 position = Vector2(1272, 496)
 amount = 4
-collectible_id = "l22_coins_1"
+collectible_id = "l22_coins_2"
 
-[node name="Hazards" type="Node2D" parent="." unique_id=340845398]
+[node name="Hazards" type="Node2D" parent="." unique_id=1131707871]
 
-[node name="Spikes1" parent="Hazards" unique_id=1462963195 instance=ExtResource("9_jr2lc")]
+[node name="Spikes1" parent="Hazards" unique_id=255541685 instance=ExtResource("10_gegmt")]
 position = Vector2(608, 1040)
 
-[node name="Spikes2" parent="Hazards" unique_id=125876250 instance=ExtResource("9_jr2lc")]
+[node name="Spikes2" parent="Hazards" unique_id=139011474 instance=ExtResource("10_gegmt")]
 position = Vector2(704, 1040)
 
-[node name="FallBoundary" parent="Hazards" unique_id=1680855974 instance=ExtResource("10_cewv6")]
+[node name="FallBoundary" parent="Hazards" unique_id=1320106269 instance=ExtResource("11_cx6ww")]
 position = Vector2(0, 1152)
 size = Vector2(1920, 64)
 
-[node name="Platforms" type="Node2D" parent="." unique_id=1234282675]
+[node name="Platforms" type="Node2D" parent="." unique_id=2084540960]
 
-[node name="C1" parent="Platforms" unique_id=1110965588 instance=ExtResource("11_me8gl")]
+[node name="C1" parent="Platforms" unique_id=1241312627 instance=ExtResource("12_831xc")]
 position = Vector2(608, 944)
 save_id = "l22_c_1"
 
-[node name="C2" parent="Platforms" unique_id=1451596812 instance=ExtResource("11_me8gl")]
+[node name="C2" parent="Platforms" unique_id=231117688 instance=ExtResource("12_831xc")]
 position = Vector2(656, 896)
 save_id = "l22_c_2"
 
-[node name="C3" parent="Platforms" unique_id=637127441 instance=ExtResource("11_me8gl")]
+[node name="C3" parent="Platforms" unique_id=158641873 instance=ExtResource("12_831xc")]
 position = Vector2(704, 848)
 save_id = "l22_c_3"
 
-[node name="SpireLift" parent="Platforms" unique_id=1287934044 instance=ExtResource("12_lt16h")]
+[node name="SpireLift" parent="Platforms" unique_id=1492324175 instance=ExtResource("13_x25qk")]
 position = Vector2(896, 800)
 travel = Vector2(0, -256)
 speed = 38.0
 auto_start = false
 save_id = "l22_spire_lift"
 
-[node name="S1" parent="Platforms" unique_id=1063433945 instance=ExtResource("13_re1jk")]
+[node name="S1" parent="Platforms" unique_id=248092277 instance=ExtResource("14_p8vog")]
 position = Vector2(1168, 496)
 active_time = 2.4
 disabled_time = 1.2
 start_offset = 1.8
 save_id = "l22_s_1"
 
-[node name="S2" parent="Platforms" unique_id=87483501 instance=ExtResource("13_re1jk")]
+[node name="S2" parent="Platforms" unique_id=795810150 instance=ExtResource("14_p8vog")]
 position = Vector2(1120, 448)
 active_time = 2.4
 disabled_time = 1.2
 start_offset = 1.2
 save_id = "l22_s_2"
 
-[node name="S3" parent="Platforms" unique_id=187989318 instance=ExtResource("13_re1jk")]
+[node name="S3" parent="Platforms" unique_id=1610233196 instance=ExtResource("14_p8vog")]
 position = Vector2(1072, 400)
 active_time = 2.4
 disabled_time = 1.2
 start_offset = 0.6
 save_id = "l22_s_3"
 
-[node name="S4" parent="Platforms" unique_id=1334225271 instance=ExtResource("13_re1jk")]
+[node name="S4" parent="Platforms" unique_id=1482469570 instance=ExtResource("14_p8vog")]
 position = Vector2(1024, 352)
 active_time = 2.4
 disabled_time = 1.2
 save_id = "l22_s_4"
 
-[node name="Enemies" type="Node2D" parent="." unique_id=1130875124]
+[node name="Enemies" type="Node2D" parent="." unique_id=1258762108]
 
-[node name="Grunt1" parent="Enemies" unique_id=1025165224 instance=ExtResource("14_gegmt")]
+[node name="Grunt1" parent="Enemies" unique_id=1877434296 instance=ExtResource("15_udb6h")]
 position = Vector2(840, 800)
 patrol_left = -64.0
 save_id = "l22_grunt_1"
 
-[node name="Archer1" parent="Enemies" unique_id=380361461 instance=ExtResource("15_cx6ww")]
+[node name="Archer1" parent="Enemies" unique_id=1288556760 instance=ExtResource("16_juoly")]
 position = Vector2(1128, 544)
 save_id = "l22_archer_1"
 
-[node name="Guard1" parent="Enemies" unique_id=609427679 instance=ExtResource("16_831xc")]
+[node name="Guard1" parent="Enemies" unique_id=767139054 instance=ExtResource("17_0ds6r")]
 position = Vector2(1016, 544)
 save_id = "l22_guard_1"
 
-[node name="Guard2" parent="Enemies" unique_id=10212169 instance=ExtResource("16_831xc")]
+[node name="Brute1" parent="Enemies" unique_id=1731612789 instance=ExtResource("18_gmnlw")]
+position = Vector2(1608, 1056)
+patrol_left = -96.0
+patrol_right = 96.0
+save_id = "l22_brute_1"
+
+[node name="Ember1" parent="Enemies" unique_id=521760262 instance=ExtResource("19_x5yol")]
+position = Vector2(1768, 1056)
+save_id = "l22_ember_1"
+
+[node name="Guard2" parent="Enemies" unique_id=1397654012 instance=ExtResource("17_0ds6r")]
 position = Vector2(744, 160)
 patrol_left = -64.0
 patrol_right = 32.0
 save_id = "l22_guard_2"
 
-[node name="Puzzles" type="Node2D" parent="." unique_id=299168340]
+[node name="Puzzles" type="Node2D" parent="." unique_id=1238224055]
 
-[node name="LandingPlate" parent="Puzzles" unique_id=1185223714 instance=ExtResource("17_x25qk")]
+[node name="LandingPlate" parent="Puzzles" unique_id=1291685361 instance=ExtResource("20_wf4u2")]
 position = Vector2(768, 800)
 puzzle_id = "l22_landing_plate"
 
-[node name="LiftLatch" parent="Puzzles" unique_id=2050191038 instance=ExtResource("18_p8vog")]
+[node name="LiftLatch" parent="Puzzles" unique_id=245340685 instance=ExtResource("21_1hkl6")]
 position = Vector2(1000, 522)
 mode = 2
 puzzle_id = "l22_lift_latch"
 
-[node name="LiftLogic" parent="Puzzles" unique_id=1040698833 instance=ExtResource("19_udb6h")]
+[node name="LiftLogic" parent="Puzzles" unique_id=1846821232 instance=ExtResource("22_wierb")]
 inputs = Array[NodePath]([NodePath("../LandingPlate"), NodePath("../LiftLatch")])
 mode = 1
 puzzle_id = "l22_lift_logic"
 
-[node name="Control1" parent="Puzzles" unique_id=61593377 instance=ExtResource("20_juoly")]
+[node name="Control1" parent="Puzzles" unique_id=1307548610 instance=ExtResource("23_pm745")]
 platform = NodePath("../../Platforms/SpireLift")
 controller = NodePath("../LiftLogic")
 
-[node name="TopTarget" parent="Puzzles" unique_id=1969596112 instance=ExtResource("21_0ds6r")]
+[node name="TopTarget" parent="Puzzles" unique_id=910238136 instance=ExtResource("24_dg35l")]
 position = Vector2(840, 138)
 puzzle_id = "l22_top_target"
 
-[node name="LowTarget" parent="Puzzles" unique_id=236799709 instance=ExtResource("21_0ds6r")]
+[node name="LowTarget" parent="Puzzles" unique_id=543468538 instance=ExtResource("24_dg35l")]
 position = Vector2(1160, 522)
 puzzle_id = "l22_low_target"
 
-[node name="SpireSync" parent="Puzzles" unique_id=1565150049 instance=ExtResource("19_udb6h")]
+[node name="SpireSync" parent="Puzzles" unique_id=1490588877 instance=ExtResource("22_wierb")]
 inputs = Array[NodePath]([NodePath("../TopTarget"), NodePath("../LowTarget")])
 mode = 2
 distinct_players = true
 latch = true
 puzzle_id = "l22_spire_sync"
 
-[node name="SummitGate" parent="Puzzles" unique_id=359734602 instance=ExtResource("22_gmnlw")]
+[node name="SummitGate" parent="Puzzles" unique_id=1232514156 instance=ExtResource("25_7kvp6")]
 position = Vector2(800, 112)
 controller = NodePath("../SpireSync")
 mode = 1
 puzzle_id = "l22_summit_gate"
 
-[node name="Campaign" type="Node2D" parent="." unique_id=1400794919]
+[node name="Campaign" type="Node2D" parent="." unique_id=1261594659]
 
-[node name="SavePoint1" parent="Campaign" unique_id=310766070 instance=ExtResource("23_x5yol")]
+[node name="SavePoint1" parent="Campaign" unique_id=2076324291 instance=ExtResource("26_nmfht")]
 position = Vector2(968, 544)
 save_id = "l22_save_point_1"
 
-[node name="Exit" parent="Campaign" unique_id=1067485081 instance=ExtResource("24_wf4u2")]
+[node name="Exit" parent="Campaign" unique_id=505847307 instance=ExtResource("27_r654d")]
 position = Vector2(660, 160)
 
-[node name="Scenery" type="Node2D" parent="." unique_id=1203284901]
+[node name="Mechanisms" type="Node2D" parent="." unique_id=133315369]
 
-[node name="Sprite2D" type="Sprite2D" parent="Scenery" unique_id=78288466]
+[node name="Saw1" parent="Mechanisms" unique_id=437757391 instance=ExtResource("28_7n0lk")]
+position = Vector2(920, 296)
+speed = 40.0
+
+[node name="Scenery" type="Node2D" parent="." unique_id=1169706731]
+
+[node name="Sprite2D" type="Sprite2D" parent="Scenery" unique_id=1793496969]
 modulate = Color(0.9, 0.95, 1, 1)
 z_index = -5
 position = Vector2(256, 1008)
-texture = ExtResource("1_boeux")
+texture = ExtResource("1_lnu38")
 centered = false
 region_enabled = true
 region_rect = Rect2(96, 48, 16, 48)
 
-[node name="Sprite2D2" type="Sprite2D" parent="Scenery" unique_id=1474381964]
+[node name="Sprite2D2" type="Sprite2D" parent="Scenery" unique_id=1530637266]
 modulate = Color(0.9, 0.95, 1, 1)
 z_index = -5
 position = Vector2(432, 1040)
-texture = ExtResource("1_boeux")
+texture = ExtResource("1_lnu38")
 centered = false
 region_enabled = true
 region_rect = Rect2(96, 32, 16, 16)
 
-[node name="Sprite2D3" type="Sprite2D" parent="Scenery" unique_id=520439996]
+[node name="Sprite2D3" type="Sprite2D" parent="Scenery" unique_id=674530947]
 modulate = Color(0.9, 0.95, 1, 1)
 z_index = -5
 position = Vector2(544, 1040)
-texture = ExtResource("1_boeux")
+texture = ExtResource("1_lnu38")
 centered = false
 region_enabled = true
 region_rect = Rect2(96, 96, 16, 16)
 
-[node name="Sprite2D4" type="Sprite2D" parent="Scenery" unique_id=878954464]
+[node name="Sprite2D4" type="Sprite2D" parent="Scenery" unique_id=507998352]
 modulate = Color(0.9, 0.95, 1, 1)
 z_index = -5
 position = Vector2(816, 1040)
-texture = ExtResource("1_boeux")
+texture = ExtResource("1_lnu38")
 centered = false
 region_enabled = true
 region_rect = Rect2(96, 128, 16, 16)
 
-[node name="Sprite2D5" type="Sprite2D" parent="Scenery" unique_id=2022625015]
+[node name="Sprite2D5" type="Sprite2D" parent="Scenery" unique_id=667436479]
 modulate = Color(0.9, 0.95, 1, 1)
 z_index = -5
 position = Vector2(896, 1008)
-texture = ExtResource("1_boeux")
+texture = ExtResource("1_lnu38")
 centered = false
 region_enabled = true
 region_rect = Rect2(96, 48, 16, 48)
 
-[node name="Sprite2D6" type="Sprite2D" parent="Scenery" unique_id=1195031300]
+[node name="Sprite2D6" type="Sprite2D" parent="Scenery" unique_id=1212357569]
 modulate = Color(0.9, 0.95, 1, 1)
 z_index = -5
 position = Vector2(976, 1040)
-texture = ExtResource("1_boeux")
+texture = ExtResource("1_lnu38")
 centered = false
 region_enabled = true
 region_rect = Rect2(112, 48, 16, 16)
 
-[node name="Sprite2D7" type="Sprite2D" parent="Scenery" unique_id=1090718530]
+[node name="Sprite2D7" type="Sprite2D" parent="Scenery" unique_id=1185673233]
 modulate = Color(0.9, 0.95, 1, 1)
 z_index = -5
 position = Vector2(1088, 1040)
-texture = ExtResource("1_boeux")
+texture = ExtResource("1_lnu38")
 centered = false
 region_enabled = true
 region_rect = Rect2(96, 128, 16, 16)
 
-[node name="Sprite2D8" type="Sprite2D" parent="Scenery" unique_id=709042209]
+[node name="Sprite2D8" type="Sprite2D" parent="Scenery" unique_id=160595811]
 modulate = Color(0.9, 0.95, 1, 1)
 z_index = -5
 position = Vector2(1216, 1040)
-texture = ExtResource("1_boeux")
+texture = ExtResource("1_lnu38")
 centered = false
 region_enabled = true
 region_rect = Rect2(96, 128, 16, 16)
 
-[node name="Sprite2D9" type="Sprite2D" parent="Scenery" unique_id=1432998615]
+[node name="Sprite2D9" type="Sprite2D" parent="Scenery" unique_id=398299285]
 modulate = Color(0.9, 0.95, 1, 1)
 z_index = -5
 position = Vector2(1392, 1040)
-texture = ExtResource("1_boeux")
+texture = ExtResource("1_lnu38")
 centered = false
 region_enabled = true
 region_rect = Rect2(112, 48, 16, 16)
 
-[node name="Sprite2D10" type="Sprite2D" parent="Scenery" unique_id=402869370]
+[node name="Sprite2D10" type="Sprite2D" parent="Scenery" unique_id=1705178315]
 modulate = Color(0.9, 0.95, 1, 1)
 z_index = -5
 position = Vector2(1488, 1040)
-texture = ExtResource("1_boeux")
+texture = ExtResource("1_lnu38")
 centered = false
 region_enabled = true
 region_rect = Rect2(96, 32, 16, 16)
 
-[node name="Sprite2D11" type="Sprite2D" parent="Scenery" unique_id=121489097]
-modulate = Color(0.9, 0.95, 1, 1)
-z_index = -5
-position = Vector2(1600, 1040)
-texture = ExtResource("1_boeux")
-centered = false
-region_enabled = true
-region_rect = Rect2(112, 48, 16, 16)
+[node name="Knights" type="Node2D" parent="." unique_id=1069911890]
 
-[node name="Sprite2D12" type="Sprite2D" parent="Scenery" unique_id=1498562807]
-modulate = Color(0.9, 0.95, 1, 1)
-z_index = -5
-position = Vector2(1760, 1040)
-texture = ExtResource("1_boeux")
-centered = false
-region_enabled = true
-region_rect = Rect2(112, 48, 16, 16)
-
-[node name="Knights" type="Node2D" parent="." unique_id=378753175]
-
-[node name="Knight1" parent="Knights" unique_id=831578189 instance=ExtResource("25_1hkl6")]
+[node name="Knight1" parent="Knights" unique_id=1986736996 instance=ExtResource("29_lpxev")]
 position = Vector2(72, 1056)
 
-[node name="Knight2" parent="Knights" unique_id=1400520819 instance=ExtResource("25_1hkl6")]
+[node name="Knight2" parent="Knights" unique_id=399793940 instance=ExtResource("29_lpxev")]
 position = Vector2(104, 1056)
-profile = ExtResource("26_wierb")
+profile = ExtResource("30_krt8v")

@@ -1,7 +1,10 @@
 class_name Fruit
 extends Collectible
-## A fruit (GDD section 7). Its effect applies to the knight who collects it:
-## green heals, yellow shields, red adds permanent range, purple poisons attacks.
+## A fruit. Its effect applies to the knight who collects it (tier = strength):
+##   green   heals 1/2/3 now (left alone at full health; the largest also heals the partner 1)
+##   yellow  a shield that blocks 1/2/3 hits for 20/30/45 s
+##   red     permanent reach +10/15/20 % (left alone at the cap)
+##   purple  venom for 30/45/60 s: every hit poisons the enemy
 ## Sprites: res://assets/sprites/fruit.png, row = colour, column = tier (apple, pear, grapes).
 
 const SHEET_ROW := {
@@ -9,12 +12,6 @@ const SHEET_ROW := {
 	PlayerStats.FruitType.YELLOW: 1,
 	PlayerStats.FruitType.PURPLE: 2,
 	PlayerStats.FruitType.RED: 3,
-}
-const LABELS := {
-	PlayerStats.FruitType.GREEN: "HEAL",
-	PlayerStats.FruitType.YELLOW: "SHIELD",
-	PlayerStats.FruitType.RED: "RANGE UP",
-	PlayerStats.FruitType.PURPLE: "POISON",
 }
 const COLOURS := {
 	PlayerStats.FruitType.GREEN: Color(0.45, 1.0, 0.45),
@@ -41,8 +38,33 @@ func _process(delta: float) -> void:
 	sprite.position.y = -8.0 + roundf(sin(_time * 3.0))
 
 
+func _accepts(knight: Knight) -> bool:
+	return knight.progress.stats.can_use_fruit(fruit_type)
+
+
+func _refusal_text(_knight: Knight) -> String:
+	return "FULL HEALTH" if fruit_type == PlayerStats.FruitType.GREEN else "REACH MAXED"
+
+
 func _apply(knight: Knight) -> void:
-	knight.progress.stats.collect_fruit(fruit_type, tier)
+	var stats := knight.progress.stats
+	stats.collect_fruit(fruit_type, tier)
+	if fruit_type == PlayerStats.FruitType.GREEN and tier >= 3 and stats.config.feast_partner_heal > 0:
+		var partner := RunState.current().player(3 - knight.player_id())
+		if partner != null and partner.is_alive():
+			partner.heal(stats.config.feast_partner_heal)
+
+
+## What the pickup did, in the knight's pop-up: the amount, and how long or "KEPT".
+func label(config: ProgressionConfig) -> String:
+	match fruit_type:
+		PlayerStats.FruitType.GREEN:
+			return "HEAL +%d%s" % [config.tier_value(config.green_fruit_heal, tier), " (BOTH)" if tier >= 3 else ""]
+		PlayerStats.FruitType.YELLOW:
+			return "SHIELD x%d %ds" % [config.tier_value(config.yellow_fruit_charges, tier), int(config.tier_value(config.yellow_fruit_seconds, tier))]
+		PlayerStats.FruitType.RED:
+			return "REACH +%d%% KEPT" % roundi(config.tier_value(config.red_fruit_range_bonus, tier) * 100.0)
+	return "VENOM %ds" % int(config.tier_value(config.venom_seconds, tier))
 
 
 func kind_name() -> String:
@@ -51,4 +73,4 @@ func kind_name() -> String:
 
 func _feedback(knight: Knight) -> void:
 	Sfx.play(Sfx.POWER_UP, self)
-	FloatingText.spawn(knight, Vector2(0, -30), "%s %d" % [LABELS[fruit_type], tier], COLOURS[fruit_type])
+	FloatingText.spawn(knight, Vector2(0, -30), label(knight.progress.stats.config), COLOURS[fruit_type])

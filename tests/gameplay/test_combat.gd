@@ -279,12 +279,12 @@ func test_attack_power_sets_damage() -> void:
 
 
 func test_range_edge() -> void:
-	var inside := _dummy(Vector2(122, FLOOR))  # hurtbox x 117..127 overlaps the reach end (x 118)
+	var inside := _dummy(Vector2(128, FLOOR))  # hurtbox x 123..133 overlaps the reach end (x 124)
 	await _tap([&"p1_attack"])
 	await physics_frames(25)
 	assert_eq(inside.hits_taken(), 1, "target overlapping the reach end is hit")
 	inside.queue_free()
-	var far := _dummy(Vector2(124, FLOOR))     # hurtbox x 119..129: 1 px beyond the reach
+	var far := _dummy(Vector2(130, FLOOR))     # hurtbox x 125..135: 1 px beyond the reach
 	await physics_frames(2)
 	await _tap([&"p1_attack"])
 	await physics_frames(25)

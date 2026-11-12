@@ -14,7 +14,8 @@ const PIP_COLOURS := {
 	PlayerEffects.ATTACK_SPEED: Color(1.0, 0.55, 0.2),
 	PlayerEffects.TILE_SHIELD: Color(0.85, 0.95, 1.0),
 	PlayerEffects.FRUIT_SHIELD: Color(1.0, 0.9, 0.25),
-	PlayerEffects.JAR_LUCK: Color(1.0, 0.75, 0.1),
+	PlayerEffects.VENOM: Color(0.85, 0.5, 1.0),
+	PlayerEffects.WARD: Color(1.0, 0.75, 0.1),
 }
 
 var stats: PlayerStats
@@ -38,6 +39,7 @@ func bind(knight: Knight) -> void:
 	knight.health.health_changed.connect(_on_health_changed)
 	stats.effects.protected.connect(_on_protected)
 	stats.effects.expired.connect(_on_expired)
+	stats.effects.ward_ready.connect(_on_ward_ready)
 	RunState.current().restored.connect(_sync_from_record)
 	_sync_from_record()
 
@@ -82,19 +84,29 @@ func _on_health_changed(current: int, _maximum: int) -> void:
 
 
 func _on_protected(layer: StringName, _event: DamageEvent) -> void:
-	var text: String = {PlayerEffects.TILE_SHIELD: "BLOCKED", PlayerEffects.FRUIT_SHIELD: "BLOCKED",
-		PlayerEffects.JAR_LUCK: "LUCKY!"}.get(layer, "BLOCKED")
+	var text: String = "WARD BLOCKED" if layer == PlayerEffects.WARD else "BLOCKED"
 	FloatingText.spawn(_knight, Vector2(0, -36), text, PIP_COLOURS.get(layer, Color.WHITE))
+	Sfx.cue(&"shield_block", self)
+
+
+func _on_ward_ready() -> void:
+	if _knight != null and _knight.is_inside_tree() and not _knight.is_dead():
+		FloatingText.spawn(_knight, Vector2(0, -36), "WARD READY", PIP_COLOURS[PlayerEffects.WARD])
+		Sfx.cue(&"charge_ready", self)
 
 
 func _on_expired(effect: StringName) -> void:
 	if _knight != null and _knight.is_inside_tree():
-		FloatingText.spawn(_knight, Vector2(0, -36), "%s ended" % effect.replace("_", " "), Color(0.8, 0.8, 0.8))
+		FloatingText.spawn(_knight, Vector2(0, -36), "%s ENDED" % PlayerEffects.NAMES.get(effect, String(effect)), Color(0.8, 0.8, 0.8))
 
 
 func _draw() -> void:
 	if stats == null:
 		return
+	# A ready ward shows as a thin golden arc in front of the knight.
+	if stats.effects.ward_is_ready():
+		draw_arc(Vector2(0, -9), 12.0, -0.9, 0.9, 8, Color(1.0, 0.8, 0.25, 0.7), 1.0)
+		draw_arc(Vector2(0, -9), 12.0, PI - 0.9, PI + 0.9, 8, Color(1.0, 0.8, 0.25, 0.7), 1.0)
 	var ids := stats.effects.active_ids()
 	var x := -float(ids.size()) * 3.0
 	for id in ids:
@@ -105,6 +117,9 @@ func _draw() -> void:
 			for c in charges - 1:
 				draw_rect(Rect2(x + 1, -44 - c * 2, 2, 1), colour)
 		draw_rect(Rect2(x, -35, 4, 1), Color(0, 0, 0, 0.5))
-		var total := 60.0 if id == PlayerEffects.JAR_LUCK else 20.0 if id == PlayerEffects.FRUIT_SHIELD else 5.0
-		draw_rect(Rect2(x, -35, 4.0 * clampf(stats.effects.remaining(id) / total, 0.0, 1.0), 1), colour)
+		var total := stats.effects.full_duration(id)
+		var fraction := clampf(stats.effects.remaining(id) / total, 0.0, 1.0)
+		if id == PlayerEffects.WARD:
+			fraction = 1.0 - fraction  # the ward's bar fills as it recharges
+		draw_rect(Rect2(x, -35, 4.0 * fraction, 1), colour)
 		x += 6.0

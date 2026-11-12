@@ -23,12 +23,10 @@ var base_range_multiplier := 1.0
 
 var max_health_bonus := 0
 var attack_power_bonus := 0
-## Sum of red-fruit bonuses, relative to the base range (0.1 + 0.3 -> x1.4).
+## Sum of red-fruit bonuses, relative to the base range (capped by the config).
 var range_bonus := 0.0
-## Sum of blue-jar bonuses, relative to the base speed.
+## Sum of blue-jar bonuses, relative to the base speed (capped).
 var speed_bonus := 0.0
-## Poison seconds each melee hit applies (0 = no poison). The highest collected tier wins.
-var poison_seconds := 0.0
 var current_health := 3
 
 var effects: PlayerEffects
@@ -86,7 +84,7 @@ func recompute() -> void:
 	combat.attack_power = attack_power()
 	combat.range_multiplier = range_multiplier()
 	combat.cooldown_multiplier = cooldown_multiplier()
-	combat.poison_seconds = poison_seconds
+	combat.poison_seconds = effects.poison_seconds()
 	changed.emit()
 
 
@@ -114,6 +112,32 @@ func add_max_health(amount: int) -> void:
 
 # --- Collectibles ---------------------------------------------------------------------
 
+## False when the fruit would do nothing for this player right now (full health, reach at
+## its cap): the fruit then stays where it is, for later or for the partner.
+func can_use_fruit(kind: PlayerStats.FruitType) -> bool:
+	match kind:
+		FruitType.GREEN:
+			var hp := health.current_health if _has_health() else current_health
+			return hp < max_health()
+		FruitType.RED:
+			return range_bonus < config.range_bonus_cap - 0.0001
+	return true
+
+
+## False when this player's upgrade of that kind is at its cap (the jar stays for the partner).
+func can_use_jar(kind: PlayerStats.JarType) -> bool:
+	match kind:
+		JarType.GREEN:
+			return max_health_bonus < config.max_health_bonus_cap
+		JarType.RED:
+			return attack_power_bonus < config.attack_power_bonus_cap
+		JarType.YELLOW:
+			return effects.ward_level < config.ward_level_cap
+		JarType.BLUE:
+			return speed_bonus < config.speed_bonus_cap - 0.0001
+	return true
+
+
 func collect_fruit(kind: PlayerStats.FruitType, tier: int) -> void:
 	match kind:
 		FruitType.GREEN:
@@ -121,11 +145,10 @@ func collect_fruit(kind: PlayerStats.FruitType, tier: int) -> void:
 		FruitType.YELLOW:
 			effects.add_fruit_shield(tier)
 		FruitType.RED:
-			range_bonus += config.tier_value(config.red_fruit_range_bonus, tier)
+			range_bonus = minf(range_bonus + config.tier_value(config.red_fruit_range_bonus, tier), config.range_bonus_cap)
 			recompute()
 		FruitType.PURPLE:
-			poison_seconds = maxf(poison_seconds, config.tier_value(config.purple_fruit_poison_seconds, tier))
-			recompute()
+			effects.add_venom(tier)
 
 
 func collect_jar(kind: PlayerStats.JarType) -> void:
@@ -133,12 +156,12 @@ func collect_jar(kind: PlayerStats.JarType) -> void:
 		JarType.GREEN:
 			add_max_health(config.green_jar_max_health)
 		JarType.RED:
-			attack_power_bonus += config.red_jar_attack_power
+			attack_power_bonus = mini(attack_power_bonus + config.red_jar_attack_power, config.attack_power_bonus_cap)
 			recompute()
 		JarType.YELLOW:
-			effects.add_jar_luck()
+			effects.add_ward()
 		JarType.BLUE:
-			speed_bonus += config.blue_jar_speed_bonus
+			speed_bonus = minf(speed_bonus + config.blue_jar_speed_bonus, config.speed_bonus_cap)
 			recompute()
 
 
@@ -152,7 +175,8 @@ func snapshot() -> Dictionary:
 		"attack_power_bonus": attack_power_bonus,
 		"range_bonus": range_bonus,
 		"speed_bonus": speed_bonus,
-		"poison_seconds": poison_seconds,
+		# Kept for the save format: venom is now a timed effect (in "effects").
+		"poison_seconds": 0.0,
 		"effects": effects.snapshot(),
 	}
 
@@ -184,8 +208,11 @@ func restore(data: Variant) -> bool:
 	attack_power_bonus = power_bonus
 	range_bonus = rng_bonus
 	speed_bonus = spd_bonus
-	poison_seconds = poison
 	current_health = hp
 	effects.restore(data.effects)
+	# A save from before venom became a timed effect: the permanent poison becomes venom of
+	# the matching tier, starting now.
+	if poison > 0.0 and not effects.has(PlayerEffects.VENOM):
+		effects.add_venom(clampi(roundi(poison), 1, 3))
 	recompute()
 	return true

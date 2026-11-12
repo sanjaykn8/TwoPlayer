@@ -87,8 +87,8 @@ func test_releasing_early_does_not_strike() -> void:
 
 
 func test_heavy_slash_reaches_further() -> void:
-	# A light slash reaches 18 px past the feet; 21 px is out of reach for it, in reach for heavy.
-	var dummy := _dummy(Vector2(100 + 26, FLOOR))
+	# A light slash reaches 24 px past the feet; 27 px is out of reach for it, in reach for heavy (30).
+	var dummy := _dummy(Vector2(100 + 32, FLOOR))
 	var log := _hits(dummy)
 	Input.action_press(&"p1_attack")
 	await physics_frames(int(k1.combat.config.charge_time * 60.0) + 4)

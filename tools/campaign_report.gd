@@ -222,10 +222,10 @@ and longer cooperative sections, not slower movement.
 ## Levels 1-4 were passed by the user before the overhaul, but they have since been rebuilt
 ## from scratch, so that report no longer describes them.
 const USER_REPORTS := {
-	"l01": "pending (rebuilt in the overhaul; the user's first-attempt pass was on the old layout)",
-	"l02": "pending (rebuilt in the overhaul; the user's first-attempt pass was on the old layout)",
-	"l03": "pending (rebuilt in the overhaul; the user's first-attempt pass was on the old layout)",
-	"l04": "pending (rebuilt in the overhaul; the user's first-attempt pass was on the old layout)",
+	"l01": "pending (rebuilt in the overhaul and extended in the final pass; the user's first-attempt pass was on the old layout)",
+	"l02": "pending (rebuilt in the overhaul and extended in the final pass; the user's first-attempt pass was on the old layout)",
+	"l03": "pending (rebuilt in the overhaul and extended in the final pass; the user's first-attempt pass was on the old layout)",
+	"l04": "pending (rebuilt in the overhaul and extended in the final pass; the user's first-attempt pass was on the old layout)",
 }
 
 

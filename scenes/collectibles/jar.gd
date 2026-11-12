@@ -1,8 +1,10 @@
 class_name Jar
 extends Collectible
-## A jar (GDD section 7). Unique per run: give every placed jar a `collectible_id`.
-## Green: +1 max health (filled). Red: +1 attack power. Yellow: 60 s of 50 % damage
-## negation. Blue: +5 % movement speed. Applies to the collecting knight only.
+## A jar: a PERMANENT upgrade for the knight who takes it (kept for the run, lost only in a
+## team wipe). Unique per run: give every placed jar a `collectible_id`.
+##   green   +1 max health (and heals it)     red   +1 attack power
+##   blue    +8 % movement speed              yellow a ward: blocks one hit, then recharges
+## Every upgrade has a cap; a knight at the cap leaves the jar for its partner.
 ## Sprites: the bottles in res://assets/sprites/world_tileset.png (cells 0,7 / 1,7 / 0,8 / 1,8).
 ## The bundle has no red bottle: the red jar is the magenta bottle tinted red, and it glints.
 
@@ -13,10 +15,10 @@ const SHEET_CELL := {
 	PlayerStats.JarType.RED: Vector2i(1, 8),
 }
 const LABELS := {
-	PlayerStats.JarType.GREEN: "MAX HP UP",
-	PlayerStats.JarType.RED: "POWER UP",
-	PlayerStats.JarType.YELLOW: "LUCK 60s",
-	PlayerStats.JarType.BLUE: "SPEED UP",
+	PlayerStats.JarType.GREEN: "MAX HEALTH +1 KEPT",
+	PlayerStats.JarType.RED: "POWER +1 KEPT",
+	PlayerStats.JarType.YELLOW: "WARD KEPT",
+	PlayerStats.JarType.BLUE: "SPEED UP KEPT",
 }
 const RED_TINT := Color(1.0, 0.5, 0.45)
 
@@ -43,6 +45,14 @@ func _process(delta: float) -> void:
 	if jar_type == PlayerStats.JarType.RED:
 		# A faint glint every couple of seconds marks the rare red jar without shouting.
 		sprite.modulate = Color(1.6, 1.6, 1.6) if fmod(_time, 2.2) < 0.08 else Color.WHITE
+
+
+func _accepts(knight: Knight) -> bool:
+	return knight.progress.stats.can_use_jar(jar_type)
+
+
+func _refusal_text(_knight: Knight) -> String:
+	return "MAXED: FOR YOUR PARTNER"
 
 
 func _apply(knight: Knight) -> void:

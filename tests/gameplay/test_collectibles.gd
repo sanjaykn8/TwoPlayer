@@ -164,7 +164,16 @@ func test_green_fruit_tiers_heal_only_the_collector() -> void:
 		_spawn(FRUIT, Vector2(700, FLOOR), {"fruit_type": F.GREEN, "tier": tier})
 		await physics_frames(5)
 		assert_eq(k1.health.current_health, mini(1 + tier, 3), "tier %d heals %d (capped)" % [tier, tier])
-		assert_eq(k2.health.current_health, 1, "the other knight is not healed (tier %d)" % tier)
+		# Tiers 1 and 2 are the eater's alone; the largest is a feast that also heals the partner 1.
+		assert_eq(k2.health.current_health, 2 if tier == 3 else 1, "the partner's health (tier %d)" % tier)
+	k1.health.revive()
+	var spare := _spawn(FRUIT, Vector2(700, FLOOR), {"fruit_type": F.GREEN, "tier": 1}) as Fruit
+	await physics_frames(10)
+	assert_false(spare.claimed, "a knight at full health leaves a green fruit where it is")
+	k1.health.take_damage(DamageEvent.create(1, DamageEvent.Category.FALL))
+	await physics_frames(5)
+	assert_true(spare.claimed, "and takes it as soon as it is hurt while standing on it")
+	assert_eq(k1.health.current_health, 3, "healed")
 
 
 func test_yellow_fruit_shield_blocks_slime_contact() -> void:
@@ -198,14 +207,14 @@ func test_shields_do_not_stop_falling_or_lava() -> void:
 
 
 func test_red_fruit_range_reaches_further_targets() -> void:
-	var far := _spawn(DUMMY, Vector2(724, FLOOR)) as TrainingDummy  # hurtbox 719-729: beyond base reach (718)
+	var far := _spawn(DUMMY, Vector2(730, FLOOR)) as TrainingDummy  # hurtbox 725-735: beyond base reach (724)
 	k1.facing = 1
 	await _tap([&"p1_attack"])
 	await physics_frames(25)
 	assert_eq(far.hits_taken(), 0, "out of base range")
 	_spawn(FRUIT, Vector2(700, FLOOR), {"fruit_type": F.RED, "tier": 3})
 	await physics_frames(5)
-	assert_near(k1.combat.stats.range_multiplier, 1.3, 0.000001, "x1.3 range on P1's attacks")
+	assert_near(k1.combat.stats.range_multiplier, 1.2, 0.000001, "x1.2 reach on P1's attacks")
 	assert_eq(k2.combat.stats.range_multiplier, 1.0, "P2 unchanged")
 	await _tap([&"p1_attack"])
 	await physics_frames(25)
@@ -217,7 +226,9 @@ func test_purple_fruit_poison_staggers_but_never_kills() -> void:
 	run.player(1).collect_fruit(F.PURPLE, 3)
 	var green := _spawn(GREEN, Vector2(790, FLOOR), {"patrol_left": 0.0, "patrol_right": 0.0}) as Slime
 	await physics_frames(2)
-	_melee(green, 1, run.player(1).poison_seconds)
+	assert_true(run.player(1).effects.has(PlayerEffects.VENOM), "purple fruit: venom, a timed effect")
+	assert_false(run.player(2).effects.has(PlayerEffects.VENOM), "only for the knight who ate it")
+	_melee(green, 1, run.player(1).combat.poison_seconds)
 	assert_eq(green.stagger.progress, 1, "the hit adds 1 point")
 	assert_true(green.poison.is_active(), "poisoned")
 	await physics_frames(61)
@@ -262,7 +273,7 @@ func test_red_jar_power_staggers_green_in_one_real_hit() -> void:
 	await physics_frames(5)
 	assert_eq(k1.combat.stats.attack_power, 2, "power 2")
 	var green := _spawn(GREEN, Vector2(712, FLOOR), {"patrol_left": 0.0, "patrol_right": 0.0}) as Slime
-	run.player(1).effects.add_jar_luck()  # irrelevant; makes sure effects do not disturb power
+	run.player(1).effects.add_ward()  # irrelevant; makes sure effects do not disturb power
 	k1.health.start_invulnerability(30.0)
 	await physics_frames(5)
 	k1.facing = 1
@@ -277,23 +288,33 @@ func test_red_jar_power_staggers_green_in_one_real_hit() -> void:
 	assert_eq(purple.stagger.progress, 2, "power 2 adds 2 points to purple")
 
 
-func test_yellow_jar_rolls_on_contact() -> void:
+func test_yellow_jar_ward_blocks_one_hit_then_recharges() -> void:
 	var stats := run.player(1)
-	stats.effects.rng.seed = 12345
 	_spawn(JAR, Vector2(700, FLOOR), {"jar_type": J.YELLOW, "collectible_id": "test_jar_yellow"})
 	await physics_frames(5)
-	assert_near(stats.effects.remaining(PlayerEffects.JAR_LUCK), 60.0, 0.1, "60 s")
-	var outcomes := []
-	stats.effects.protected.connect(func(layer: StringName, _e: DamageEvent) -> void: outcomes.append(layer))
-	var applied := 0
-	for i in 40:
-		k1.health.clear_invulnerability()
-		applied += k1.health.take_damage(DamageEvent.create(0 + 1, DamageEvent.Category.CONTACT))
-		k1.health.revive()
-	assert_eq(outcomes.size() + applied, 40, "every event was either negated or applied")
-	assert_gt(outcomes.size(), 10.0, "some negated (%d of 40)" % outcomes.size())
-	assert_gt(applied, 10.0, "failed rolls fall through to normal damage (%d of 40)" % applied)
-	assert_false(stats.effects.has(PlayerEffects.FRUIT_SHIELD), "no shield charges involved")
+	assert_true(stats.effects.ward_is_ready(), "the ward is ready when the jar is taken")
+	assert_false(run.player(2).effects.has(PlayerEffects.WARD), "only for the knight who took it")
+	assert_eq(k1.health.take_damage(DamageEvent.create(1, DamageEvent.Category.CONTACT)), 0, "the ward blocks the hit")
+	assert_false(stats.effects.ward_is_ready(), "and is spent")
+	k1.health.clear_invulnerability()
+	assert_eq(k1.health.take_damage(DamageEvent.create(1, DamageEvent.Category.CONTACT)), 1, "the next hit lands")
+	await physics_frames(int(stats.effects.ward_recharge_seconds() * 60.0) + 2)
+	assert_true(stats.effects.ward_is_ready(), "it recharges by itself")
+	assert_true(stats.effects.has(PlayerEffects.WARD), "and is never lost")
+
+
+func test_capped_jar_is_left_for_the_partner() -> void:
+	var stats := run.player(1)
+	stats.collect_jar(J.RED)
+	stats.collect_jar(J.RED)
+	var jar := _spawn(JAR, Vector2(700, FLOOR), {"jar_type": J.RED, "collectible_id": "test_jar_red_3"}) as Jar
+	await physics_frames(10)
+	assert_false(jar.claimed, "a knight at the power cap does not take a third red jar")
+	assert_eq(stats.attack_power(), 3, "power stays at the cap")
+	k2.teleport_to(Vector2(700, FLOOR))
+	await physics_frames(5)
+	assert_true(jar.claimed, "the partner takes it")
+	assert_eq(run.player(2).attack_power(), 2, "and gets the upgrade")
 
 
 func test_blue_jar_speed_only_for_collector() -> void:
@@ -306,7 +327,7 @@ func test_blue_jar_speed_only_for_collector() -> void:
 	Input.action_press(&"p1_move_right")
 	Input.action_press(&"p2_move_right")
 	await physics_frames(40)
-	assert_near(absf(k1.velocity.x), 110.0 * 1.05, 0.0001, "P1 runs at 115.5 px/s")
+	assert_near(absf(k1.velocity.x), 110.0 * 1.08, 0.0001, "P1 runs at 118.8 px/s")
 	assert_near(absf(k2.velocity.x), 110.0, 0.0001, "P2 runs at 110 px/s")
 	_release_all()
 	await physics_frames(20)
@@ -338,10 +359,10 @@ func test_power_tile_fires_once_per_visit() -> void:
 
 func test_both_knights_activate_independently() -> void:
 	var tile := _tile(1)
-	tile.rng_seed = 0
-	tile.rng.seed = 2024
 	var got := {}
 	tile.activated.connect(func(k: Knight, effect: StringName) -> void: got[k.player_id()] = effect)
+	# The tile shows what it will give and cycles: a knight gets the boost showing when it lands.
+	assert_eq(tile.pick_effect(), tile.effect_pool[int(tile._cycle_time / PowerTile.CONFIG.tile_cycle_seconds) % 3], "the shown boost follows the cycle")
 	k1.teleport_to(Vector2(556, 420))
 	k2.teleport_to(Vector2(564, 420))
 	await physics_frames(30)
@@ -354,16 +375,18 @@ func test_both_knights_activate_independently() -> void:
 func test_tile_effects_values_and_duration() -> void:
 	var stats := run.player(1)
 	stats.effects.add_tile_effect(PlayerEffects.ATTACK_SPEED)
-	assert_near(k1.combat.effective_cooldown(), 0.225, 0.000001, "cooldown exactly 25 % shorter")
+	assert_near(k1.combat.effective_cooldown(), 0.195, 0.000001, "cooldown exactly 35 % shorter")
 	stats.effects.add_tile_effect(PlayerEffects.SPEED_BOOST)
-	assert_near(k1.progress.speed_multiplier(), 1.25, 0.000001, "speed exactly +25 %")
+	assert_near(k1.progress.speed_multiplier(), 1.3, 0.000001, "speed exactly +30 %")
 	Input.action_press(&"p1_move_right")
 	await physics_frames(40)
-	assert_near(absf(k1.velocity.x), 137.5, 0.0001, "runs at 137.5 px/s")
+	assert_near(absf(k1.velocity.x), 143.0, 0.0001, "runs at 143 px/s")
 	_release_all()
-	await physics_frames(260)  # 300 ticks of the effects in total
-	assert_false(stats.effects.has(PlayerEffects.SPEED_BOOST), "speed boost lasted 5 s")
-	assert_false(stats.effects.has(PlayerEffects.ATTACK_SPEED), "attack boost lasted 5 s")
+	await physics_frames(679)  # 719 ticks of the effects in total
+	assert_true(stats.effects.has(PlayerEffects.SPEED_BOOST), "haste still on one tick before 12 s")
+	await physics_frames(2)
+	assert_false(stats.effects.has(PlayerEffects.SPEED_BOOST), "haste lasted 12 s")
+	assert_false(stats.effects.has(PlayerEffects.ATTACK_SPEED), "frenzy lasted 12 s")
 	assert_near(k1.combat.effective_cooldown(), 0.30, 0.000001, "cooldown back to normal")
 	stats.effects.add_tile_effect(PlayerEffects.TILE_SHIELD)
 	assert_eq(k1.health.take_damage(DamageEvent.create(1, DamageEvent.Category.SPIKE)), 0, "tile shield blocks one hit")
@@ -413,9 +436,9 @@ func test_progress_survives_scene_change() -> void:
 	var nk2: Knight = next.get("knight_2")
 	assert_eq([nk1.health.current_health, nk1.health.max_health], [3, 4], "health carried into the new level")
 	assert_eq(nk1.combat.stats.attack_power, 2, "power carried")
-	assert_near(nk1.combat.stats.range_multiplier, 1.2, 0.000001, "range carried")
-	assert_near(nk1.progress.speed_multiplier(), 1.30, 0.000001, "blue jar + active speed boost carried")
-	assert_eq(nk2.combat.stats.poison_seconds, 1.0, "P2 poison carried")
+	assert_near(nk1.combat.stats.range_multiplier, 1.15, 0.000001, "range carried")
+	assert_near(nk1.progress.speed_multiplier(), 1.38, 0.000001, "blue jar + active haste carried")
+	assert_eq(nk2.combat.stats.poison_seconds, 3.0, "P2's venom carried")
 	assert_eq(nk2.combat.stats.attack_power, 1, "P2 power unchanged")
 	assert_eq(run.coins, 1, "coins carried")
 	assert_true(run.is_collected("level_jar"), "collected ids carried")

@@ -234,6 +234,7 @@ func _physics_process(delta: float) -> void:
 		state = State.ATTACK_RECOVERY
 	# Visual first, so the slash frame on screen always matches the hit frames below.
 	_update_weapon()
+	queue_redraw()
 	pose_updated.emit()
 	var open := is_hit_window_open()
 	if open:
@@ -244,6 +245,7 @@ func _physics_process(delta: float) -> void:
 	if state == State.ATTACK_RECOVERY and _elapsed >= effective_cooldown() - EPSILON:
 		state = State.IDLE
 		weapon.visible = false
+		queue_redraw()
 		attack_finished.emit(attack_id)
 		if _buffered and enabled:
 			_buffered = false
@@ -340,6 +342,37 @@ func _register_coop(target_key: int) -> bool:
 		return true
 	_recent_hits[target_key] = [frame, _attacker_player_id]
 	return false
+
+
+## The reach arc: a bright crescent drawn on the far edge of the real hitbox while it can hit
+## (and fading for `trail_time` after). Whatever the range (red fruit, heavy slash), the arc
+## on screen is where the attack reaches.
+func _draw() -> void:
+	if state == State.IDLE:
+		return
+	var window_end := _windup + _active
+	if _elapsed <= _windup + EPSILON or _elapsed > window_end + config.trail_time + EPSILON:
+		return
+	var alpha := 1.0 if _elapsed <= window_end + EPSILON else 0.45
+	var rect := HitboxGeometry.local_rect(profile, _side, config, current_range_multiplier(), _body_height.call())
+	var colour := Color(1.0, 0.95, 0.75, alpha) if heavy else Color(1.0, 1.0, 1.0, alpha)
+	if stats.poison_seconds > 0.0:
+		colour = Color(0.8, 0.45, 1.0, alpha)  # a venomous blade
+	var points := PackedVector2Array()
+	var vertical := profile == HitboxGeometry.Profile.UP or profile == HitboxGeometry.Profile.DOWN
+	for i in 9:
+		var t := float(i) / 8.0
+		var bulge := sin(t * PI)
+		if vertical:
+			var far_y := rect.position.y if profile == HitboxGeometry.Profile.UP else rect.end.y
+			var near_y := rect.end.y if profile == HitboxGeometry.Profile.UP else rect.position.y
+			points.append(Vector2(lerpf(rect.position.x, rect.end.x, t), lerpf(lerpf(near_y, far_y, 0.55), far_y, bulge)).round())
+		else:
+			var far_x := rect.end.x if _side > 0 else rect.position.x
+			var near_x := rect.position.x if _side > 0 else rect.end.x
+			points.append(Vector2(lerpf(lerpf(near_x, far_x, 0.55), far_x, bulge), lerpf(rect.position.y, rect.end.y, t)).round())
+	draw_polyline(points, Color(0.1, 0.1, 0.15, alpha * 0.8), 4.0)
+	draw_polyline(points, colour, 2.0)
 
 
 ## Weapon frames follow the same timeline as the hitbox: 0 windup, 1-2 hit frames, 3 trail.

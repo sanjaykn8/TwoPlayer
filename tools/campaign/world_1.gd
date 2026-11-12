@@ -14,11 +14,13 @@ static func levels() -> Array:
 
 
 ## The Mossy Path: steps and a pit, the first slimes, a spring mushroom up to the canopy
-## (red fruit, coins), a cracked wall that teaches the charged slash (a secret room above it
-## needs a charged up-strike and a partner's boost), a plate gate, and the first orc grunt.
+## (red fruit, coins) and a second spring from there onto the roof of the old tree (coins, a
+## shield fruit): a high road past the cracked wall below, which teaches the charged slash (a
+## secret room above it needs a charged up-strike and a partner's boost). Then a plate gate
+## behind the first spikes, and the first orc grunt.
 static func l01() -> Dictionary:
 	return {"id": "l01", "title": "The Mossy Path", "world": "forest", "width": 120, "height": 36,
-		"difficulty": 1, "minutes": 3.5, "layout": 2, "spawn": [3, 30], "ops": [
+		"difficulty": 1, "minutes": 3.5, "layout": 3, "spawn": [3, 30], "ops": [
 		["fill", 0, 0, 0, 35], ["fill", 119, 0, 119, 35],
 		["ground", 1, 18, 30], ["ground", 19, 22, 29], ["ground", 23, 34, 28],
 		["clue", 6, 30, "Two knights walk one road."],
@@ -27,6 +29,9 @@ static func l01() -> Dictionary:
 		["spring", 40, 28],
 		["ledge", 38, 44, 22], ["ledge", 47, 52, 20], ["ledge", 55, 59, 21],
 		["coins", 3, 49, 20], ["fruit", "red", 1, 51, 20],
+		["spring", 58, 21], ["ledge", 56, 59, 16], ["ledge", 58, 60, 13],
+		["clue", 56, 21, "The old tree\nhas a roof."],
+		["coins", 4, 66, 10], ["fruit", "yellow", 1, 74, 10],
 		["ground", 53, 84, 26],
 		["slime", "g", 45, 28, -3, 4],
 		["fill", 61, 10, 76, 22],
@@ -39,6 +44,7 @@ static func l01() -> Dictionary:
 		["slime", "g", 89, 24, -3, 3],
 		["clue", 92, 24, "Stone hears\nthe knight."],
 		["plate", "Plate", 94, 24, {"mode": 1}],
+		["spikes", 96, 97, 24],
 		["fill", 99, 0, 99, 20],
 		["gate", "Gate", 99, 24, 3, "Plate", 1],
 		["enemy", "grunt", 106, 24, -4, 4],
@@ -47,21 +53,25 @@ static func l01() -> Dictionary:
 	]}
 
 
-## Rootway Hollows: a ladder down from the cliff, a spring back up to a root ledge (coins), a
-## lift over a pit, orc grunts, the hollow with the first two-knight lock, a cracked root wall
-## hiding a cave of coins, and a ladder up to the high road.
+## Rootway Hollows: a ladder down from the cliff, a spring back up to a root ledge (coins) and
+## from there a crumbling root bridge, or the lift below it, over the pit; orc grunts, the
+## hollow with the first two-knight lock, a root tunnel behind the hollow (a slime, coins, a
+## green fruit), a cracked root wall hiding a cave of coins, and a ladder up to the high road.
 static func l02() -> Dictionary:
 	return {"id": "l02", "title": "Rootway Hollows", "world": "forest", "width": 130, "height": 44,
-		"difficulty": 2, "minutes": 4.0, "layout": 2, "spawn": [3, 14], "ops": [
+		"difficulty": 2, "minutes": 4.0, "layout": 3, "spawn": [3, 14], "ops": [
 		["fill", 0, 0, 0, 43], ["fill", 129, 0, 129, 43],
 		["ground", 1, 18, 14], ["ladder", 19, 14, 24], ["ground", 19, 36, 24],
 		["clue", 5, 14, "The roots run deep."],
 		["slime", "g", 27, 24, -5, 5],
 		["spring", 33, 24], ["ledge", 30, 36, 18], ["coins", 4, 34, 18],
+		["collapse", "RootA", 38, 18, 2], ["collapse", "RootB", 42, 18, 2], ["collapse", "RootC", 46, 18, 2],
 		["moving", "Lift", 37, 24, 3, {"travel": Vector2i(9, 0), "speed": 36.0}],
 		["ground", 49, 64, 24],
 		["enemy", "grunt", 56, 24, -5, 4],
 		["ground", 65, 105, 32],
+		["clear", 54, 29, 64, 31],
+		["slime", "g", 59, 32, -3, 3], ["coins", 4, 55, 32], ["fruit", "green", 1, 56, 32],
 		["clue", 68, 32, "Two stones.\nTwo knights."],
 		["plate", "PlateA", 72, 32], ["plate", "PlateB", 78, 32],
 		["logic", "Lock", ["PlateA", "PlateB"], 0, {"distinct_players": true, "latch": true}],
@@ -80,12 +90,13 @@ static func l02() -> Dictionary:
 
 
 ## Old Watchtrees: one knight holds the plate while the other rides the lift and strikes the
-## switch that keeps it running. Then up the trees on branches and a spring, an orc on the
-## high branch, a gliding platform between trunks, and down to the exit. Optional: a chain of
-## spirit lanterns (strike down to bounce) to a ledge with the green jar.
+## switch that keeps it running. Then up the trees on branches and springs (a slime on the first
+## branch, an orc on the high one, a nest above it with coins and a green fruit), a gliding
+## platform between trunks, and down to the exit. Optional: a chain of spirit lanterns (strike
+## down to bounce) to a ledge with the green jar.
 static func l03() -> Dictionary:
 	return {"id": "l03", "title": "Old Watchtrees", "world": "forest", "width": 112, "height": 56,
-		"difficulty": 2, "minutes": 4.5, "layout": 2, "spawn": [3, 50], "ops": [
+		"difficulty": 2, "minutes": 4.5, "layout": 3, "spawn": [3, 50], "ops": [
 		["fill", 0, 0, 0, 55], ["fill", 111, 0, 111, 55],
 		["ground", 1, 24, 50], ["clear", 21, 50, 23, 50],
 		["clue", 5, 50, "One waits.\nOne climbs."],
@@ -98,6 +109,8 @@ static func l03() -> Dictionary:
 		["control", "Lift", "LiftLogic", 0],
 		["ledge", 30, 35, 33], ["ledge", 37, 42, 30], ["spring", 41, 30],
 		["ledge", 38, 46, 24], ["enemy", "grunt", 43, 24, -4, 3],
+		["slime", "g", 33, 33, -2, 2],
+		["spring", 39, 24], ["ledge", 36, 39, 18], ["coins", 4, 37, 18], ["fruit", "green", 1, 38, 18],
 		["ledge", 49, 53, 22],
 		["fill", 55, 22, 58, 55], ["save", 56, 22],
 		["moving", "Glide", 59, 22, 2, {"travel": Vector2i(10, 0), "speed": 40.0}],
@@ -115,11 +128,12 @@ static func l03() -> Dictionary:
 
 ## Heart of the Grove: the World 1 finale. An ambush in the clearing (the gates shut until the
 ## grunts and slime are beaten), a coin cave under a cracked floor (strike the earth from
-## above; a ladder leads out), rafts over a pit, the split (one holds above, one runs below),
-## more orcs and spikes, and the two-plate gate.
+## above; a ladder leads out), rafts over a pit with spirit lanterns above them to an islet
+## (a venom fruit for the fights ahead), the split (one holds above, one runs below), more orcs
+## and spikes, and the two-plate gate.
 static func l04() -> Dictionary:
 	return {"id": "l04", "title": "Heart of the Grove", "world": "forest", "width": 150, "height": 40,
-		"difficulty": 3, "minutes": 5.0, "layout": 2, "spawn": [3, 32], "ops": [
+		"difficulty": 3, "minutes": 5.0, "layout": 3, "spawn": [3, 32], "ops": [
 		["fill", 0, 0, 0, 39], ["fill", 149, 0, 149, 39],
 		["ground", 1, 60, 32],
 		["clue", 6, 32, "The grove remembers\nevery step."],
@@ -134,6 +148,8 @@ static func l04() -> Dictionary:
 		["clear", 52, 32, 52, 32], ["ladder", 52, 32, 36],
 		["coins", 5, 56, 36], ["fruit", "green", 2, 58, 36],
 		["moving", "Raft1", 61, 32, 2, {"travel": Vector2i(11, 0), "speed": 38.0}],
+		["lantern", 63, 30], ["lantern", 66, 28], ["ledge", 69, 72, 27],
+		["fruit", "purple", 1, 71, 27], ["coins", 4, 70, 27],
 		["ground", 75, 77, 31],
 		["moving", "Raft2", 78, 31, 2, {"travel": Vector2i(10, 0), "speed": 38.0}],
 		["ground", 91, 148, 31],

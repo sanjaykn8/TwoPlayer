@@ -1640,3 +1640,52 @@ Damage queries use `SpaceQuery.knight_hurtboxes`. Defaults are in `MechanismConf
 - **Route validator:** removes enemies and damaging hazards and cracked blocks, ignores
   lanterns, and has a `float` technique for updrafts.
 - **Probe:** checks every enemy type and fights arenas by script.
+
+## 24. Final pass systems (2026-11-12)
+
+### Reach and its visual
+
+- Reach values live in `combat_config.tres` (`side_reach`, `vertical_reach`, `low_reach` = 20;
+  the slash ends 24 px from the knight's centre).
+- `CombatComponent._draw()` draws the reach crescent from `HitboxGeometry.local_rect(...)`,
+  the rectangle the hit query uses, during the hit window and the trail. The component calls
+  `queue_redraw()` whenever the weapon pose changes. Colour: white (light), warm (heavy),
+  purple (venom).
+- Melee enemies' `attack_range` and `attack_rect` (`resources/enemies/orc_*.tres`) are kept
+  at least as long as the knight's longest poke; `test_final_range` enforces it.
+
+### Power-ups
+
+| Piece | Role |
+|---|---|
+| `ProgressionConfig` (`progression_config.tres`) | Every value: tiers, durations, caps, ward recharge, tile cycle |
+| `PlayerEffects` | Timed effects (`SPEED_BOOST`, `ATTACK_SPEED`, `TILE_SHIELD`, `FRUIT_SHIELD`, `VENOM`) as remaining seconds and charges; the ward (`ward_level`, `ward_cooldown`); `resolve_protection()` (guard, shield, ward; falls and lava pass); `snapshot()` / `restore()` with validation and conversion of the retired `jar_luck` |
+| `PlayerStats` | Permanent bonuses with caps; `can_use_fruit()` / `can_use_jar()`; `collect_fruit()` / `collect_jar()`; pushes `poison_seconds` from venom into `CombatStats` |
+| `Collectible` | `_accepts(knight)` and `_refusal_text(knight)`: a refused item is not claimed, the knight is re-checked while it stays on the item, and a throttled text says why |
+| `Fruit`, `Jar` | Type rules, labels (`label(config)`), the feast's partner heal |
+| `PowerTile` | Shows and cycles its boost (`pick_effect()` from `_cycle_time`; `cycle_offset` per tile; `forced_effect` for tests and fixed tiles) |
+| `PlayerProgress` | Ticks effects, shows pips, ward arcs, block and ready feedback |
+| `EffectIndicator`, `PlayerStatusPanel` | HUD: one indicator per running effect; the row is an `HFlowContainer` capped at `MAX_EFFECT_ROW`; from `COMPACT_FROM` effects the indicators drop their names |
+
+Signals: `PlayerEffects.changed`, `expired(effect)`, `protected(layer, event)`, `ward_ready`.
+Nothing outside `PlayerEffects` decides whether a hit is blocked.
+
+### Level additions
+
+All from existing ops; no new scene types. Each level's `"layout"` was raised to 3, so a
+mid-level save from the old layout restarts that level from its spawn with the run's
+progress kept. New co-op wiring uses the existing patterns: a held plate with a FOLLOW gate
+(l05), a plate-or-latch `PuzzleLogic` driving a `PlatformController` (l19), a SYNC lock with
+`distinct_players` (l16), and an `EncounterZone` arena (l11).
+
+### Test tooling
+
+- `RouteValidator.goal_cells` / `start_cell`: replay the route to any standing cell, used by
+  `test_optional_routes` for optional rewards.
+- `test_final_coop`: per-level loops over `LevelCatalog.all_levels()` through the real
+  `CampaignGame` (`user://test_saves_final/`).
+- `test_final_range`: real swings against every enemy scene, frozen (no AI) so only the
+  hitbox and hurtbox decide.
+- `LevelProbe`: its knight arrives hurt at green fruit (refusal rule) and compares the ward
+  level for jars.
+

@@ -1441,3 +1441,17 @@ Campaign validators on the new layouts:
 |---|---|
 | Two-person play of the overhauled game | **Pending** (`docs/FRIEND_PLAYTEST_CHECKLIST.md`) |
 | Playtime | **Not measured** |
+
+## Final pass: 2026-11-12
+
+Level depth, longer reach, redesigned power-ups and a complete level-by-level QA. The full
+record is in `docs/FINAL_TEST_REPORT.md`; per-level results in `docs/LEVEL_BY_LEVEL_QA.md`.
+
+| Item | Result |
+|---|---|
+| Full suite | 516 passed, 0 failed, twice in a row; no error, warning or leak lines |
+| New suites | `test_final_range` (5), `test_final_coop` (9), `test_optional_routes` (2) |
+| All 24 levels | Probe, route, static analysis, spawns, solo exit, death and quit-and-reopen: PASS |
+| Real window | Renders, screenshots and a 24-level performance run (144 fps average, 0 orphans) |
+| Manual play | **Not done** |
+

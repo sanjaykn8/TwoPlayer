@@ -32,7 +32,7 @@ func _process(_delta: float) -> void:
 		var s := run.player(id)
 		var hp := "%d/%d" % [s.health.current_health if s.health != null else s.current_health, s.max_health()]
 		lines.append("P%d HP %s pow %d range x%.2f speed x%.2f cd x%.2f poison %.0fs" % [
-			id, hp, s.attack_power(), s.range_multiplier(), s.speed_multiplier(), s.cooldown_multiplier(), s.poison_seconds])
+			id, hp, s.attack_power(), s.range_multiplier(), s.speed_multiplier(), s.cooldown_multiplier(), s.effects.poison_seconds()])
 		var effects := PackedStringArray()
 		for effect in s.effects.active_ids():
 			var charges := s.effects.charges(effect)

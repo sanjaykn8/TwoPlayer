@@ -55,11 +55,11 @@ func test_profiles() -> void:
 
 
 func test_hitbox_rectangles() -> void:
-	assert_eq(HitboxGeometry.local_rect(P.SIDE, 1, config, 1.0, 18.0), Rect2(4, -16, 14, 14), "right slash")
-	assert_eq(HitboxGeometry.local_rect(P.SIDE, -1, config, 1.0, 18.0), Rect2(-18, -16, 14, 14), "left slash mirrors")
-	assert_eq(HitboxGeometry.local_rect(P.UP, 1, config, 1.0, 18.0), Rect2(-8, -32, 16, 16), "up slash above the head")
-	assert_eq(HitboxGeometry.local_rect(P.DOWN, 1, config, 1.0, 18.0), Rect2(-8, -2, 16, 16), "down slash below the feet")
-	assert_eq(HitboxGeometry.local_rect(P.LOW, 1, config, 1.0, 11.0), Rect2(4, -8, 14, 8), "low slash at the feet")
+	assert_eq(HitboxGeometry.local_rect(P.SIDE, 1, config, 1.0, 18.0), Rect2(4, -17, 20, 16), "right slash")
+	assert_eq(HitboxGeometry.local_rect(P.SIDE, -1, config, 1.0, 18.0), Rect2(-24, -17, 20, 16), "left slash mirrors")
+	assert_eq(HitboxGeometry.local_rect(P.UP, 1, config, 1.0, 18.0), Rect2(-9, -38, 18, 22), "up slash above the head")
+	assert_eq(HitboxGeometry.local_rect(P.DOWN, 1, config, 1.0, 18.0), Rect2(-9, -2, 18, 22), "down slash below the feet")
+	assert_eq(HitboxGeometry.local_rect(P.LOW, 1, config, 1.0, 11.0), Rect2(4, -8, 20, 8), "low slash at the feet")
 	assert_eq(HitboxGeometry.local_rect(P.SIDE, 1, config, 1.0, 11.0).get_center().y, -5.5, "crouched slash follows body height")
 	assert_eq(HitboxGeometry.origin(P.SIDE, config, 18.0), Vector2(0, -9), "line of sight from body centre")
 	assert_eq(HitboxGeometry.origin(P.LOW, config, 18.0), Vector2(0, -4), "low slash sight line near the feet")
@@ -67,11 +67,11 @@ func test_hitbox_rectangles() -> void:
 
 func test_range_is_short_and_scales_separately_from_power() -> void:
 	var base := HitboxGeometry.local_rect(P.SIDE, 1, config, 1.0, 18.0)
-	assert_eq(base.end.x, 18.0, "base reach: 18 px from the centre line (13 px past the body)")
-	assert_lt(base.end.x, 16.0 * 1.5, "shorter than one and a half tiles")
+	assert_eq(base.end.x, 24.0, "base reach: 24 px from the centre line (19 px past the body; 1.43x the original 14 px slash)")
+	assert_lt(base.end.x, 16.0 * 2.0, "shorter than two tiles")
 	for tier: float in [1.1, 1.2, 1.3]:
 		var upgraded := HitboxGeometry.local_rect(P.SIDE, 1, config, tier, 18.0)
-		assert_near(upgraded.size.x, 14.0 * tier, 0.0001, "reach x%.1f" % tier)
+		assert_near(upgraded.size.x, 20.0 * tier, 0.0001, "reach x%.1f" % tier)
 		assert_eq(upgraded.position.x, 4.0, "near edge unchanged at x%.1f" % tier)
 		assert_eq(upgraded.size.y, base.size.y, "thickness unchanged at x%.1f" % tier)
 	var stats := CombatStats.from_config(config)

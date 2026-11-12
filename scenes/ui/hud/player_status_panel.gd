@@ -16,7 +16,12 @@ var portrait: TextureRect
 var hearts: HealthDisplay
 var health_text: Label
 var upgrades: Label
-var effects_row: HBoxContainer
+var effects_row: HFlowContainer
+## The widest the effect row may get before it wraps to a second line: the panel must stay
+## inside its third of the 640 px screen, clear of the coin panel in the middle.
+const MAX_EFFECT_ROW := 196.0
+## From this many running effects the indicators drop their names (icon, charges, seconds).
+const COMPACT_FROM := 4
 
 var _indicators := {}
 
@@ -57,11 +62,12 @@ func _init(id: int) -> void:
 	upgrades = MenuScreen.label("", &"HudLabel", HORIZONTAL_ALIGNMENT_RIGHT if right else HORIZONTAL_ALIGNMENT_LEFT)
 	upgrades.add_theme_color_override(&"font_color", UiTheme.TEXT_DIM.lightened(0.2))
 	box.add_child(upgrades)
-	effects_row = HBoxContainer.new()
+	effects_row = HFlowContainer.new()
 	effects_row.name = "Effects"
 	effects_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	effects_row.add_theme_constant_override(&"separation", 6)
-	effects_row.alignment = BoxContainer.ALIGNMENT_END if right else BoxContainer.ALIGNMENT_BEGIN
+	effects_row.add_theme_constant_override(&"h_separation", 6)
+	effects_row.add_theme_constant_override(&"v_separation", 1)
+	effects_row.alignment = FlowContainer.ALIGNMENT_END if right else FlowContainer.ALIGNMENT_BEGIN
 	box.add_child(effects_row)
 
 
@@ -140,11 +146,9 @@ static func upgrade_summary(record: PlayerStats) -> String:
 	if record.attack_power_bonus > 0:
 		parts.append("PWR %d" % record.attack_power())
 	if record.range_bonus > 0.0:
-		parts.append("RANGE +%d%%" % roundi(record.range_bonus * 100.0))
+		parts.append("REACH +%d%%" % roundi(record.range_bonus * 100.0))
 	if record.speed_bonus > 0.0:
 		parts.append("SPEED +%d%%" % roundi(record.speed_bonus * 100.0))
-	if record.poison_seconds > 0.0:
-		parts.append("POISON %ds" % roundi(record.poison_seconds))
 	return "  ".join(parts)
 
 
@@ -163,4 +167,12 @@ func _rebuild_effects() -> void:
 			_indicators[id] = ind
 			effects_row.add_child(ind)
 	effects_row.visible = not _indicators.is_empty()
+	for id: StringName in _indicators:
+		(_indicators[id] as EffectIndicator).compact = _indicators.size() >= COMPACT_FROM
 	tick()
+	# As wide as its indicators need, up to the limit; beyond that the row wraps.
+	var wanted := -6.0
+	for child in effects_row.get_children():
+		if not child.is_queued_for_deletion():
+			wanted += (child as Control).get_combined_minimum_size().x + 6.0
+	effects_row.custom_minimum_size.x = clampf(wanted, 0.0, MAX_EFFECT_ROW)

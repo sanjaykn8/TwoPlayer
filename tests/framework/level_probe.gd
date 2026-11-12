@@ -380,8 +380,11 @@ func _collectibles() -> void:
 		var k := _k(0)
 		_heal(k)
 		var stats := run.player(1)
-		var snapshot := [stats.max_health_bonus, stats.attack_power_bonus, stats.speed_bonus, stats.effects.has(PlayerEffects.JAR_LUCK)]
+		var snapshot := [stats.max_health_bonus, stats.attack_power_bonus, stats.speed_bonus, stats.effects.ward_level]
 		var coins := run.coins
+		# A knight at full health leaves a green fruit where it is, so it arrives hurt.
+		if item is Fruit and (item as Fruit).fruit_type == PlayerStats.FruitType.GREEN:
+			k.health.apply_damage(1)
 		_place(k, item.global_position)
 		await _frames(6)
 		if item.collectible_id != "" and not run.is_collected(item.collectible_id):
@@ -391,7 +394,7 @@ func _collectibles() -> void:
 			failures.append("%s gave %d coins" % [item.name, run.coins - coins])
 		if item is Jar:
 			jars += 1
-			var after := [stats.max_health_bonus, stats.attack_power_bonus, stats.speed_bonus, stats.effects.has(PlayerEffects.JAR_LUCK)]
+			var after := [stats.max_health_bonus, stats.attack_power_bonus, stats.speed_bonus, stats.effects.ward_level]
 			if after == snapshot:
 				upgrades.append("%s changed nothing" % item.name)
 			if run.player(2).max_health_bonus != 0 and (item as Jar).jar_type == PlayerStats.JarType.GREEN:

@@ -69,7 +69,7 @@ func _progress(slot: int, level_id: String, coins: int) -> Dictionary:
 	var state := {
 		"campaign_id": run.campaign.campaign_id, "level": level_id, "coins": run.coins,
 		"p1_power": run.player(1).attack_power(), "p2_max": run.player(2).max_health(),
-		"p2_hp": g.knights[1].health.current_health, "poison": run.player(1).poison_seconds,
+		"p2_hp": g.knights[1].health.current_health, "poison": run.player(1).effects.remaining(PlayerEffects.VENOM),
 		"shield_left": run.player(2).effects.remaining(PlayerEffects.FRUIT_SHIELD),
 		"p1_x": g.knights[0].global_position.x, "defeated": defeated,
 		"completed": run.campaign.completed_levels.size(),
@@ -92,7 +92,7 @@ func _check_resume(slot: int, expected: Dictionary) -> void:
 	assert_eq(run.player(1).attack_power(), expected.p1_power, "%s: P1 red jar power" % label)
 	assert_eq(run.player(2).max_health(), expected.p2_max, "%s: P2 green jar max health" % label)
 	assert_eq(g.knights[1].health.current_health, expected.p2_hp, "%s: P2 health" % label)
-	assert_eq(run.player(1).poison_seconds, expected.poison, "%s: P1 poison" % label)
+	assert_near(run.player(1).effects.remaining(PlayerEffects.VENOM), expected.poison, 0.05, "%s: P1 venom time" % label)
 	assert_near(run.player(2).effects.remaining(PlayerEffects.FRUIT_SHIELD), expected.shield_left, 0.05, "%s: P2 shield time kept" % label)
 	assert_near(g.knights[0].global_position.x, expected.p1_x, 2.0, "%s: P1 position" % label)
 	assert_eq(run.campaign.completed_levels.size(), expected.completed, "%s: completed levels" % label)

@@ -1,9 +1,11 @@
 # Level Validation Matrix
 
-One row per level; every level has its own result. Updated 2026-11-08 after the gameplay
-overhaul (levels rebuilt or remixed, new enemies and mechanisms), from the full regression run (the probe, route and timing results are written by the
-tests to `user://level_validation_results.json`, `user://route_validation_results.json` and
-`user://platform_timing_results.json`).
+One row per level; every level has its own result. Updated 2026-11-12 after the final
+development pass (every level extended; longer reach; redesigned power-ups), from the full
+regression run (the probe, route and timing results are written by the tests to
+`user://level_validation_results.json`, `user://route_validation_results.json` and
+`user://platform_timing_results.json`). The per-level co-op checks and the optional routes
+added in the final pass are in `docs/LEVEL_BY_LEVEL_QA.md`.
 
 **Two kinds of evidence, kept apart:**
 
@@ -11,7 +13,7 @@ tests to `user://level_validation_results.json`, `user://route_validation_result
   real input and physics, headless. They prove that each mechanism works and that the level
   can be completed by the knights' real movement. They do **not** prove that a level is clear,
   fair or fun, that the camera reads well on a monitor, or how long it takes.
-- **Manual:** two people playing. **No level has been played by people since the overhaul.**
+- **Manual:** two people playing. **No level has been played by people since the overhaul or the final pass.**
   Levels 1–4 were passed on the first attempt by the user before the overhaul
   (`docs/PLAYTEST_FEEDBACK.md`), but they have been rebuilt since, so that report no longer
   applies to them.
@@ -50,26 +52,26 @@ level has no such element (listed below the table). No automated check is FAIL o
 
 | Level | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | Route | Timing | Manual |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| l01 The Mossy Path | PASS | PASS | PASS | PASS | PASS | N/A | PASS | PASS | PASS | PASS | PASS | N/A | PASS | N/A | PASS | PASS | PASS | PASS | PASS | PASS | PASS (6/6 jumps) | N/A | NOT TESTED |
+| l01 The Mossy Path | PASS | PASS | PASS | PASS | PASS | N/A | PASS | PASS | PASS | PASS | PASS | PASS | PASS | N/A | PASS | PASS | PASS | PASS | PASS | PASS | PASS (7/7 jumps) | N/A | NOT TESTED |
 | l02 Rootway Hollows | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | N/A | N/A | PASS | PASS | PASS | PASS | PASS | PASS (2/2 jumps) | N/A | NOT TESTED |
 | l03 Old Watchtrees | PASS | PASS | PASS | PASS | PASS | N/A | PASS | PASS | PASS | PASS | PASS | N/A | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS (9/9 jumps) | N/A | NOT TESTED |
 | l04 Heart of the Grove | PASS | PASS | PASS | PASS | PASS | PASS | N/A | PASS | PASS | PASS | PASS | PASS | PASS | N/A | PASS | PASS | PASS | PASS | PASS | PASS | PASS (2/2 jumps) | N/A | NOT TESTED |
-| l05 Crystal Descent | PASS | PASS | PASS | PASS | PASS | N/A | N/A | PASS | PASS | PASS | PASS | PASS | PASS | PASS | N/A | N/A | PASS | PASS | PASS | PASS | PASS (7/7 jumps) | N/A | NOT TESTED |
+| l05 Crystal Descent | PASS | PASS | PASS | PASS | PASS | N/A | N/A | PASS | PASS | PASS | PASS | PASS | PASS | PASS | N/A | PASS | PASS | PASS | PASS | PASS | PASS (9/9 jumps) | N/A | NOT TESTED |
 | l06 Echoing Shafts | PASS | PASS | PASS | PASS | PASS | N/A | PASS | PASS | PASS | PASS | PASS | N/A | PASS | N/A | PASS | N/A | PASS | PASS | PASS | PASS | PASS (8/8 jumps) | PASS (min slack 3.20 s) | NOT TESTED |
-| l07 Brood Caverns | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | N/A | PASS | PASS | PASS | PASS | PASS | PASS (1/1 jumps) | N/A | NOT TESTED |
-| l08 The Sunless Lift | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | N/A | PASS | N/A | N/A | PASS | PASS | PASS | PASS | PASS | PASS (0/0 jumps) | N/A | NOT TESTED |
+| l07 Brood Caverns | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | N/A | PASS | PASS | PASS | PASS | PASS | PASS (3/3 jumps) | N/A | NOT TESTED |
+| l08 The Sunless Lift | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | N/A | PASS | PASS | PASS | PASS | PASS | PASS (1/1 jumps) | N/A | NOT TESTED |
 | l09 Sunken Gatehouse | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | N/A | PASS | N/A | N/A | PASS | PASS | PASS | PASS | PASS | PASS (2/2 jumps) | N/A | NOT TESTED |
 | l10 Hall of Echoes | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | N/A | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS (2/2 jumps) | N/A | NOT TESTED |
 | l11 Twin Sanctums | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | N/A | PASS | PASS | PASS | PASS | PASS | PASS | PASS (2/2 jumps) | N/A | NOT TESTED |
 | l12 The Gilded Seal | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | N/A | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS (1/1 jumps) | N/A | NOT TESTED |
-| l13 Ashen Steps | PASS | PASS | PASS | PASS | PASS | N/A | N/A | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS (6/6 jumps) | N/A | NOT TESTED |
+| l13 Ashen Steps | PASS | PASS | PASS | PASS | PASS | N/A | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS (8/8 jumps) | N/A | NOT TESTED |
 | l14 Cinder Bridges | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | N/A | N/A | PASS | PASS | PASS | PASS | PASS | PASS (10/10 jumps) | PASS (min slack 1.92 s) | NOT TESTED |
 | l15 Forge of Embers | PASS | PASS | PASS | PASS | PASS | PASS | N/A | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS (6/6 jumps) | N/A | NOT TESTED |
 | l16 Heart of the Mountain | PASS | PASS | PASS | PASS | PASS | N/A | PASS | PASS | PASS | PASS | PASS | PASS | PASS | N/A | PASS | PASS | PASS | PASS | PASS | PASS | PASS (13/13 jumps) | PASS (min slack 2.05 s) | NOT TESTED |
 | l17 Iron Gate Keep | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | N/A | PASS | PASS | PASS | PASS | PASS | PASS (1/1 jumps) | N/A | NOT TESTED |
-| l18 Clockwork Halls | PASS | PASS | PASS | PASS | PASS | PASS | N/A | PASS | PASS | PASS | PASS | PASS | PASS | N/A | PASS | PASS | PASS | PASS | PASS | PASS | PASS (4/4 jumps) | N/A | NOT TESTED |
+| l18 Clockwork Halls | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | N/A | PASS | PASS | PASS | PASS | PASS | PASS | PASS (4/4 jumps) | N/A | NOT TESTED |
 | l19 Broken Towers | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | N/A | PASS | PASS | PASS | PASS | PASS | PASS (10/10 jumps) | N/A | NOT TESTED |
-| l20 The Black Bastion | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | N/A | N/A | PASS | PASS | PASS | PASS | PASS | PASS (6/6 jumps) | N/A | NOT TESTED |
+| l20 The Black Bastion | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | N/A | PASS | PASS | PASS | PASS | PASS | PASS | PASS (7/7 jumps) | N/A | NOT TESTED |
 | l21 Frost Causeway | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | N/A | PASS | PASS | PASS | PASS | PASS | PASS (17/17 jumps) | PASS (min slack 3.22 s) | NOT TESTED |
 | l22 Spire of Silence | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS (11/11 jumps) | PASS (min slack 3.40 s) | NOT TESTED |
 | l23 Warden's Vault | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | PASS | N/A | PASS | PASS | PASS | PASS | PASS | PASS (5/5 jumps) | N/A | NOT TESTED |
@@ -77,29 +79,29 @@ level has no such element (listed below the table). No automated check is FAIL o
 
 **N/A details** (the level has no such element):
 
-- **l01**: climb (no ladders); hazards (no hazards); upgrades (no jars; fruit upgrades are checked under 13)
-- **l02**: upgrades (no jars; fruit upgrades are checked under 13); effects (no power tiles)
+- **l01**: climb (no ladders); upgrades (no jars in this level (fruit upgrades checked under collectibles))
+- **l02**: upgrades (no jars in this level (fruit upgrades checked under collectibles)); effects (no power tiles)
 - **l03**: climb (no ladders); hazards (no hazards)
-- **l04**: one_way (no one-way tile with a safe landing below; drops into lava or onto spikes are not tried); upgrades (no jars; fruit upgrades are checked under 13)
-- **l05**: climb (no ladders); one_way (no one-way tile with a safe landing below; drops into lava or onto spikes are not tried); effects (no power tiles); puzzles (no mechanisms)
-- **l06**: climb (no ladders); hazards (no hazards); upgrades (no jars; fruit upgrades are checked under 13); puzzles (no mechanisms)
+- **l04**: one_way (no one-way platform with free space below); upgrades (no jars in this level (fruit upgrades checked under collectibles))
+- **l05**: climb (no ladders); one_way (no one-way platform with free space below); effects (no power tiles)
+- **l06**: climb (no ladders); hazards (no hazards); upgrades (no jars in this level (fruit upgrades checked under collectibles)); puzzles (no mechanisms)
 - **l07**: effects (no power tiles)
-- **l08**: hazards (no hazards); upgrades (no jars; fruit upgrades are checked under 13); effects (no power tiles)
-- **l09**: hazards (no hazards); upgrades (no jars; fruit upgrades are checked under 13); effects (no power tiles)
+- **l08**: effects (no power tiles)
+- **l09**: hazards (no hazards); upgrades (no jars in this level (fruit upgrades checked under collectibles)); effects (no power tiles)
 - **l10**: hazards (no hazards)
-- **l11**: upgrades (no jars; fruit upgrades are checked under 13)
+- **l11**: upgrades (no jars in this level (fruit upgrades checked under collectibles))
 - **l12**: hazards (no hazards)
-- **l13**: climb (no ladders); one_way (no one-way tile with a safe landing below; drops into lava or onto spikes are not tried)
-- **l14**: upgrades (no jars; fruit upgrades are checked under 13); effects (no power tiles)
-- **l15**: one_way (no one-way tile with a safe landing below; drops into lava or onto spikes are not tried)
-- **l16**: climb (no ladders); upgrades (no jars; fruit upgrades are checked under 13)
+- **l13**: climb (no ladders)
+- **l14**: upgrades (no jars in this level (fruit upgrades checked under collectibles)); effects (no power tiles)
+- **l15**: one_way (no one-way platform with free space below)
+- **l16**: climb (no ladders); upgrades (no jars in this level (fruit upgrades checked under collectibles))
 - **l17**: effects (no power tiles)
-- **l18**: one_way (no one-way tile with a safe landing below; drops into lava or onto spikes are not tried); upgrades (no jars; fruit upgrades are checked under 13)
+- **l18**: upgrades (no jars in this level (fruit upgrades checked under collectibles))
 - **l19**: effects (no power tiles)
-- **l20**: upgrades (no jars; fruit upgrades are checked under 13); effects (no power tiles)
+- **l20**: upgrades (no jars in this level (fruit upgrades checked under collectibles))
 - **l21**: effects (no power tiles)
 - **l23**: effects (no power tiles)
-- **l24**: upgrades (no jars; fruit upgrades are checked under 13)
+- **l24**: upgrades (no jars in this level (fruit upgrades checked under collectibles))
 
 ## Campaign-wide checks
 
@@ -118,7 +120,7 @@ level has no such element (listed below the table). No automated check is FAIL o
 
 | Level | Status | Source |
 |---|---|---|
-| l01–l24 | NOT TESTED since the overhaul (l01–l04 were passed before it, on their old layouts) | `docs/PLAYTEST_FEEDBACK.md` |
+| l01–l24 | NOT TESTED since the overhaul and the final pass (l01–l04 were passed before them, on their old layouts) | `docs/PLAYTEST_FEEDBACK.md` |
 
 Per-check manual results go into `docs/CAMPAIGN_PLAYTEST.md` and are summarised here when
 they exist. A level counts as manually validated only when two people have played it and

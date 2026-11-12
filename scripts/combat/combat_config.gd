@@ -24,15 +24,15 @@ extends Resource
 ## Side slash: starts this far from the knight's centre line...
 @export var side_near := 4.0
 ## ...and reaches this far beyond that (before the range multiplier).
-@export var side_reach := 14.0
-@export var side_thickness := 14.0
+@export var side_reach := 20.0
+@export var side_thickness := 16.0
 ## Up / down slash: reach beyond the head or feet, and width.
-@export var vertical_reach := 14.0
-@export var vertical_thickness := 16.0
+@export var vertical_reach := 20.0
+@export var vertical_thickness := 18.0
 ## Up / down hitboxes overlap the body by this much so touching targets count.
 @export var vertical_overlap := 2.0
 ## Low forward slash (Down held on the ground, D-2): reach and height above the feet.
-@export var low_reach := 14.0
+@export var low_reach := 20.0
 @export var low_thickness := 8.0
 
 @export_group("Charged slash")

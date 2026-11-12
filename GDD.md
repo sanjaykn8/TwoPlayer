@@ -208,6 +208,7 @@ Red jar:
 Yellow jar:
 - Provides a 50% chance to negate each incoming damage event.
 - Duration: 60 seconds.
+- *(Superseded by §18 "Final pass": the yellow jar is now a permanent, recharging ward.)*
 
 Blue jar:
 - Permanently increases movement speed by 5%.
@@ -247,6 +248,7 @@ Purple fruit:
 - Tier 3: 3 seconds.
 - Poison deals one damage-over-time tick per second.
 - Poison contributes toward an enemy's stagger threshold but does not independently execute a staggered enemy.
+- *(Superseded by §18 "Final pass": purple fruit is now venom, a timed effect of 30/45/60 s.)*
 
 Fruit effects apply to the player who collects the fruit.
 
@@ -802,3 +804,48 @@ Overhaul decisions (2026-11-08; reason: friends found the game boring; details i
   - cave darkness with a light around each knight and torches.
 - **Saves:** each level has a layout version. A mid-level save from an older layout starts
   the rebuilt level from its spawn; the run's progress is kept.
+
+### Final pass (2026-11-12): reach, power-ups, level depth
+
+These decisions replace the earlier values wherever they differ.
+
+- **Reach.** Both knights' slash ends 24 px from the knight's centre in every direction
+  (it was 18 px: x1.33). The charged slash reaches 30 px. A crescent is drawn on the far edge
+  of the hitbox while it is live, so what the players see is what hits. Walls still block,
+  and a swing still hits each target once. Orc grunts and shieldbearers strike 4 px further
+  and brutes 4 px further, so no melee enemy can be hit from where it cannot answer. Boss
+  reach is unchanged (40 px).
+- **Power-ups have three families**, each with one rule:
+  - **Jars are permanent** for the run (saved; lost on a team wipe) and capped per knight. A
+    knight at the cap leaves the jar for its partner.
+    - green: +1 maximum health (cap +3);
+    - red: +1 attack power (cap +2);
+    - blue: +8 % movement speed (cap +24 %);
+    - yellow: a **ward** that blocks one hit and recharges in 25 s; further yellow jars
+      shorten the recharge by 5 s each (minimum 15 s, cap 3 jars).
+  - **Fruits act now or for a shown time.**
+    - green: heals 1/2/3; the largest is a **feast** that also heals the partner 1, wherever
+      it is. A knight at full health leaves a green fruit where it is;
+    - yellow: a shield of 1/2/3 hits for 20/30/45 s. A second one never stacks: hits and
+      time each become the larger value;
+    - red: permanent reach +10/15/20 %, capped at +40 %. A knight at the cap leaves it;
+    - purple: **venom** for 30/45/60 s: every hit poisons for 3 s. Another one keeps the
+      longer time.
+  - **"?" tiles give a 12 s boost chosen by timing.** The tile shows the boost it will give
+    and cycles every 1.2 s: HASTE (+30 % speed), FRENZY (35 % shorter attack cooldown), GUARD
+    (blocks one hit, 20 s). Taking the same boost again refreshes it; strength never stacks.
+- **Protection order:** tile guard, fruit shield, then the ward. One layer acts per hit.
+  Falls and lava ignore all three.
+- **Who is affected:** always and only the knight who takes the item. The two exceptions are
+  the shared coins and the feast.
+- **Feedback:** every pickup shows its name and rule in a pop-up ("WARD KEPT", "VENOM 45s",
+  "REACH +15% KEPT"); a refused item says why ("FULL HEALTH", "MAXED: FOR YOUR PARTNER"). The
+  HUD lists each knight's permanent upgrades on one line and every running effect with its
+  seconds and charges; the row wraps so it never covers the coin panel. A ready ward draws
+  golden arcs around its knight; a venomous blade swings purple.
+- **Old saves:** yellow-jar luck becomes a level-1 ward; permanent poison becomes venom of
+  the matching tier, starting when the save is loaded.
+- **Level depth.** Every level gained at least one new main-route element or combination and
+  at least one new optional route, secret or co-op mechanism (list in
+  `docs/LEVEL_BY_LEVEL_QA.md`). Optional rewards are placed for a reason: venom and shields
+  before fights, feasts before bosses, wards behind co-op or skill tests.

@@ -15,12 +15,13 @@ static func levels() -> Array:
 
 ## Sunken Gatehouse: the first shieldbearer in the courtyard, a spring to a ledge outside the
 ## gatehouse tower (a cracked wall into a hidden room), saws in the tunnel under the tower (jump
-## the floor blade, time the falling one), a courtyard with an archer on the battlement and a
-## gate that opens when one knight on the battlement and one below strike their targets
-## together, then a guarded hall that locks until its defenders fall.
+## the floor blade, time the falling one), a courtyard with an archer on the battlement, a
+## cistern under its floor (a cracked flagstone or the ladder; coins and venom), and a gate that
+## opens when one knight on the battlement and one below strike their targets together, then a
+## guarded hall that locks until its defenders fall.
 static func l09() -> Dictionary:
 	return {"id": "l09", "title": "Sunken Gatehouse", "world": "ruins", "width": 120, "height": 48,
-		"difficulty": 5, "minutes": 4.5, "layout": 2, "spawn": [3, 40], "ops": [
+		"difficulty": 5, "minutes": 4.5, "layout": 3, "spawn": [3, 40], "ops": [
 		["fill", 0, 0, 0, 47], ["fill", 119, 0, 119, 47],
 		["ground", 1, 24, 40],
 		["clue", 6, 40, "Strike where\nthe shield is not."],
@@ -38,6 +39,9 @@ static func l09() -> Dictionary:
 		["target", "Upper", 61, 30], ["target", "Lower", 74, 40],
 		["logic", "Sync", ["Upper", "Lower"], 2, {"window": 2.0, "latch": true, "distinct_players": true}],
 		["enemy", "guard", 69, 40, -2, 2], ["enemy", "grunt", 77, 40, -2, 2],
+		["clear", 62, 41, 69, 43], ["crack", "Cistern", 64, 40, 1, 1],
+		["clear", 69, 40, 69, 40], ["ladder", 69, 40, 44],
+		["coins", 5, 63, 44], ["fruit", "purple", 2, 66, 44],
 		["fill", 82, 0, 82, 35],
 		["gate", "CourtGate", 82, 40, 4, "Sync", 1],
 		["ground", 83, 118, 38],
@@ -53,10 +57,11 @@ static func l09() -> Dictionary:
 ## Hall of Echoes: three targets in the order the sign gives (a shieldbearer watches), a pit
 ## whose plate holds a gate while a saw runs the pit floor, a bridge held from a balcony
 ## (archers wait on the far side), a timed door between two switches. Optional: a balcony
-## ledge (coins, purple fruit) and the yellow jar past the bridge.
+## ledge (coins, purple fruit), and past the bridge a spring up to a ledge swept by a saw: the
+## yellow jar waits at its far end.
 static func l10() -> Dictionary:
 	return {"id": "l10", "title": "Hall of Echoes", "world": "ruins", "width": 180, "height": 40,
-		"difficulty": 6, "minutes": 5.0, "layout": 2, "spawn": [3, 32], "ops": [
+		"difficulty": 6, "minutes": 5.0, "layout": 3, "spawn": [3, 32], "ops": [
 		["fill", 0, 0, 0, 39], ["fill", 179, 0, 179, 39],
 		["ground", 1, 59, 32], ["ground", 60, 75, 36], ["ground", 76, 99, 32], ["ground", 121, 178, 32],
 		["fill", 44, 1, 44, 27], ["fill", 88, 1, 88, 27], ["fill", 160, 1, 160, 27],
@@ -82,7 +87,8 @@ static func l10() -> Dictionary:
 		["logic", "BridgeLogic", ["BridgePlate", "BridgeLatch"], 1],
 		["control", "Bridge", "BridgeLogic", 1],
 		["coins", 4, 101, 21], ["fruit", "purple", 2, 103, 21],
-		["jar", "yellow", 128, 32],
+		["spring", 129, 32], ["ledge", 126, 136, 26], ["saw", 128, 25, 6, 0, {"speed": 45.0}],
+		["jar", "yellow", 136, 26],
 		["enemy", "archer", 140, 32, -2, 2], ["enemy", "guard", 146, 32, -3, 3], ["enemy", "grunt", 151, 32, -3, 3],
 		["tile", 135, 31],
 		["clue", 154, 32, "The door forgets\nquickly."],
@@ -96,14 +102,15 @@ static func l10() -> Dictionary:
 
 
 ## Twin Sanctums: the knights split at the first ladder. The upper knight walks the temple
-## roof (saws, a shieldbearer, an archer), the lower one the crypt beneath (orcs, an archer);
-## each route's switches open the other's doors in three stages (a held plate below keeps a
-## roof door open until the roof latch). The routes join at the far end. Optional: a roof
-## ledge above a power tile (coins, green fruit).
+## roof (saws, a shieldbearer, an archer), the lower one the crypt beneath (orcs, a saw, an
+## archer); each route's switches open the other's doors in three stages (a held plate below,
+## with an orc closing in on its holder, keeps a roof door open until the roof latch). The
+## routes join at the far end, where a hall locks on both knights: a shieldbearer between two
+## archers. Optional: a roof ledge above a power tile (coins, a feast fruit).
 static func l11() -> Dictionary:
-	return {"id": "l11", "title": "Twin Sanctums", "world": "ruins", "width": 170, "height": 44,
-		"difficulty": 6, "minutes": 5.0, "layout": 2, "spawn": [3, 36], "ops": [
-		["fill", 0, 0, 0, 43], ["fill", 169, 0, 169, 43], ["ground", 1, 168, 36],
+	return {"id": "l11", "title": "Twin Sanctums", "world": "ruins", "width": 190, "height": 44,
+		"difficulty": 6, "minutes": 5.0, "layout": 3, "spawn": [3, 36], "ops": [
+		["fill", 0, 0, 0, 43], ["fill", 189, 0, 189, 43], ["ground", 1, 188, 36],
 		["fill", 21, 16, 150, 30], ["ladder", 20, 16, 36],
 		["fill", 80, 1, 80, 11], ["fill", 110, 1, 110, 11],
 		["clear", 86, 16, 90, 17], ["ledge", 66, 69, 12],
@@ -118,6 +125,7 @@ static func l11() -> Dictionary:
 		["timed", "TA", 87, 16, 2, {"active_time": 2.2, "disabled_time": 1.4}],
 		["enemy", "archer", 104, 16, -2, 2],
 		["enemy", "grunt", 40, 36, -5, 5], ["slime", "g", 64, 36, -4, 3], ["spikes", 75, 76, 36],
+		["saw", 54, 35, 5, 0], ["enemy", "grunt", 110, 36, -4, 4],
 		["tile", 100, 35],
 		["plate", "PlateL2", 95, 36],
 		["switch", "SwitchU2", 115, 16, {"mode": 2}],
@@ -126,17 +134,23 @@ static func l11() -> Dictionary:
 		["gate", "GL2", 125, 36, 5, "SwitchU2", 1],
 		["enemy", "guard", 132, 16, -5, 5], ["enemy", "archer", 142, 36, -2, 2],
 		["save", 153, 36], ["fruit", "yellow", 2, 157, 36],
-		["exit", 164, 36],
+		["clue", 155, 36, "Two roads meet.\nSo do their keepers."],
+		["fill", 160, 1, 182, 28],
+		["arena", "Reunion", 162, 29, 180, 35],
+		["gate", "ReunionIn", 160, 36, 7, "Reunion", 0], ["gate", "ReunionOut", 182, 36, 7, "Reunion", 0],
+		["enemy", "guard", 171, 36, -4, 4], ["enemy", "archer", 165, 36, 0, 0], ["enemy", "archer", 178, 36, 0, 0],
+		["exit", 185, 36],
 	]}
 
 
 ## The Gilded Seal: the World 3 finale. A great chamber whose seal gate needs three locks: twin
-## targets struck together, two plates stepped on within moments of each other (a shieldbearer
-## guards the pit), three switches in the order the sign tells. Beyond the seal waits the Orc
-## Warchief: the hall locks until it falls. Optional: a red jar above the right gallery.
+## targets struck together (a saw and an orc below them), two plates stepped on within moments
+## of each other (a shieldbearer guards the pit), three switches in the order the sign tells
+## (an archer at the gallery's end). Before the seal: a feast and a venom fruit. Beyond it waits
+## the Orc Warchief: the hall locks until it falls. Optional: a red jar above the gallery.
 static func l12() -> Dictionary:
 	return {"id": "l12", "title": "The Gilded Seal", "world": "ruins", "width": 230, "height": 46,
-		"difficulty": 7, "minutes": 7.0, "layout": 2, "spawn": [3, 40], "ops": [
+		"difficulty": 7, "minutes": 7.0, "layout": 3, "spawn": [3, 40], "ops": [
 		["fill", 0, 0, 0, 45], ["fill", 229, 0, 229, 45], ["ground", 1, 228, 40],
 		["fill", 30, 28, 60, 29], ["ladder", 29, 28, 40],
 		["clear", 75, 40, 105, 43], ["ladder", 76, 40, 44], ["ladder", 104, 40, 44],
@@ -148,6 +162,7 @@ static func l12() -> Dictionary:
 		["target", "TA1", 35, 28], ["target", "TA2", 55, 28],
 		["logic", "LockA", ["TA1", "TA2"], 2, {"window": 2.0, "latch": true, "distinct_players": true}],
 		["enemy", "grunt", 45, 40, -6, 6], ["enemy", "archer", 66, 40, -2, 2],
+		["saw", 50, 39, 7, 0, {"speed": 45.0}],
 		["clue", 72, 40, "Two stones that\ncount together."],
 		["plate", "PB1", 78, 44, {"mode": 2, "active_time": 1.5}],
 		["plate", "PB2", 101, 44, {"mode": 2, "active_time": 1.5}],
@@ -161,9 +176,10 @@ static func l12() -> Dictionary:
 		["switch", "S2", 150, 26, {"mode": 1, "active_time": 0.4}],
 		["logic", "LockC", ["S1", "S2", "S3"], 3, {"latch": true, "window": 5.0}],
 		["slime", "p", 132, 26, -4, 3],
+		["enemy", "archer", 156, 26, -1, 1],
 		["tile", 145, 25], ["jar", "red", 141, 22],
 		["logic", "FinalLock", ["LockA", "LockB", "LockC"], 0, {"latch": true}],
-		["save", 161, 40],
+		["save", 161, 40], ["fruit", "green", 3, 159, 40], ["fruit", "purple", 2, 163, 40],
 		["gate", "SealGate", 165, 40, 6, "FinalLock", 1],
 		["fill", 166, 1, 224, 30],
 		["clue", 170, 40, "The Warchief\nholds the hall."],

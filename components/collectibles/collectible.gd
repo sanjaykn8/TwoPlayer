@@ -6,7 +6,9 @@ extends Area2D
 ##   knights overlapping it in the same frame cannot both collect it.
 ## - Items with a `collectible_id` are recorded in the RunState; an already-collected item
 ##   removes itself when its level loads, so it can never be collected twice in a run.
-## Subclasses override _apply(), kind_name() and _feedback().
+## - An item a knight cannot use right now (_accepts() false: full health, an upgrade at its
+##   cap) is NOT taken: it stays for later or for the partner, and a short note says why.
+## Subclasses override _apply(), _accepts(), kind_name() and _feedback().
 
 signal collected_by(knight: Knight)
 
@@ -16,6 +18,9 @@ signal collected_by(knight: Knight)
 @export var pickup_delay := 0.0
 
 var claimed := false
+## Knights currently touching the item that could not use it, re-checked every tick.
+var _waiting: Array[Knight] = []
+var _refusal_cooldown := 0.0
 
 
 func _ready() -> void:
@@ -30,6 +35,13 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	_refusal_cooldown = maxf(_refusal_cooldown - delta, 0.0)
+	# A knight standing on an item it could not use takes it the moment it can (e.g. hurt).
+	for knight in _waiting.duplicate():
+		if not is_instance_valid(knight) or not _touching(knight):
+			_waiting.erase(knight)
+		elif _accepts(knight):
+			collect(knight)
 	if pickup_delay > 0.0:
 		pickup_delay -= delta
 		if pickup_delay <= 0.0:
@@ -48,6 +60,13 @@ func _on_area_entered(area: Area2D) -> void:
 func collect(knight: Knight) -> bool:
 	if claimed or pickup_delay > 0.0 or knight == null or knight.is_dead():
 		return false
+	if not _accepts(knight):
+		if not _waiting.has(knight):
+			_waiting.append(knight)
+		if _refusal_cooldown <= 0.0:
+			_refusal_cooldown = 1.5
+			FloatingText.spawn(knight, Vector2(0, -30), _refusal_text(knight), Color(0.8, 0.8, 0.8))
+		return false
 	claimed = true
 	set_deferred(&"monitoring", false)
 	_apply(knight)
@@ -57,6 +76,20 @@ func collect(knight: Knight) -> bool:
 	_feedback(knight)
 	_remove()
 	return true
+
+
+## Whether `knight` can use the item now. False leaves the item in place.
+func _accepts(_knight: Knight) -> bool:
+	return true
+
+
+## Shown (briefly, not repeatedly) when a knight touches an item it cannot use.
+func _refusal_text(_knight: Knight) -> String:
+	return "NOT NEEDED"
+
+
+func _touching(knight: Knight) -> bool:
+	return overlaps_area(knight.hurtbox)
 
 
 ## Applies the item's effect to `knight`'s run record.

@@ -1,7 +1,9 @@
 class_name PowerTile
 extends StaticBody2D
-## A solid "?" block. A knight that steps onto it gets one random 5-second effect from
-## `effect_pool` (power-tile speed +25 %, attack cooldown -25 %, or a one-hit shield).
+## A solid "?" block. It shows the boost it will give and cycles through `effect_pool`
+## (HASTE: faster movement, FRENZY: faster attacks, GUARD: blocks one hit) every
+## `tile_cycle_seconds`; a knight that steps onto it gets the boost showing at that moment.
+## So the boost is a choice made by timing, not luck.
 ## - Fires when the knight is standing on it (on the floor, inside the sensor), once.
 ## - The same knight must leave the sensor before it can fire for them again.
 ## - Each knight is tracked separately; both can trigger it at the same moment.
@@ -9,20 +11,21 @@ extends StaticBody2D
 
 signal activated(knight: Knight, effect: StringName)
 
-const NAMES := {
-	PlayerEffects.SPEED_BOOST: "SPEED!",
-	PlayerEffects.ATTACK_SPEED: "FAST ATTACK!",
-	PlayerEffects.TILE_SHIELD: "SHIELD!",
+const CONFIG := preload("res://resources/config/progression_config.tres")
+const COLOURS := {
+	PlayerEffects.SPEED_BOOST: Color(0.4, 0.85, 1.0),
+	PlayerEffects.ATTACK_SPEED: Color(1.0, 0.6, 0.25),
+	PlayerEffects.TILE_SHIELD: Color(0.9, 0.95, 1.0),
 }
 
 @export var effect_pool: Array[StringName] = [PlayerEffects.SPEED_BOOST, PlayerEffects.ATTACK_SPEED, PlayerEffects.TILE_SHIELD]
-## 0 = random seed. Any other value makes the effect sequence reproducible.
-@export var rng_seed := 0
+## Seconds the cycle starts ahead (0 = from the first effect). Lets neighbouring tiles differ.
+@export var cycle_offset := 0.0
 ## When set, always grants this effect (testing).
 @export var forced_effect: StringName = &""
 
-var rng := RandomNumberGenerator.new()
 var activations := 0
+var _cycle_time := 0.0
 
 ## player id -> {"knight": Knight, "fired": bool}
 var _inside := {}
@@ -33,15 +36,14 @@ var _flash := 0.0
 
 
 func _ready() -> void:
-	if rng_seed != 0:
-		rng.seed = rng_seed
-	else:
-		rng.randomize()
+	_cycle_time = cycle_offset
 	sensor.area_entered.connect(_on_entered)
 	sensor.area_exited.connect(_on_exited)
 
 
 func _physics_process(delta: float) -> void:
+	_cycle_time += delta
+	queue_redraw()
 	for id: int in _inside:
 		var entry: Dictionary = _inside[id]
 		var knight: Knight = entry.knight
@@ -60,15 +62,30 @@ func activate(knight: Knight) -> StringName:
 	activations += 1
 	_flash = 0.12
 	Sfx.play(Sfx.POWER_UP, self, -8.0, 1.2)
-	FloatingText.spawn(knight, Vector2(0, -30), NAMES.get(effect, String(effect)), Color(0.5, 0.9, 1.0))
+	var seconds := CONFIG.tile_shield_seconds if effect == PlayerEffects.TILE_SHIELD else CONFIG.tile_effect_seconds
+	FloatingText.spawn(knight, Vector2(0, -30), "%s %ds" % [PlayerEffects.NAMES.get(effect, String(effect)), int(seconds)], COLOURS.get(effect, Color.WHITE))
 	activated.emit(knight, effect)
 	return effect
 
 
+## The boost showing right now (the one a knight stepping on gets).
 func pick_effect() -> StringName:
 	if forced_effect != &"":
 		return forced_effect
-	return effect_pool[rng.randi_range(0, effect_pool.size() - 1)]
+	return effect_pool[int(_cycle_time / CONFIG.tile_cycle_seconds) % effect_pool.size()]
+
+
+## The boost's name floats above the block in its colour, with a bar showing how long until
+## it changes.
+func _draw() -> void:
+	var effect := pick_effect()
+	var colour: Color = COLOURS.get(effect, Color.WHITE)
+	var text: String = PlayerEffects.NAMES.get(effect, String(effect))
+	draw_string(UiTheme.FONT, Vector2(-24, -13), text, HORIZONTAL_ALIGNMENT_CENTER, 48, 8, Color(0.05, 0.05, 0.07))
+	draw_string(UiTheme.FONT, Vector2(-25, -14), text, HORIZONTAL_ALIGNMENT_CENTER, 48, 8, colour)
+	if forced_effect == &"" and effect_pool.size() > 1:
+		var left := 1.0 - fposmod(_cycle_time, CONFIG.tile_cycle_seconds) / CONFIG.tile_cycle_seconds
+		draw_rect(Rect2(-6, -11, 12.0 * left, 1), colour)
 
 
 func _on_entered(area: Area2D) -> void:

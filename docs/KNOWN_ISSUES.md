@@ -1,6 +1,6 @@
 # Known Issues
 
-Updated 2026-11-08 (gameplay overhaul).
+Updated 2026-11-12 (final development pass: level depth, reach, power-ups, full QA).
 
 ## Severity scheme (Phase 11)
 
@@ -17,10 +17,55 @@ do not apply to them: **verification gaps** (something not yet tested by people)
 **design notes** (deliberate behaviour or accepted limits). An issue is never removed because
 a workaround exists; resolved issues move to the Resolved section with their fix.
 
-**Current count (after the overhaul): P0 open 0 · P1 open 1 (KI-5, export environment; not
-needed for playing in the editor) · P2 open 4 · P3 open 20.** No known open P0 or P1 game
-defect. Nobody has played the overhauled game yet (see Verification gaps), so this is a
-statement about what is known, not a guarantee.
+**Current count (after the final pass): P0 open 0 · P1 open 1 (KI-5, export environment; not
+needed for playing in the editor, and no export was requested) · P2 open 3 · P3 open 21.** No
+known open P0 or P1 game defect. Nobody has played the game since the overhaul or the final
+pass (see Verification gaps), so this is a statement about what is known, not a guarantee.
+
+## Found and fixed in the final pass
+
+### KI-116: three effect indicators pushed a HUD panel over the coin panel (P2, UI, fixed)
+
+| Field | Detail |
+|---|---|
+| Description | A knight with three or more running effects had a status panel wider than its third of the screen; it covered part of the coin and level-name panel |
+| Reproduction | Give Player Two a ward, a shield and haste (real-window screenshot at 640×360) |
+| Expected | Each knight's panel stays in its corner; the coin panel is always readable |
+| Actual | The effect row was a single line with no wrapping; three indicators made the panel about 270 px wide |
+| Root cause | `PlayerStatusPanel.effects_row` was an `HBoxContainer`; the redesign also raised the possible number of indicators from five to six |
+| Fix | The row is an `HFlowContainer` capped at 196 px; further indicators wrap to a second line |
+| Regression test | `test_hud.test_six_effects_wrap_and_never_cover_the_middle_panel`: PASS; real-window screenshot checked |
+
+### KI-117: the new island wind in Echoing Shafts did not reach the shelf (P2, level design, fixed before commit)
+
+| Field | Detail |
+|---|---|
+| Description | The first version of l06's low road ended in an updraft that carried the knight up under the pocket ledge and onto the spring, not onto the middle shelf it was meant to reach |
+| Reproduction | `test_optional_routes` (real knight, real input) on the first build of the final pass: `(58,58) -> (55,42)` banned |
+| Expected | The wind sets the knight down on the shelf |
+| Actual | The static analyzer accepted the route; the real knight could not land where the route said |
+| Root cause | The wind column stood under a one-way ledge and beside a spring; the analyzer does not model overshoot above an updraft |
+| Fix | The column moved two tiles right and now ends one row below the shelf, which was extended by two tiles |
+| Regression test | `test_optional_routes_worlds_1_and_2`: PASS (the knight floats up and lands on the shelf) |
+
+### KI-118: the level probe expected a full-health knight to take green fruit (P3, tooling, fixed)
+
+| Field | Detail |
+|---|---|
+| Description | After the power-up redesign, 14 levels failed the probe's collectible check: "FruitGreen1 not collected" |
+| Reproduction | Full suite right after the redesign: 6 failures in `test_level_validation` |
+| Expected | The probe follows the game's rule (a knight at full health leaves green fruit) |
+| Actual | The probe healed the knight and then expected the fruit to be taken |
+| Root cause | The probe predated the refusal rule |
+| Fix | The probe's knight arrives hurt at green fruit; the jar check compares the ward level |
+| Regression test | `test_level_validation`: 6/6 (24 levels) PASS |
+
+### KI-27: the slash art did not show the reach (P2, resolved)
+
+Open since Phase 3. The final pass draws a crescent on the far edge of the live hitbox, taken
+from the same rectangle as the hit query, so it grows with red fruit and with the charged
+slash. Checked in a real-window screenshot; `test_final_range` proves the edge is where hits
+stop.
 
 ## Found and fixed in the overhaul
 
@@ -162,8 +207,7 @@ Other defects found and fixed during development (all before any commit):
 |---|---|---|---|---|---|---|---|---|
 | KI-5 | P1 (release environment) | Windows export templates for 4.7.2 are not installed (`%APPDATA%/Godot/export_templates/` is empty) | Project → Export → Windows Desktop | A release build can be exported and run offline | Export impossible | Editor environment, not game code | User installs via Editor → Manage Export Templates (Phase 12) | Pending (Phase 12 export test) |
 | KI-85 | P2 | Window title from `ui_config.tres` is "UNTITLED"; `application/config/name` is "2p" (task bar, exports) | Launch the game | The real title | Placeholder names | No title chosen (the user must choose it) | Set when the title is chosen (Phase 12) | — |
-| KI-27 | P2 | The knife slash art does not grow with the red-fruit range bonus | Eat red fruit, attack | The drawn arc shows the reach | Hits land beyond the drawn arc | Pixel art cannot scale by 1.1–1.3 cleanly | Longer arc variant or range indicator (art polish) | — |
-| KI-106 | P2 (pending playtest) | Gates with no clue within 24 tiles: l06 1, l09 2, l10 1, l11 4, l12 1, l18 1, l19 1, l20 1, l24 3 (boss reward gates excluded) | `tools/difficulty_report.gd` | Puzzle solvable by reasoning from the level (GDD) | Unknown: these gates may be clear from their switches, or not | Clues are placed per area, not per gate | Decide from the manual playtest; add clues only where players get stuck | — |
+| KI-106 | P2 (pending playtest) | Gates with no clue within 24 tiles (arena gates included, boss reward gates excluded): l07 2, l08 2, l09 2, l10 1, l11 5, l12 1, l16 1, l18 1, l19 1, l20 2, l24 4 | `tools/difficulty_report.gd` | Puzzle solvable by reasoning from the level (GDD) | Unknown: these gates may be clear from their switches, or not | Clues are placed per area, not per gate | Decide from the manual playtest; add clues only where players get stuck | — |
 | KI-103 | P3 | One 32.3 ms frame in l03 during the 24-level performance run (every other frame of all levels ≤ 23.2 ms) | Windowed run, all 24 levels in a row | No frame above ~25 ms | One isolated spike, not reproduced | Unknown (single event; possibly first use of a shader or sound) | Watch in the manual playtest; profile if it recurs | Performance run: average 60.0 fps on every level |
 | KI-17 | P3 | While two nearby knights wait out a merge (0.25 s + 0.3 s), both appear in both halves | Separate, then rejoin | Clean merge | Both knights briefly in both views | One world seen by two cameras | Tune `merge_hold_time` / `transition_duration` after manual tests | `test_camera_rig`: PASS |
 | KI-19 | P3 | When P1 is right of or below P2, split and merge cut instead of sliding | Swap sides, separate | Slide | Cut | Fixed view identity per player | By design; revisit after manual tests | `test_camera_rig`: PASS |
@@ -179,6 +223,7 @@ Other defects found and fixed during development (all before any commit):
 | KI-33 | P3 | Slimes have no death or attack animation (squash-and-fade placeholder, briefly non-integer scale) | Kill a slime | Death frames | Placeholder | Bundle lacks frames | Art polish | — |
 | KI-10 | P3 | Jump, fall, crouch and climb are single frames reused from the soldier's walk and death rows (the pack has no jump art) | Move | Dedicated frames | Closest existing frames | Pack lacks frames | Art polish | `test_knight_sprite_frames` |
 | KI-110 | P2 (licence) | The Tiny RPG pack forbids redistributing its raw files, modified or not | Publish the repository | Assets ship only inside the game | `assets/tiny_rpg/` and the generated recolours are in the repository | Licence of the pack | Never push to a public remote without removing them | — |
+| KI-121 | P3 | Two single long frames in the final real-window performance run: 37 ms in l09 and 89 ms in l13 (every level averaged 142.6–144 fps; the start-up hitch of KI-111 did not recur) | Windowed run over all 24 levels | No frame above ~25 ms | One isolated frame each | Probably first use of a particle or sound (the l13 one is new: steam vent or fire jets) | Watch in the playtest; preload if players notice | Performance run (`docs/FINAL_TEST_REPORT.md` §7) |
 | KI-111 | P3 | A single 527 ms frame on the main menu at start-up in the real-window performance run (Phase 11's run had none); every level ran at 60 fps | Launch in a window and measure the first 3 s | No hitch | One long frame | Probably first-time loading of new resources (art, sounds) | Preload in Phase 12 if players notice | Performance run (`docs/MASTER_DEVELOPMENT_REPORT.md`) |
 | KI-112 | P3 (maintainability) | `knight.gd` has grown to about 800 lines (combat reactions, environment, presentation) | — | Smaller components | One large script | Features added in place | Split presentation into a component when it next changes (CLAUDE.md note) | Full suite |
 | KI-113 | P3 | Old saves inside a rebuilt level: run-wide records keyed by id (collected items, defeated enemies, puzzle states) can match a new object with the same id, so one new pickup may already count as collected | Load a pre-overhaul save made inside l01–l06 or l09 | Fresh level | Rare id matches | Ids are per level and position-independent | Accepted: positions are dropped (layout version), ids are not | `test_world_records_its_layout_and_old_layouts_start_fresh` |
@@ -192,6 +237,8 @@ Other defects found and fixed during development (all before any commit):
 |---|---|---|
 | KI-88 | **Campaign playtest of the overhauled game.** No level has been played by people since the overhaul (levels 1–4 were passed before it, on layouts that no longer exist). Fun, clarity of clues and routes, fairness of jumps, timings and boss patterns, difficulty curve, camera | `docs/FRIEND_PLAYTEST_CHECKLIST.md`, `docs/CAMPAIGN_PLAYTEST.md` |
 | KI-89 | **Campaign length unmeasured.** Design estimates total 127 min; pure movement 9.2 min; target 90–120 min. Arenas and boss fights add time that only play can measure | Time the playtest |
+| KI-119 | **The final pass has not been played by people.** The longer reach, the redesigned power-ups, and every route, secret and co-op mechanism added to the 24 levels are verified by automated tests only (real input and physics, headless) and by real-window screenshots | `docs/COMBAT_AND_POWERUP_CHANGES.md` §3, `docs/LEVEL_BY_LEVEL_QA.md` |
+| KI-120 | **Optional routes that need a lantern bounce or a partner's boost are checked statically only:** l01 secret room (boost), l03 green jar (lanterns), l04 venom islet (lanterns). The pogo and boost mechanics themselves are tested in `test_mechanisms` and `test_combat_expansion`, but nobody has made these exact jumps | Play them; if one cannot be made, report the level |
 | KI-114 | **New combat and enemies by feel:** charge time, co-op window, hit pause, knockback, wind-up lengths, boss patterns, bat swoops and arrow speed are tuned from tests and reasoning only | `docs/FRIEND_PLAYTEST_CHECKLIST.md` §4 |
 | KI-107 | **Two-player session** with the 20 tests of `docs/TWO_PLAYER_PLAYTEST.md` | User (two players) |
 | KI-9 | Physical keyboard: **user-reported pass**; model not supplied, so not tied to hardware; rollover with six keys held not separately reported | `docs/MANUAL_KEYBOARD_TEST.md`, T-04 |
